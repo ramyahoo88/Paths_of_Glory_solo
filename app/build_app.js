@@ -8,7 +8,7 @@ const B = require(path.join(root, 'sim/board.js'))
 const R = require(path.join(root, 'engine/rules.js'))
 const POLICY = require(path.join(root, 'research/event_policy.json'))
 const EP = require(path.join(root, 'sim/events.js'))
-const VERSION = process.env.GS_VERSION || '0.7.6'
+const VERSION = process.env.GS_VERSION || '0.8.0'
 
 const FN = { WEST: 'West', EAST: 'East', ITALY: 'Italy', BALKANS: 'Balkans', NEAREAST: 'Near East' }
 const objectives = {}
@@ -160,6 +160,7 @@ function shuffle(a) { const c = (window.crypto && crypto.getRandomValues) ? (n =
 function reset() { S.deck = shuffle(D.deck.map(c => c.id)); S.discard = []; S.hist = []; S.cur = null }
 const ST = { A: 'Assault', P: 'Press', H: 'Hold' }, PL = { O: ['Ops', 'Attack → Event → Logistics'], E: ['Event', 'Event → Attack → Logistics'], L: ['Logistics', 'Logistics → Attack → Event'] };
 const ORDER = ['West', 'East', 'Italy', 'Balkans', 'Near East'];
+const SHIFT = { cp: 0.75, ap: 1 }; // added to the Staff card's Stance threshold (rules §5.4)
 function cardById(id) { return D.deck.find(c => c.id === id) }
 function render() {
   $('side').value = S.side; $('lvl').value = S.lvl;
@@ -168,9 +169,9 @@ function render() {
   const c = S.cur ? cardById(S.cur) : null;
   if (c) {
     const front = D.frontTable[S.side][S.lvl][c.n - 1];
-    const order = [front, ...ORDER.filter(f => f !== front)];
-    $('card').innerHTML = '<div class="num">' + c.n + '</div><div class="front">' + front + ' front</div>' +
-      '<span class="pill st-' + c.stance + '">' + ST[c.stance] + ' · Score ≥ ' + (D.stance[c.stance] + (S.side === 'ap' ? 1 : 0) >= 0 ? '+' : '') + (D.stance[c.stance] + (S.side === 'ap' ? 1 : 0)) + '</span>' +
+    const order = (S.side === 'cp' ? ['West', front] : [front]).concat(ORDER).filter((f, i, a) => a.indexOf(f) === i); // CP bot: West always first (§2)
+    $('card').innerHTML = '<div class="num">' + c.n + '</div><div class="front">' + (S.side === 'cp' && front !== 'West' ? 'West front, then ' + front : front + ' front') + '</div>' +
+      '<span class="pill st-' + c.stance + '">' + ST[c.stance] + ' · Score ≥ +' + (D.stance[c.stance] + SHIFT[S.side]) + '</span>' +
       '<span class="pill plan">Plan: ' + PL[c.plan][0] + '</span><div class="muted" style="margin-top:6px">' + PL[c.plan][1] + '</div>' +
       '<div style="margin-top:6px"><b>Tie:</b> ' + (c.tie === 'N' ? '▲ North' : '▼ South') + '</div>' +
       '<div class="muted" style="margin-top:6px">Front order: ' + order.join(' → ') + '</div><div class="muted">Card ' + c.id + '/18</div>';
@@ -191,7 +192,7 @@ function renderEdge() {
   const edge = Math.round((eA - eD) * 10) / 10;
   const bonus = ($('bobj').checked ? 1 : ($('bnear').checked ? 0.4 : 0)) + ($('bvp').checked ? 0.5 : 0) + ($('boos').checked ? 0.5 : 0) + (+$('bmo').value) + (+$('bfront').value);
   const score = edge + bonus;
-  const c = S.cur ? cardById(S.cur) : null, need = c ? D.stance[c.stance] + (S.side === 'ap' ? 1 : 0) : null;
+  const c = S.cur ? cardById(S.cur) : null, need = c ? D.stance[c.stance] + SHIFT[S.side] : null;
   const lateMO = +$('bmo').value === 6;
   const verdict = need === null ? '' : score >= need - 1e-9 ? '<span class="ok"> — attack (needs ' + need + ')</span>'
     : lateMO ? '<span class="ok"> — attack: last-chance MO. In rounds 5–6 the first attack that meets the unmet MO is made whatever its Score (Score needed otherwise: ' + need + ')</span>'

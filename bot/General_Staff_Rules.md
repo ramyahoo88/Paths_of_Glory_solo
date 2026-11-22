@@ -1,6 +1,6 @@
 # General Staff — a card-driven solo opponent for *Paths of Glory*
 
-**Version 0.7.6 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
+**Version 0.8.0 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
 
 General Staff can command **either side**; you play the other side normally. The bot follows the same rules you do. It holds a hand of real strategy cards and takes six action rounds a turn. Each round it plays a card as an Event, for Operations (OPS), for Strategic Redeployment (SR) or for Replacement Points (RP), or it takes the 1-OP Automatic Operation. It never breaks a rule, never looks at your hand and never rolls dice to make a decision. Its decisions come from a deck of **Staff cards** and the fixed priorities in this booklet. Dice are rolled only where the game rules call for them (combat, mandated offensives, entrenching, sieges and so on).
 
@@ -30,7 +30,7 @@ The optional **General Staff Companion** (an offline web page) draws Staff cards
 ## 2. Terms
 
 * **Front.** Every space belongs to one of five fronts: **West**, **East**, **Italy**, **Balkans**, **Near East** (§10.1).
-* **Front order.** The Staff card's front first; then the others in this fixed order: West, East, Italy, Balkans, Near East.
+* **Front order.** The Staff card's front first; then the others in this fixed order: West, East, Italy, Balkans, Near East. **The Central Powers bot always puts the West first**, then the Staff card's front, then the fixed order. Its main effort stays in the West, and the Staff card sets the second front.
 * **Contact.** A space is *in contact* if an enemy unit is in an adjacent space.
 * **Objective.** For each front, the bot's Objective is the **first space on that front's Objective list (§10.3) that the bot does not control**. Where a list starts with some of the bot's own key spaces (for example Paris for the Allies, or Lemberg for the Central Powers), a lost one becomes the Objective until it is retaken. "The front's Objective" and "Objective list" always mean those of the front the space in question lies on (§10.1). A few lists name a space on a neighbouring front (Bucharest and Constanta on the Central Powers' Balkans list, Constantinople on the Allied Near East list). Such a space can be that front's Objective for Forward moves and the "within two spaces" bonus, but an attack on it is an Objective attack only for the front it lies on.
 * **Distance.** The number of connections crossed on the shortest route between two spaces, ignoring units; adjacent spaces are at Distance 1. Connections that only one nation may use (the British Channel crossings, and the Russian, Italian and Turkish ones) count; MEF and Arab Northern Army landing links do not. Work out the Attack Search and the Move list only when a step needs them.
@@ -126,9 +126,9 @@ Consider the shortlisted targets from the highest Score down. For each, take its
 
 | Stance | Central Powers bot: attack if the Score is at least | Allied bot: attack if the Score is at least |
 |---|---|---|
-| Assault | 0 | +1 |
-| Press | +0.75 | +1.75 |
-| Hold | +1.5 | +2.5 |
+| Assault | +0.75 | +1 |
+| Press | +1.5 | +1.75 |
+| Hold | +2.25 | +2.5 |
 
 From action round 5, the first attack whose chosen units would satisfy the bot's unmet MO is made whatever its Score.
 

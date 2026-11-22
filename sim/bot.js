@@ -48,7 +48,7 @@ class Bot {
   constructor(side, seed, opts = {}) {
     this.side = side; this.enemy = side === 'ap' ? 'cp' : 'ap'
     this.role = ROLE[side]
-    this.opts = Object.assign({ edgeShift: side === 'ap' ? 1.0 : 0, flank: false, events: true, sr: true, rp: true, entrench: true, guard: true, moves: true, directive: true, moveMode: 'table', shortlist: 3, keep: false, urgentMin: 7, fwdArmyV: side === 'ap' ? 2.5 : 1.5, rpStep: side === 'ap' ? 6 : 0 }, opts)
+    this.opts = Object.assign({ edgeShift: side === 'ap' ? 1.0 : 0.75, campaign: side === 'cp' ? 'west' : null, flank: false, events: true, sr: true, rp: true, entrench: true, guard: true, moves: true, directive: true, moveMode: 'table', shortlist: 3, keep: false, urgentMin: 7, fwdArmyV: side === 'ap' ? 2.5 : 1.5, rpStep: side === 'ap' ? 6 : 0 }, opts)
     this.r = rng(seed * 7919 + (side === 'ap' ? 13 : 29))
     this.deck = makeDeck(); this.shuffle(); this.discard = []
     this.dir = null; this.plan = null
@@ -135,12 +135,42 @@ class Bot {
   }
   frontsInOrder(A) {
     const out = []
+    if (this.opts.campaign) out.push(this.campaignFront(A)) // experiment: a main front for the turn comes first
     if (this.opts.directive && this.dir) {
       const tbl = FRONT_TABLE[this.side][this.commitment(A)]
       out.push(tbl[this.dir.n - 1])
     }
-    for (const f of FRONT_ORDER[this.side]) if (!out.includes(f)) out.push(f)
+    for (const f of FRONT_ORDER[this.side]) if (!out.includes(f) && f) out.push(f)
+    return out.filter((f, i) => out.indexOf(f) === i)
+  }
+  // Experiment (CP campaign focus): the main front for this turn, from a short checklist of open information.
+  campaignFront(A) {
+    const mode = this.opts.campaign, turn = A.game.turn
+    const fallen = A.game.events.fall_of_the_tsar > 0 || A.game.events.treaty_of_brest_litovsk > 0
+    if (mode === 'west') return 'WEST'
+    if (mode === 'east') return fallen ? 'WEST' : 'EAST'
+    const thr = this.homeThreat(A)
+    if (thr) return B.FRONT[thr]                      // 1. a home VP space under threat
+    if (turn <= (this.opts.westTurns ?? 2)) return 'WEST' // 2. 1914: the western offensive
+    return fallen ? 'WEST' : 'EAST'                   // 3. Russia standing: East; after its fall: West
+  }
+  // home VP spaces (of the bot's own side) with enemy units adjacent and held by fewer than two units and no army
+  weakHome(A) {
+    const out = []
+    for (let t = 1; t < B.N; t++) {
+      if (!data.spaces[t].vp || data.spaces[t].faction !== this.side || !this.isMine(A, t) || !this.adjEnemy(A, t)) continue
+      const here = this.piecesAt(A, t, this.side)
+      if (here.length >= 2 || here.some(p => data.pieces[p].type === 'army')) continue
+      out.push(t)
+    }
     return out
+  }
+  homeThreat(A) { const w = this.weakHome(A); return w.length ? w.sort((a, b) => this.piecesAt(A, a, this.side).length - this.piecesAt(A, b, this.side).length || this.tie(a, b))[0] : null }
+  // Experiment (front security): a stack leaving a home VP space in contact keeps an army or two units behind
+  secureOk(A, here, leaving) {
+    if (!this.opts.secure || !data.spaces[here].vp || data.spaces[here].faction !== this.side || !this.adjEnemy(A, here)) return true
+    const rest = this.piecesAt(A, here, this.side).filter(p => !leaving.includes(p))
+    return rest.length >= 2 || rest.some(p => data.pieces[p].type === 'army')
   }
   minEdge() { return STANCE_MIN_EDGE[this.dir ? this.dir.stance : 'P'] + this.opts.edgeShift }
 
@@ -300,6 +330,8 @@ class Bot {
         if (mo && mo !== 'none' && !(A.game.events.french_mutiny > 0 && mo === 'fr')) {
           if (A.satisfies_mo(mo, group.ps, defs, t)) { isMo = true; moBonus = roundNo >= 5 ? 6.0 : roundNo >= 3 ? 2.5 : 1.0; bonus += moBonus }
         }
+        // experiment: attacks with no positional stake (not VP, fort or Objective list, no reduced army to finish) count for less
+        if (this.opts.attrPenalty && !(data.spaces[t].vp || data.spaces[t].fort || B.OBJ[this.side][f].includes(t) || defs.some(p => data.pieces[p].type === 'army' && A.is_unit_reduced(p)))) bonus -= this.opts.attrPenalty
         // enemy out of supply -> softer target
         if (defs.some(p => A.game.oos_pieces.includes(p))) bonus += 0.5
         // pre-evaluate with every space whose units can legally attack together
@@ -439,6 +471,7 @@ class Bot {
       }
     }
     const gaps = this.threatened(A, 2)
+    if (this.opts.secure) for (const t of this.weakHome(A)) if (!gaps.includes(t)) gaps.push(t)
     if (this.opts.fillAll) for (const t of this.threatened(A, 1, true)) if (!gaps.includes(t) && fronts.indexOf(B.FRONT[t]) === 0) gaps.push(t)
     for (const t of gaps) {
       let bestS = null, bd = 99
@@ -582,7 +615,7 @@ class Bot {
     // Rebuild step (opts.rpStep): heavy losses -> one RP play per turn before the Plan
     if (this.opts.rpStep && acts.play_rps && acts.play_rps.length && !A.game[this.side].actions.some(x => x.type === 'rp')) {
       const need = this.rpNeed(A); let total = 0
-      for (const t in need) total += Math.max(0, need[t] - (A.game.rp[t] || 0))
+      for (const t in need) if (!this.opts.rpOnly || this.opts.rpOnly.includes(t)) total += Math.max(0, need[t] - (A.game.rp[t] || 0))
       if (total >= this.opts.rpStep) { const l = this.logistics(A, hand, Object.assign({}, acts, { play_sr: [] }), roundNo, false); if (l && l[0] === 'play_rps') { this.step = 'Rebuild'; return l } }
     }
     // Idle reserves: many units far from the enemy -> SR them now (opts.idleSR = SR-point trigger)
@@ -851,6 +884,7 @@ class Bot {
   // Siege rule (15.2.4; §6): units besieging an enemy fort keep a legal besieging force behind (an army, or as many
   // corps as the fort's level) when others leave. leaving = the units that would go.
   siegeOk(A, here, leaving) {
+    if (!this.secureOk(A, here, leaving)) return false
     if (this.opts.siegeKeep === false || !A.is_besieged(here) || !A.has_undestroyed_fort(here, this.enemy)) return true
     const rest = this.piecesAt(A, here, this.side).filter(p => !leaving.includes(p))
     return rest.length > 0 && A.can_besiege(here, rest)
@@ -1090,6 +1124,7 @@ class Bot {
           const left = this.piecesAt(A, org, this.side).filter(q => q !== p && !chosen.includes(q))
           const otherContact = B.adj[org].some(x => x !== t && this.enemyUnitsAt(A, x).length > 0)
           if (this.opts.guard && left.length === 0 && otherContact && this.isMine(A, org)) continue
+          if (!this.secureOk(A, org, chosen.concat([p]))) continue
           return ['piece', p]
         }
       }
