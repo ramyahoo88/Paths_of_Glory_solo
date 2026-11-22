@@ -45,7 +45,7 @@ class Bot {
   constructor(side, seed, opts = {}) {
     this.side = side; this.enemy = side === 'ap' ? 'cp' : 'ap'
     this.role = ROLE[side]
-    this.opts = Object.assign({ edgeShift: side === 'ap' ? 1.0 : 0, flank: false, events: true, sr: true, rp: true, entrench: true, guard: true, moves: true, directive: true, moveMode: 'table', shortlist: 5, keep: false, rpStep: side === 'ap' ? 6 : 0 }, opts)
+    this.opts = Object.assign({ edgeShift: side === 'ap' ? 1.0 : 0, flank: false, events: true, sr: true, rp: true, entrench: true, guard: true, moves: true, directive: true, moveMode: 'table', shortlist: 3, keep: false, urgentMin: 7, rpStep: side === 'ap' ? 6 : 0 }, opts)
     this.r = rng(seed * 7919 + (side === 'ap' ? 13 : 29))
     this.deck = makeDeck(); this.shuffle(); this.discard = []
     this.dir = null; this.plan = null
@@ -406,7 +406,7 @@ class Bot {
       // Printed Move Value table: value desc, then front order, then Tie.
       const ed = this.enemyDist(A)
       const val = m => {
-        if (m.kind === 'capture') return 2 + (data.spaces[m.to].vp ? 2 : 0)
+        if (m.kind === 'capture') return (data.spaces[m.to].vp ? 4 : (this.opts.captureV ?? 2))
         if (m.kind === 'fill') return ((data.spaces[m.to].vp || data.spaces[m.to].fort || data.spaces[m.to].capital) ? 2 : 1) + (ed[m.to] === 1 ? 1 : 0) + (data.spaces[m.to].capital ? 1 : 0)
         if (m.kind === 'siege') return 2 + (data.spaces[m.to].vp ? 1 : 0)
         if (m.kind === 'forward') return this.piecesAt(A, m.from, this.side).some(p => data.pieces[p].type === 'army') ? 1.5 : 1
@@ -487,7 +487,7 @@ class Bot {
       const p0 = this.planOps(A, Math.max(1, ...hand.filter(h => opsLegal.has(h.c) && !this.isKeep(A, h.c)).map(h => h.d.ops)))
       if (p0.attacks.some(a => a.mo)) { this.step = 'Mandated Offensive (last chance)'; return this.useOps(A, hand, opsLegal, p0, p0.attacks.reduce((a, x) => a + x.cost, 0)) }
     }
-    if (this.opts.events && evs.length && evs[0].pr >= 8) { this.step = 'Urgent event'; return this.useEvent(evs[0].c) }
+    if (this.opts.events && evs.length && evs[0].pr >= (this.opts.urgentMin ?? 8)) { this.step = 'Urgent event'; return this.useEvent(evs[0].c) }
     // budget available: max ops among non-urgent cards
     const opsCards = hand.filter(h => opsLegal.has(h.c) && !this.isKeep(A, h.c))
     const maxOps = Math.max(1, ...opsCards.map(h => h.d.ops))
@@ -556,7 +556,7 @@ class Bot {
     const order = this.dir.plan === 'E' ? ['event', 'ops', 'log'] : this.dir.plan === 'L' ? ['log', 'ops', 'event'] : ['ops', 'event', 'log']
     for (const step of order) {
       this.step = 'Plan ' + step
-      if (step === 'event' && this.opts.events && evs.length && evs[0].pr >= 5) return this.useEvent(evs[0].c)
+      if (step === 'event' && this.opts.events && evs.length && evs[0].pr >= (this.opts.evMin ?? 5)) return this.useEvent(evs[0].c)
       if (step === 'ops' && plan.attacks.length) return this.useOps(A, hand, opsLegal, plan, attackCost)
       if (step === 'log') {
         const l = this.logistics(A, hand, acts, roundNo)
@@ -855,6 +855,7 @@ class Bot {
       const pd = data.pieces[p]
       const red = A.is_unit_reduced(p)
       // cost of taking a step: corps cheap, armies expensive; eliminating a unit costs more
+      if (this.opts.lossMode === 'flipFirst') return (red ? 20 : 0) + (pd.type === 'army' ? 10 : 2) + A.get_piece_cf(p) * 0.3
       return (pd.type === 'army' ? 10 : 2) + (red ? (pd.type === 'army' ? 8 : 1) : 0) + A.get_piece_cf(p) * 0.3
     }
     return ['piece', ps.sort((a, b) => val(a) - val(b))[0]]
@@ -988,7 +989,8 @@ class Bot {
     const hand = A.game[this.side].hand
     const ccs = hand.filter(c => data.cards[c].cc)
     const offer = (acts.card || []).filter(c => data.cards[c].cc)
-    if (ccs.length > 2 && offer.length) return ['card', offer[0]]
+    const pri = c => (EP.BY[c] ? EP.BY[c].event_priority : 0)
+    if (ccs.length > 2 && offer.length) return ['card', offer.slice().sort((a, b) => pri(a) - pri(b) || a - b)[0]]
     return ['done']
   }
 

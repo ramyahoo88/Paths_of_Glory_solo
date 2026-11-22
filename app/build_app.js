@@ -8,7 +8,7 @@ const B = require(path.join(root, 'sim/board.js'))
 const R = require(path.join(root, 'engine/rules.js'))
 const POLICY = require(path.join(root, 'research/event_policy.json'))
 const EP = require(path.join(root, 'sim/events.js'))
-const VERSION = process.env.GS_VERSION || '0.5'
+const VERSION = process.env.GS_VERSION || '0.6'
 
 const FN = { WEST: 'West', EAST: 'East', ITALY: 'Italy', BALKANS: 'Balkans', NEAREAST: 'Near East' }
 const objectives = {}
@@ -29,7 +29,7 @@ const DATA = {
   armyCols: R.__api.fire_table.army.map(c => c.factors), corpsCols: R.__api.fire_table.corps.map(c => c.factors),
 }
 
-const html = `<!doctype html>
+const html = `<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>General Staff Companion v${VERSION}</title>
 <style>
@@ -79,7 +79,7 @@ td, th { border-bottom:1px solid #e2d7bb; padding:4px; text-align:left; vertical
 <ol>
 <li><b>Forced play</b> (Guns of August).</li>
 <li><b>MO last chance</b>: rounds 5–6, MO unmet, MO attack exists.</li>
-<li><b>Urgent event</b>: priority 8–9, legal now.</li>
+<li><b>Urgent event</b>: priority 7–9, legal now.</li>
 <li><b>MO</b>: round 3+, MO attack in the Attack Search.</li>
 <li><b>Crisis</b>: crisis space and the planned Operation includes a Fill.</li>
 <li><b>Rebuild</b> (Allies only): missing steps − RP held ≥ 6, no RP card yet this turn.</li>
@@ -148,7 +148,7 @@ function renderTabs() {
   const ft = D.frontTable[S.side];
   $('t-front').innerHTML = '<table><tr><th>Staff number</th>' + [1,2,3,4,5,6].map(n => '<th>' + n + '</th>').join('') + '</tr>' + Object.keys(ft).map(l => '<tr><th>' + l + '</th>' + ft[l].map(f => '<td>' + f + '</td>').join('') + '</tr>').join('') + '</table>';
   const q = ($('evq').value || '').toLowerCase();
-  $('evlist').innerHTML = '<table><tr><th>#</th><th>Card</th><th>Pri</th><th>When</th></tr>' + D.events[S.side].filter(e => !q || String(e.n) === q || e.name.toLowerCase().includes(q)).map(e => '<tr><td>' + e.n + '</td><td>' + e.name + '</td><td>' + e.pri + '</td><td>' + e.when + '</td></tr>').join('') + '</table><p class="muted">Play an event only when the rules allow it. Priority 8–9 urgent; 5–7 at the Plan's Event step; 3–4 fallback; 0 never; CC held for combat.</p>';
+  $('evlist').innerHTML = '<table><tr><th>#</th><th>Card</th><th>Pri</th><th>Notes</th></tr>' + D.events[S.side].filter(e => !q || String(e.n) === q || e.name.toLowerCase().includes(q)).map(e => '<tr><td>' + e.n + '</td><td>' + e.name + '</td><td>' + e.pri + '</td><td>' + e.when + '</td></tr>').join('') + '</table><p class="muted">Play an event only when the rules allow it. Priority 7–9 urgent; 5–6 at the Event step of the Plan; 3–4 fallback; 0 never; CC held for combat.</p>';
 }
 $('draw').onclick = () => { if (!S.deck.length) { S.deck = shuffle(S.discard); S.discard = [] } S.hist.push(JSON.stringify({ deck: S.deck, discard: S.discard, cur: S.cur })); if (S.hist.length > 30) S.hist.shift(); S.cur = S.deck.pop(); S.discard.push(S.cur); render() };
 $('undo').onclick = () => { const h = S.hist.pop(); if (h) { const x = JSON.parse(h); S.deck = x.deck; S.discard = x.discard; S.cur = x.cur } render() };
@@ -159,6 +159,8 @@ $('evq').oninput = renderTabs;
 document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x === b)); for (const t of ['obj','front','ev']) $('t-' + t).classList.toggle('hidden', t !== b.dataset.t) });
 load(); if (!S.deck.length && !S.discard.length) reset(); render();
 </script></body></html>`
+// syntax check of the page script before writing
+{ const i = html.indexOf('<script>'), j = html.lastIndexOf('</script>'); new Function(html.slice(i + 8, j)) }
 const out = path.join(root, 'app/General_Staff_Companion.html')
 fs.writeFileSync(out, html)
 console.log('wrote', out, html.length, 'bytes')

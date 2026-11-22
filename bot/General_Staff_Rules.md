@@ -1,6 +1,6 @@
 # General Staff — a card-driven solo opponent for *Paths of Glory*
 
-**Version 0.5 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
+**Version 0.6 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
 
 General Staff can command **either side**; you play the other side normally. The bot follows the same rules you do. It holds a hand of real strategy cards and takes six action rounds a turn. Each round it plays a card as an Event, for Operations (OPS), for Strategic Redeployment (SR) or for Replacement Points (RP), or it takes the 1-OP Automatic Operation. It never breaks a rule, never looks at your hand and never rolls dice to make a decision. Its decisions come from a deck of **Staff cards** and the fixed priorities in this booklet. Dice are rolled only where the game rules call for them (combat, mandated offensives, entrenching, sieges and so on).
 
@@ -21,7 +21,9 @@ The optional **General Staff Companion** (an offline web page) draws Staff cards
 
 **Reference sheets**: the procedure summary, the Front Tables, the Objective lists, the Edge table and the Event Priority lists for both decks.
 
-**Setup.** Set up the Historical scenario normally. Shuffle the Staff deck. Deal the bot its strategy cards exactly as for a human player. Keep the bot's hand face down beside the board and look at it when the procedure tells you to. The bot plays to fixed rules, so seeing its cards gives you little, but the honest habit is to look only when asked.
+**Setup.** Set up the Historical scenario normally. Shuffle the Staff deck. Deal the bot its strategy cards exactly as for a human player.
+
+**Difficulty (optional).** For a harder game, start the VP marker 1 or 2 spaces in the bot's favour: toward 20 when the bot plays the Central Powers, toward 0 when it plays the Allies. For an easier game, move it toward you instead. In bot-versus-bot tests, each VP of handicap shifted the result by about six percentage points. Keep the bot's hand face down beside the board and look at it when the procedure tells you to. The bot plays to fixed rules, so seeing its cards gives you little, but the honest habit is to look only when asked.
 
 ---
 
@@ -45,7 +47,7 @@ Draw one Staff card. When the deck runs out, shuffle the discards to form a new 
 
 1. **Forced play.** If a rule requires a particular card (Guns of August in the first action round of the game), play it.
 2. **MO: last chance.** In action rounds 5 and 6, if the bot's mandated offensive (MO) is unmet and the Attack Search (§5) includes an attack that would satisfy it, conduct that Operation (§4).
-3. **Urgent event.** Among the bot's cards whose event is legal now, play the one with the highest **event priority of 8 or 9** (§8). Ties: lower OPS value, then the lower card number.
+3. **Urgent event.** Among the bot's cards whose event is legal now, play the one with the highest **event priority of 7, 8 or 9** (§8). Ties: lower OPS value, then the lower card number.
 4. **MO.** From action round 3, if the MO is unmet and the Attack Search includes an attack that would satisfy it, conduct that Operation.
 5. **Crisis.** If a bot space is in crisis, plan an Operation as in §4 with the highest OPS among the bot's cards. If its planned moves include a **Fill** (§6), conduct the Operation. (The Fill is planned after the attacks, so a cheap card may not reach it; that is intended.)
 6. **Rebuild** (Allied bot only). If the bot has not played a card for RP this turn and its missing steps, less the RP it already holds, total **6 or more**, play a card for RP as in §7.1 (if one qualifies).
@@ -88,9 +90,9 @@ A **target** is an enemy-occupied space, or an enemy-controlled fort that is not
 
 ### 5.2 Shortlist and attackers
 
-For each target, the **attackers** are the bot units able to attack it. Count attacking spaces strongest first, adding them while their activation costs still fit the OPS available.
+For each target, the **attackers** are the bot units able to attack it, from one or more adjacent spaces.
 
-Make a **shortlist** across the whole map: the **five** targets with the largest **CF difference**, counting the CF of every bot unit able to attack the target (whatever the OPS) minus the defending CF and any undestroyed fort's value. Add any front's Objective that is a target, and any target where an attack by all those units would satisfy the bot's unmet MO. Rank the shortlist by Score (§5.3) worked out the same way.
+Make a **shortlist** across the whole map: the **three** targets with the largest **CF difference**, counting the CF of every bot unit able to attack the target (whatever the OPS) minus the defending CF and any undestroyed fort's value. Add any front's Objective that is a target, and any target where an attack by all those units would satisfy the bot's unmet MO. Rank the shortlist by Score (§5.3) worked out the same way.
 
 ### 5.3 Edge and Score
 
@@ -178,8 +180,8 @@ Redeploy only those units (Reserve Box, or more than three spaces from the enemy
 
 Each strategy card has an **event priority** from 0 to 9 on the Event Priority lists. Some notes change it with the situation.
 
-* **8–9: urgent.** Played before anything else (§3, step 3).
-* **5–7.** Played when the Staff card's Plan reaches *Event*.
+* **7–9: urgent.** Played before anything else (§3, step 3).
+* **5–6.** Played when the Staff card's Plan reaches *Event*.
 * **3–4.** Played only in the Fallback step.
 * **0.** Never played as an action-round event.
 * **CC.** Combat cards are held for combat (§9).

@@ -8,7 +8,7 @@ const B = require(path.join(root, 'sim/board.js'))
 const POLICY = require(path.join(root, 'research/event_policy.json'))
 const EP = require(path.join(root, 'sim/events.js'))
 const out = path.join(root, 'print/out'); fs.mkdirSync(out, { recursive: true })
-const VERSION = process.env.GS_VERSION || '0.5'
+const VERSION = process.env.GS_VERSION || '0.6'
 
 const STANCE = { A: ['Assault', 'CP 0 · Allies +1'], P: ['Press', 'CP +0.75 · Allies +1.75'], H: ['Hold', 'CP +1.5 · Allies +2.5'] }
 const PLAN = { O: ['Ops', 'Attack · Event · Logistics'], E: ['Event', 'Event · Attack · Logistics'], L: ['Logistics', 'Logistics · Attack · Event'] }
@@ -104,7 +104,7 @@ let ref = `<!doctype html><meta charset="utf-8"><style>${css}</style><div class=
 <h2>Objectives &mdash; Allied bot</h2>${objTable('ap')}
 <div class="pb"></div><h1>Event priorities &mdash; Central Powers cards</h1>${eventTable('cp')}
 <div class="pb"></div><h1>Event priorities &mdash; Allied cards</h1>${eventTable('ap')}
-<p class="small">Play an event only when the rules allow it. Pri 8&ndash;9 urgent; 5&ndash;7 when the Plan reaches Event; 3&ndash;4 fallback only; 0 never; CC = combat card, held for combat. Cards of priority 7+ are never used for RP or SR.</p>
+<p class="small">Play an event only when the rules allow it. Pri 7&ndash;9 urgent; 5&ndash;6 when the Plan reaches Event; 3&ndash;4 fallback only; 0 never; CC = combat card, held for combat. Cards of priority 7+ are never used for RP or SR.</p>
 </div>`
 fs.writeFileSync(path.join(out, 'reference.html'), ref)
 
