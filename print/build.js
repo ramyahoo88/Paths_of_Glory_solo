@@ -35,11 +35,11 @@ body { font-family: 'DejaVu Sans', Arial, sans-serif; color: #1d1d1b; margin: 0;
 .back .t { font-size: 20pt; font-weight: bold; letter-spacing: 0.08em; } .back .u { font-size: 8pt; margin-top: 6px; }
 h1 { font-size: 16pt; margin: 0 0 4px; } h2 { font-size: 11.5pt; margin: 10px 0 4px; border-bottom: 1.5px solid #333; } h3 { font-size: 10pt; margin: 8px 0 3px; }
 table { border-collapse: collapse; width: 100%; font-size: 8pt; margin: 3px 0 6px; }
-th, td { border: 1px solid #999; padding: 2px 4px; vertical-align: top; text-align: left; }
+th, td { border: 1px solid #999; padding: 2px 4px; vertical-align: top; text-align: left; height: 14px; }
 th { background: #e8e2d0; }
 .ref { font-size: 8.5pt; line-height: 1.3; }
 .two { columns: 2; column-gap: 0.25in; }
-.small { font-size: 7.5pt; } .pb { page-break-before: always; }
+.small { font-size: 7.5pt; } .pb { page-break-before: always; } .rec td { height: 30px; } .rec th { font-size: 8pt; }
 ol, ul { margin: 2px 0 4px 16px; padding: 0; } li { margin: 1px 0; }
 `
 
@@ -103,6 +103,10 @@ let ref = `<!doctype html><meta charset="utf-8"><style>${css}</style><div class=
 <p class="small">Use the columns after all shifts. Edge = bot's expected hits &minus; defender's expected hits. Score = Edge + bonuses (Objective +1, or else within 2 of the Objective +0.4; VP space +0.5; a defender out of supply +0.5; MO attack +1 / +2.5 / +6 in rounds 1&ndash;2 / 3&ndash;4 / 5&ndash;6; &minus;0.25 for each place the target's front is after the first in front order). Attack if Score &ge; Stance: Central Powers bot Assault 0, Press +0.75, Hold +1.5; Allied bot Assault +1, Press +1.75, Hold +2.5. From round 5 an MO attack is made at any Score.</p>
 <h2>Objectives &mdash; Central Powers bot</h2>${objTable('cp')}
 <h2>Objectives &mdash; Allied bot</h2>${objTable('ap')}
+<div class="pb"></div><h1>Bot record sheet</h1>
+<p class="small">One line per turn. Tick a Staff card box as you draw each card; note the step that decided the round (F forced, L last-chance MO, U urgent, M MO, C crisis, R rebuild, P plan, B fallback). Track the bot's MO, whether it has played an RP card this turn, and its missing steps.</p>
+<table class="rec"><tr><th>Turn</th><th>Bot MO</th><th>R1</th><th>R2</th><th>R3</th><th>R4</th><th>R5</th><th>R6</th><th>MO met?</th><th>RP card played?</th><th>Missing steps / RP held</th><th>Notes</th></tr>
+${Array.from({ length: 20 }, (_, i) => `<tr><td>${i + 1}</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td style="width:22%"></td></tr>`).join('')}</table>
 <div class="pb"></div><h1>Event priorities &mdash; Central Powers cards</h1>${eventTable('cp')}
 <div class="pb"></div><h1>Event priorities &mdash; Allied cards</h1>${eventTable('ap')}
 <p class="small">Play an event only when the rules allow it. Pri 7&ndash;9 urgent; 5&ndash;6 when the Plan reaches Event; 3&ndash;4 fallback only; 0&ndash;2 never. CC n = combat card with keep value n (draw-phase discards drop the lowest). Cards of priority 7+ are never used for RP or SR.</p>

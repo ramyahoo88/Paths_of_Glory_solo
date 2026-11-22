@@ -16,11 +16,11 @@ The bot plays by the same rules you do. It holds a hand of real strategy cards a
 | **Simulation report** | [REPORT.md](sim/REPORT.md) |
 | **Changes** | [CHANGELOG.md](CHANGELOG.md) |
 
-Print the cards at 100% (US Letter), single-sided; the last sheet is backs. The reference sheets are six pages; the event lists (pages 3–6) can stay in a sleeve.
+Print the cards at 100% (US Letter), single-sided; the last sheet is backs. The reference sheets are seven pages: procedure, tables, a record sheet, and the event lists (which can stay in a sleeve).
 
 ## How good is it?
 
-General Staff was developed and tested in about **21,000 simulated full campaigns** on the open-source **Rally the Troops** rules engine. The engine is used with GMT's permission on that site and is not included here. The final version:
+General Staff was developed and tested in about **22,000 simulated full campaigns** on the open-source **Rally the Troops** rules engine. The engine is used with GMT's permission on that site and is not included here. The final version:
 
 * is close to balanced against itself: in 200 self-play games, the Allies won **57%** and the Central Powers **43%**;
 * beat a random player and a naive one-attack, no-events bot in **260 of 260** games;

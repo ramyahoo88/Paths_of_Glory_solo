@@ -6,7 +6,7 @@
 
 * In **200 self-play campaigns** (bot against bot), the Allied bot won **57%** and the Central Powers bot **43%**. Mean VP stayed between 8 and 12 all war.
 * Against a **random** player and against a **naive** one-attack, no-events bot, General Staff won **every** game on both sides: 260 of 260.
-* About **21,000 further campaigns** compared design alternatives in paired tests. They settled the main choices:
+* About **22,000 further campaigns** compared design alternatives in paired tests. They settled the main choices:
   * attack the best Score, not the first acceptable target;
   * advance after combat;
   * fill endangered spaces by movement, not SR;
