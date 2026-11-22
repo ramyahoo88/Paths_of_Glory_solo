@@ -14,6 +14,11 @@ for (let i = 0; i < N; i++) adj.push([])
 for (let i = 1; i < N; i++) {
   const sp = data.spaces[i]
   for (const j of sp.connections || []) { if (j < N && !adj[i].includes(j)) adj[i].push(j); if (j < N && !adj[j].includes(i)) adj[j].push(i) }
+  // nation-limited links (British Channel crossings, Russian/Italian/Turkish internal links); not MEF/ANA landings
+  for (const [nat, list] of Object.entries(sp.limited_connections || {})) {
+    if (nat === 'mef' || nat === 'ana') continue
+    for (const j of list) { if (j < N && !adj[i].includes(j)) adj[i].push(j); if (j < N && !adj[j].includes(i)) adj[j].push(i) }
+  }
 }
 function bfs(from) {
   const d = new Array(N).fill(99); d[from] = 0; const q = [from]

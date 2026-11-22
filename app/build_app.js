@@ -8,7 +8,7 @@ const B = require(path.join(root, 'sim/board.js'))
 const R = require(path.join(root, 'engine/rules.js'))
 const POLICY = require(path.join(root, 'research/event_policy.json'))
 const EP = require(path.join(root, 'sim/events.js'))
-const VERSION = process.env.GS_VERSION || '0.3'
+const VERSION = process.env.GS_VERSION || '0.4'
 
 const FN = { WEST: 'West', EAST: 'East', ITALY: 'Italy', BALKANS: 'Balkans', NEAREAST: 'Near East' }
 const objectives = {}
@@ -16,11 +16,13 @@ for (const side of ['cp', 'ap']) { objectives[side] = {}; for (const f of B.FRON
 const frontTable = {}
 for (const side of ['cp', 'ap']) { frontTable[side] = {}; for (const lvl in FRONT_TABLE[side]) frontTable[side][lvl] = FRONT_TABLE[side][lvl].map(f => FN[f]) }
 const events = {}
-for (const side of ['cp', 'ap']) events[side] = POLICY.filter(e => e.side === side).sort((a, b) => a.num - b.num).map(e => ({
-  n: e.num, name: e.name, pri: e.class === 'combat_card' ? 'CC' : String(e.event_priority),
-  when: e.class === 'combat_card' ? (e.hold_as_cc_when || e.play_event_when) : e.play_event_when,
-  keep: EP.KEEP.has(e.global),
-}))
+for (const side of ['cp', 'ap']) events[side] = POLICY.filter(e => e.side === side).sort((a, b) => a.num - b.num).map(e => {
+  const pri = EP.printedPriority(e.global), d = B.data.cards[e.global]
+  let when = EP.NOTE[e.global] || ''
+  if (pri === 'CC') when = 'Combat card: held for combat.'
+  else if (d.reinfnation && +pri <= 5) when = (when ? when + ' ' : '') + '3 if an army reinforcement card of the same nation (priority 7+) is in hand.'
+  return { n: e.num, name: e.name, pri, when, keep: EP.KEEP.has(e.global) }
+})
 const DATA = {
   version: VERSION, deck: makeDeck(), frontTable, objectives, events, stance: STANCE_MIN_EDGE,
   army: B.expectedTable(R.__api.fire_table.army).map(x => +x.toFixed(2)), corps: B.expectedTable(R.__api.fire_table.corps).map(x => +x.toFixed(2)),
@@ -77,9 +79,10 @@ td, th { border-bottom:1px solid #e2d7bb; padding:4px; text-align:left; vertical
 <ol>
 <li><b>Forced play</b> (Guns of August).</li>
 <li><b>MO last chance</b>: rounds 5–6, MO unmet, MO attack exists.</li>
-<li><b>Urgent event</b>: priority 8–9, legal, condition met.</li>
+<li><b>Urgent event</b>: priority 8–9, legal now.</li>
 <li><b>MO</b>: round 3+, MO attack in the Attack Search.</li>
 <li><b>Crisis</b>: Fill move for a crisis space.</li>
+<li><b>Rebuild</b> (Allies only): missing steps − RP held ≥ 6, no RP card yet this turn.</li>
 <li><b>Plan</b> (see card).</li>
 <li><b>Fallback</b>: event 3–4 → moves-only Ops → low-trigger RP/SR → 1-OP Automatic Operation.</li>
 </ol></section>
@@ -118,7 +121,7 @@ function render() {
     const front = D.frontTable[S.side][S.lvl][c.n - 1];
     const order = [front, ...ORDER.filter(f => f !== front)];
     $('card').innerHTML = '<div class="num">' + c.n + '</div><div class="front">' + front + ' front</div>' +
-      '<span class="pill st-' + c.stance + '">' + ST[c.stance] + ' · Score ≥ ' + (D.stance[c.stance] >= 0 ? '+' : '') + D.stance[c.stance] + '</span>' +
+      '<span class="pill st-' + c.stance + '">' + ST[c.stance] + ' · Score ≥ ' + (D.stance[c.stance] + (S.side === 'ap' ? 1 : 0) >= 0 ? '+' : '') + (D.stance[c.stance] + (S.side === 'ap' ? 1 : 0)) + '</span>' +
       '<span class="pill plan">Plan: ' + PL[c.plan][0] + '</span><div class="muted" style="margin-top:6px">' + PL[c.plan][1] + '</div>' +
       '<div style="margin-top:6px"><b>Tie:</b> ' + (c.tie === 'N' ? '▲ North' : '▼ South') + '</div>' +
       '<div class="muted" style="margin-top:6px">Front order: ' + order.join(' → ') + '</div><div class="muted">Card ' + c.id + '/18</div>';
@@ -135,7 +138,7 @@ function renderEdge() {
   const edge = eA - eD;
   const bonus = ($('bobj').checked ? 1 : 0) + ($('bnear').checked ? 0.4 : 0) + ($('bvp').checked ? 0.5 : 0) + ($('boos').checked ? 0.5 : 0) + (+$('bmo').value) + (+$('bfront').value);
   const score = edge + bonus;
-  const c = S.cur ? cardById(S.cur) : null, need = c ? D.stance[c.stance] : null;
+  const c = S.cur ? cardById(S.cur) : null, need = c ? D.stance[c.stance] + (S.side === 'ap' ? 1 : 0) : null;
   const verdict = need === null ? '' : (score >= need ? '<span class="ok"> — attack (needs ' + need + ')</span>' : '<span class="no"> — too weak (needs ' + need + ')</span>');
   $('edge').innerHTML = 'Bot ' + eA.toFixed(2) + ' − defender ' + eD.toFixed(2) + ' = Edge ' + (edge >= 0 ? '+' : '') + edge.toFixed(2) + '<br>Score ' + (score >= 0 ? '+' : '') + score.toFixed(2) + verdict;
 }
@@ -145,7 +148,7 @@ function renderTabs() {
   const ft = D.frontTable[S.side];
   $('t-front').innerHTML = '<table><tr><th>Staff number</th>' + [1,2,3,4,5,6].map(n => '<th>' + n + '</th>').join('') + '</tr>' + Object.keys(ft).map(l => '<tr><th>' + l + '</th>' + ft[l].map(f => '<td>' + f + '</td>').join('') + '</tr>').join('') + '</table>';
   const q = ($('evq').value || '').toLowerCase();
-  $('evlist').innerHTML = '<table><tr><th>#</th><th>Card</th><th>Pri</th><th>When</th></tr>' + D.events[S.side].filter(e => !q || String(e.n) === q || e.name.toLowerCase().includes(q)).map(e => '<tr><td>' + e.n + '</td><td>' + e.name + (e.keep ? ' ★' : '') + '</td><td>' + e.pri + '</td><td>' + e.when + '</td></tr>').join('') + '</table><p class="muted">★ = Kept card (only when its keep condition holds; see rules §2).</p>';
+  $('evlist').innerHTML = '<table><tr><th>#</th><th>Card</th><th>Pri</th><th>When</th></tr>' + D.events[S.side].filter(e => !q || String(e.n) === q || e.name.toLowerCase().includes(q)).map(e => '<tr><td>' + e.n + '</td><td>' + e.name + '</td><td>' + e.pri + '</td><td>' + e.when + '</td></tr>').join('') + '</table><p class="muted">Play an event only when the rules allow it. Priority 8–9 urgent; 5–7 at the Plan's Event step; 3–4 fallback; 0 never; CC held for combat.</p>';
 }
 $('draw').onclick = () => { if (!S.deck.length) { S.deck = shuffle(S.discard); S.discard = [] } S.hist.push(JSON.stringify({ deck: S.deck, discard: S.discard, cur: S.cur })); if (S.hist.length > 30) S.hist.shift(); S.cur = S.deck.pop(); S.discard.push(S.cur); render() };
 $('undo').onclick = () => { const h = S.hist.pop(); if (h) { const x = JSON.parse(h); S.deck = x.deck; S.discard = x.discard; S.cur = x.cur } render() };

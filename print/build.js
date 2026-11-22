@@ -8,9 +8,9 @@ const B = require(path.join(root, 'sim/board.js'))
 const POLICY = require(path.join(root, 'research/event_policy.json'))
 const EP = require(path.join(root, 'sim/events.js'))
 const out = path.join(root, 'print/out'); fs.mkdirSync(out, { recursive: true })
-const VERSION = process.env.GS_VERSION || '0.1'
+const VERSION = process.env.GS_VERSION || '0.4'
 
-const STANCE = { A: ['Assault', 'Edge 0+'], P: ['Press', 'Edge +0.75'], H: ['Hold', 'Edge +1.5'] }
+const STANCE = { A: ['Assault', 'CP 0 · Allies +1'], P: ['Press', 'CP +0.75 · Allies +1.75'], H: ['Hold', 'CP +1.5 · Allies +2.5'] }
 const PLAN = { O: ['Ops', 'Attack · Event · Logistics'], E: ['Event', 'Event · Attack · Logistics'], L: ['Logistics', 'Logistics · Attack · Event'] }
 const FRONTNAME = { WEST: 'West', EAST: 'East', ITALY: 'Italy', BALKANS: 'Balkans', NEAREAST: 'Near East' }
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
@@ -48,7 +48,7 @@ function cardHtml(c) {
   return `<div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">${c.n}</div><div class="flabel">Front number</div>
-  <div class="row st-${c.stance}"><div class="k">Stance</div><div class="v">${STANCE[c.stance][0]}</div><div class="s">Attack if ${STANCE[c.stance][1]}</div></div>
+  <div class="row st-${c.stance}"><div class="k">Stance</div><div class="v">${STANCE[c.stance][0]}</div><div class="s">Attack if Score &ge; ${STANCE[c.stance][1]}</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">${PLAN[c.plan][0]}</div><div class="s">${PLAN[c.plan][1]}</div></div>
   <div class="tie">Tie: ${c.tie === 'N' ? '&#9650; North' : '&#9660; South'}</div>
   <div class="cardno">${c.id}/18 · v${VERSION}</div></div>`
@@ -80,11 +80,14 @@ function edgeTables() {
 }
 function eventTable(side) {
   const rows = POLICY.filter(e => e.side === side).sort((x, y) => x.num - y.num)
-  let h = '<table><tr><th>#</th><th>Card</th><th>Pri</th><th>Play the event when</th></tr>'
+  let h = '<table><tr><th>#</th><th>Card</th><th>Pri</th><th>Notes</th></tr>'
   for (const e of rows) {
-    const pr = e.class === 'combat_card' ? 'CC' : (EP.FIXED && EP.FIXED[e.global] !== undefined ? EP.FIXED[e.global] : e.event_priority)
-    const cond = e.class === 'combat_card' ? (e.hold_as_cc_when || e.play_event_when) : e.play_event_when
-    h += `<tr><td>${e.num}</td><td>${esc(e.name)}</td><td>${pr}</td><td>${esc(cond)}</td></tr>`
+    const pr = EP.printedPriority(e.global)
+    let note = EP.NOTE[e.global] || ''
+    const d = B.data.cards[e.global]
+    if (pr === 'CC') note = 'Combat card: held for combat.' + (d.ops ? '' : '')
+    else if (d.reinfnation && +pr <= 5) note = (note ? note + ' ' : '') + '3 if an army reinforcement card of the same nation (priority 7+) is in hand.'
+    h += `<tr><td>${e.num}</td><td>${esc(e.name)}</td><td>${pr}</td><td>${esc(note)}</td></tr>`
   }
   return h + '</table>'
 }
@@ -96,12 +99,12 @@ let ref = `<!doctype html><meta charset="utf-8"><style>${css}</style><div class=
 <h2>Front Table &mdash; Allied bot</h2>${frontTable('ap')}
 <p class="small">After the Staff card's front, check the others in this order: West, East, Italy, Balkans, Near East.</p>
 <h2>Edge table</h2>${edgeTables()}
-<p class="small">Use the columns after all shifts. Edge = bot's expected hits &minus; defender's expected hits. Assault 0+, Press +0.75, Hold +1.5. Objective &minus;1. MO attack &minus;0.5 (rounds 1&ndash;2), &minus;1.5 (rounds 3&ndash;4), any Edge (rounds 5&ndash;6).</p>
+<p class="small">Use the columns after all shifts. Edge = bot's expected hits &minus; defender's expected hits. Score = Edge + bonuses (Objective +1; within 2 of the Objective +0.4; VP space +0.5; a defender out of supply +0.5; MO attack +1 / +2.5 / +6 in rounds 1&ndash;2 / 3&ndash;4 / 5&ndash;6; &minus;0.25 for each place the target's front is after the first in front order). Attack if Score &ge; Stance: Central Powers bot Assault 0, Press +0.75, Hold +1.5; Allied bot Assault +1, Press +1.75, Hold +2.5. From round 5 an MO attack is made at any Score.</p>
 <h2>Objectives &mdash; Central Powers bot</h2>${objTable('cp')}
 <h2>Objectives &mdash; Allied bot</h2>${objTable('ap')}
 <div class="pb"></div><h1>Event priorities &mdash; Central Powers cards</h1>${eventTable('cp')}
 <div class="pb"></div><h1>Event priorities &mdash; Allied cards</h1>${eventTable('ap')}
-<p class="small">Pri 8&ndash;9 urgent; 5&ndash;7 when the Plan reaches Event; 3&ndash;4 fallback only; 0 never; CC = combat card, held for combat.</p>
+<p class="small">Play an event only when the rules allow it. Pri 8&ndash;9 urgent; 5&ndash;7 when the Plan reaches Event; 3&ndash;4 fallback only; 0 never; CC = combat card, held for combat. Cards of priority 7+ are never used for RP or SR.</p>
 </div>`
 fs.writeFileSync(path.join(out, 'reference.html'), ref)
 

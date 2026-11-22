@@ -1,34 +1,36 @@
 <h2>Bot action round &mdash; draw 1 Staff card, then take the first step that applies</h2>
 <ol>
 <li><b>Forced play</b> (Guns of August, CP turn 1 round 1).</li>
-<li><b>Urgent event</b>: highest legal event of priority 8&ndash;9 whose condition holds (ties: lower OPS).</li>
-<li><b>Mandated Offensive</b>: MO unmet, round 3+, and an MO attack exists &rarr; Operations with it.</li>
-<li><b>Crisis</b>: a bot VP/capital/fort space is empty with an enemy unit adjacent &rarr; Operations with a Fill move; else SR a unit into it.</li>
+<li><b>MO last chance</b>: rounds 5&ndash;6, MO unmet, and the Attack Search has an MO attack &rarr; Operations with it.</li>
+<li><b>Urgent event</b>: highest legal event of priority 8&ndash;9 (ties: lower OPS, lower number).</li>
+<li><b>MO</b>: round 3+, MO unmet, and the Attack Search has an MO attack &rarr; Operations with it.</li>
+<li><b>Crisis</b>: a bot VP/capital/fort space is empty with an enemy unit adjacent, and the Move list has a Fill &rarr; Operations.</li>
+<li><b>Rebuild</b> (Allied bot only): no RP card played this turn and missing steps &minus; RP held &ge; 6 &rarr; play a card for RP.</li>
 <li><b>Plan</b> on the Staff card: <b>Ops</b> = Attack, Event 5+, Logistics &middot; <b>Event</b> = Event 5+, Attack, Logistics &middot; <b>Logistics</b> = Logistics, Attack, Event 5+.</li>
-<li><b>Fallback</b>: Event 3&ndash;4 &rarr; moves-only Operations &rarr; RP/SR at low triggers &rarr; 1-OP Automatic Operation.</li>
+<li><b>Fallback</b>: Event 3&ndash;4 &rarr; moves-only Operations (a Capture, Fill or Siege, or 2+ moves) &rarr; RP/SR at low triggers &rarr; 1-OP Automatic Operation.</li>
 </ol>
 <div class="two">
 <h3>Attack Search</h3>
 <ol>
-<li>Fronts: Staff card front, then West, East, Italy, Balkans, Near East.</li>
-<li>Targets on a front: Objective &rarr; MO targets (if MO unmet) &rarr; VP/fort spaces &rarr; others. Within a group: most bot CF able to attack, then Tie.</li>
+<li>Targets: enemy-occupied spaces and unbesieged enemy forts the bot can legally attack.</li>
+<li>Shortlist: the 5 targets with the largest CF difference (attack CF &minus; defence CF &minus; fort), plus Objectives and MO targets.</li>
 <li>Attackers: adjacent bot spaces, strongest first, while activation costs fit the OPS available.</li>
-<li>Edge = bot's expected hits &minus; defender's (Edge table, after shifts).</li>
-<li>Attack the first target meeting the Stance (Assault 0, Press +0.75, Hold +1.5); Objective &minus;1; MO easier (see table).</li>
-<li>Repeat with unused OPS and spaces, max 3 attacks; leftover OPS to moves.</li>
+<li>Edge = bot's expected hits &minus; defender's (Edge table, after shifts). Score = Edge + bonuses (sheet 2).</li>
+<li>Highest Score first: attack if Score &ge; Stance (CP: Assault 0, Press +0.75, Hold +1.5; Allies +1 more). From round 5 an MO attack is made at any Score.</li>
+<li>Up to 3 attacks, each space used once; leftover OPS go to the Move list.</li>
 </ol>
 <h3>Card for Operations</h3>
-<ol><li>Cost 1 &rarr; Automatic Operation.</li><li>Else lowest event priority card with enough OPS (priority 6+ only if nothing else); ties: lower OPS, lower number.</li></ol>
-<h3>Moves (in order)</h3>
-<ol><li><b>Fill</b> a threatened space (empty bot VP/capital/fort, enemy within 2): nearest stack within 3 not in contact (or 2+ units).</li>
-<li><b>Capture</b> an adjacent empty enemy VP space.</li>
-<li><b>Siege</b> an adjacent empty enemy fort (army, or corps &ge; fort value).</li>
-<li><b>Capture</b> any adjacent empty enemy space.</li>
-<li><b>Entrench</b> an army in contact (Hold card: before Capture).</li>
-<li><b>Forward</b>: rear stack toward nearest contact space with &lt;3 units, nearest the Objective.</li></ol>
+<ol><li>Plan costs 1 and &le;1 attack &rarr; Automatic Operation.</li><li>Else the lowest-priority card with enough OPS for the attacks (or the first move); priority 6+ only if nothing else; ties: lower OPS, lower number. None enough: highest OPS, then replan.</li></ol>
+<h3>Move list (highest value first; ties: front order, Tie)</h3>
+<table><tr><th>Move</th><th>Value</th></tr>
+<tr><td><b>Capture</b> an adjacent empty enemy space (no intact enemy fort)</td><td>4 VP / 2</td></tr>
+<tr><td><b>Fill</b> a threatened space from the nearest stack within 3 (out of contact or 2+ units)</td><td>2, +1 crisis, +1 capital</td></tr>
+<tr><td><b>Siege</b> an adjacent empty enemy fort (army, or corps &ge; fort)</td><td>3 VP / 2</td></tr>
+<tr><td><b>Forward</b>: rear stack toward the nearest contact space with &lt;3 units</td><td>1.5 army / 1</td></tr>
+<tr><td><b>Entrench</b> an army in contact (after an Entrench event)</td><td>1.5 Hold / 0.5</td></tr></table>
 <p class="small"><b>Guard</b>: leaving a bot space in contact, leave the weakest unit (except to capture a VP space). Never overstack, never end out of supply or in a fort space you cannot besiege.</p>
 <h3>Logistics</h3>
-<p><b>RP</b> if missing steps &ge; 3 (army 2 eliminated / 1 reduced; corps 1 eliminated / &frac12; reduced): card covering most of them. <b>SR</b> if units worth &ge; 4 SR points sit in the Reserve Box or &gt;3 spaces from the enemy: card whose SR value is closest. Cards of priority 7+ are never used for RP/SR.</p>
+<p><b>RP</b> if missing steps &ge; 3 (army 2 eliminated / 1 reduced; corps 1 eliminated / &frac12; reduced): card covering most of them. <b>SR</b> if units worth &ge; 4 SR points sit in the Reserve Box or &gt;3 spaces from the enemy: card whose SR value is closest. Cards of priority 7+ are never used for RP or SR.</p>
 <h3>Combat</h3>
 <ul>
 <li><b>Combat cards</b>: attacking, play every usable one; defending, play them for VP, fort or trench spaces.</li>

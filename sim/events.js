@@ -74,4 +74,20 @@ const KEEP_WHEN = {
 }
 function keepNow(A, c) { return KEEP.has(c) && (!KEEP_WHEN[c] || KEEP_WHEN[c](A)) }
 
-module.exports = { priority, ccOk, BY, C, KEEP, KEEP_WHEN, keepNow }
+// Printed notes (match ADJUST and KEEP_WHEN above). Keys are global card indices.
+const NOTE = {
+  12: '0 on turn 1; 7 from turn 2 while no Entrench event has been played.',
+  16: '4 while the Allies are at Mobilization, otherwise 6.',
+  44: '5 if Bulgaria is at war, otherwise 2.', 27: 'Never as an event.',
+  71: '0 on turn 1; 6 from turn 2 while no Entrench event has been played.',
+  98: '3 once Independent Air Force has been played.', 112: '8 if the Allied MO this turn is France.', 120: 'Never as an event.',
+}
+// Printed priority (situational cards show their usual value; the note gives the rule).
+function printedPriority(c) {
+  const e = BY[c]; if (!e) return '?'
+  if (e.class === 'combat_card') return 'CC'
+  const fixed = { 12: 7, 16: 6, 17: 8, 44: 5, 27: 0, 45: 7, 46: 5, 71: 6, 73: 3, 75: 3, 94: 3, 98: 8, 112: 6, 120: 0 }
+  return String(fixed[c] !== undefined ? fixed[c] : e.event_priority)
+}
+
+module.exports = { priority, ccOk, BY, C, KEEP, KEEP_WHEN, keepNow, NOTE, printedPriority }

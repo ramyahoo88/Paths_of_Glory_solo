@@ -45,7 +45,7 @@ class Bot {
   constructor(side, seed, opts = {}) {
     this.side = side; this.enemy = side === 'ap' ? 'cp' : 'ap'
     this.role = ROLE[side]
-    this.opts = Object.assign({ edgeShift: 0, flank: false, events: true, sr: true, rp: true, entrench: true, guard: true, moves: true, directive: true, moveMode: 'table', shortlist: 5 }, opts)
+    this.opts = Object.assign({ edgeShift: side === 'ap' ? 1.0 : 0, flank: false, events: true, sr: true, rp: true, entrench: true, guard: true, moves: true, directive: true, moveMode: 'table', shortlist: 5, keep: false, rpStep: side === 'ap' ? 6 : 0 }, opts)
     this.r = rng(seed * 7919 + (side === 'ap' ? 13 : 29))
     this.deck = makeDeck(); this.shuffle(); this.discard = []
     this.dir = null; this.plan = null
@@ -61,6 +61,12 @@ class Bot {
     if ((st === 'confirm_move_violations' || st === 'choose_sr_unit') && view.violations && view.violations.length) { for (const v of view.violations) { const k = 'viol:' + st + ':' + v.rule + ':' + (this.curMove ? this.curMove.kind : '-'); this.stats.fallback[k] = (this.stats.fallback[k] || 0) + 1 } }
     let res
     this._occ = null; this._edist = null
+    const legalKeys = Object.keys(view.actions || {}).filter(k => !['undo', 'propose_rollback', 'flag_supply_warnings'].includes(k) && view.actions[k] !== 0)
+    if (!legalKeys.length && view.actions && view.actions.undo) {
+      this.blocked = this.blocked || new Set(); if (this.lastSpace) this.blocked.add(this.lastSpace)
+      this.stats.undos = (this.stats.undos || 0) + 1
+      return ['undo']
+    }
     if (h) res = R.__with(g, A => h.call(this, A, g, view.actions))
     if (!res || !legal(view.actions, res)) {
       if (res && !legal(view.actions, res)) { this.stats.fallback['illegal:' + st + ':' + res[0]] = (this.stats.fallback['illegal:' + st + ':' + res[0]] || 0) + 1 }
@@ -316,6 +322,7 @@ class Bot {
         if (this.enemyUnitsAt(A, t).length) continue
         if (A.has_undestroyed_fort(t, this.enemy) && !A.is_besieged(t)) continue
         if (!A.is_space_at_war(t)) continue
+        if (!A.can_end_move(t, ps)) continue
         let v = 1.5 + (data.spaces[t].vp ? 2 : 0) + (obj && B.dist(t, obj) < B.dist(s, obj) ? 0.5 : 0)
         if (!best || v > best.score) best = { from: s, to: t, kind: 'capture', score: v + frontBonus }
       }
@@ -338,6 +345,30 @@ class Bot {
       }
     }
     // (5) gap filling: my empty VP/fort space with an enemy unit within 2 spaces -> nearest stack moves in
+    // (7) MO approach: MO unmet and no MO attack possible -> nearest MO-nation stack moves next to a valid MO target
+    if (this.moPrep) {
+      const mo = A.game[this.side].mo
+      const nat = mo === 'ah_it' ? 'ah' : mo
+      const targets = []
+      for (let t = 1; t < B.N; t++) {
+        const defs = this.enemyUnitsAt(A, t); if (!defs.length) continue
+        const rep = [...mySpaces.values()].flat().find(p => data.pieces[p].nation === nat)
+        if (rep && A.satisfies_mo(mo, [rep], defs, t)) targets.push(t)
+      }
+      let best = null
+      for (const [s, ps] of mySpaces) {
+        if (used.has(s) || !ps.some(p => data.pieces[p].nation === nat)) continue
+        if (targets.some(t => B.adj[s].includes(t))) continue // already in contact with an MO target
+        for (const t of targets) {
+          for (const x of B.adj[t]) {
+            if (this.enemyUnitsAt(A, x).length || !A.is_space_at_war(x)) continue
+            const dd = B.dist(s, x)
+            if (dd <= 4 && (!best || dd < best.d)) best = { d: dd, from: s, to: x }
+          }
+        }
+      }
+      if (best) out.push({ from: best.from, to: best.to, kind: 'moApproach', score: 3 })
+    }
     // (6) line gaps: my empty space adjacent to an enemy unit -> one unit from a nearby stack (opts.gaps)
     if (this.opts.gaps) {
       const ed = this.enemyDist(A)
@@ -367,8 +398,9 @@ class Bot {
         if (m.kind === 'fill') return ((data.spaces[m.to].vp || data.spaces[m.to].fort || data.spaces[m.to].capital) ? 2 : 1) + (ed[m.to] === 1 ? 1 : 0) + (data.spaces[m.to].capital ? 1 : 0)
         if (m.kind === 'siege') return 2 + (data.spaces[m.to].vp ? 1 : 0)
         if (m.kind === 'forward') return this.piecesAt(A, m.from, this.side).some(p => data.pieces[p].type === 'army') ? 1.5 : 1
-        if (m.kind === 'entrench') return (this.dir && this.dir.stance === 'H') ? 1.5 : 0.5
+        if (m.kind === 'entrench') return (this.dir && this.dir.stance === 'H') ? (this.opts.entrenchH ?? 1.5) : (this.opts.entrenchV ?? 0.5)
         if (m.kind === 'gap') return m.score
+        if (m.kind === 'moApproach') return 3
         return 0
       }
       const fo = m => { const i = fronts.indexOf(B.FRONT[m.from]); return i < 0 ? 9 : i }
@@ -408,6 +440,7 @@ class Bot {
   s_action_phase(A, g, acts) {
     this.step = '?'
     const res = this._actionPhase(A, g, acts)
+    { const k = 'step:' + this.step + (this.step.startsWith('Plan') ? ':' + res[0] : ''); this.stats[k] = (this.stats[k] || 0) + 1 }
     if (this.opts.trace) {
       const nm = c => data.cards[c] ? data.cards[c].name : ''
       const sn = s => data.spaces[s] ? data.spaces[s].name : s
@@ -422,6 +455,7 @@ class Bot {
   }
   _actionPhase(A, g, acts) {
     this.stats.rounds++
+    this.blocked = null
     if (!this.violation) this.resets = 0
     this.noMove = !!this.violation; this.violation = false
     this.dir = this.draw()
@@ -441,7 +475,7 @@ class Bot {
     }
     if (this.opts.events && evs.length && evs[0].pr >= 8) { this.step = 'Urgent event'; return this.useEvent(evs[0].c) }
     // budget available: max ops among non-urgent cards
-    const opsCards = hand.filter(h => opsLegal.has(h.c))
+    const opsCards = hand.filter(h => opsLegal.has(h.c) && !this.isKeep(A, h.c))
     const maxOps = Math.max(1, ...opsCards.map(h => h.d.ops))
     const savedMoves = this.opts.moves
     if (this.noMove) this.opts.moves = false
@@ -454,13 +488,35 @@ class Bot {
     const moPending = A.game[this.side].mo && A.game[this.side].mo !== 'none'
     if (moPending && roundNo >= (this.opts.moRound || 3) && plan.attacks.some(a => a.mo)) { this.step = 'Mandated Offensive'; return this.useOps(A, hand, opsLegal, plan, attackCost) }
     // Crisis step: an empty VP space of mine with an enemy unit adjacent -> fill it (move or SR)
+    // MO preparation (opts.moPrep, rounds 1-4): no MO attack possible -> move MO-nation units into contact
+    this.moPrep = false
+    if (this.opts.moPrep && moPending && roundNo <= 4 && !plan.attacks.some(a => a.mo)) {
+      this.moPrep = true
+      const p2 = this.planOps(A, maxOps)
+      if (p2.moves.some(m => m.kind === 'moApproach')) { this.step = 'MO preparation'; return this.useOps(A, hand, opsLegal, p2, 0) }
+      this.moPrep = false
+    }
     if (this.opts.crisis !== false) {
-      const crisis = this.threatened(A, 1)
+      const crisis = this.threatened(A, this.opts.crisisRange || 1)
       if (crisis.length) {
         this.step = 'Crisis'
         if (plan.moves.some(m => m.kind === 'fill')) return this.useOps(A, hand, opsLegal, plan, 0)
         const l = this.opts.crisisSR === true ? this.logistics(A, hand, acts, roundNo, false, true) : null
         if (l) return l
+      }
+    }
+    // Rebuild step (opts.rpStep): heavy losses -> one RP play per turn before the Plan
+    if (this.opts.rpStep && acts.play_rps && acts.play_rps.length && !A.game[this.side].actions.some(x => x.type === 'rp')) {
+      const need = this.rpNeed(A); let total = 0
+      for (const t in need) total += Math.max(0, need[t] - (A.game.rp[t] || 0))
+      if (total >= this.opts.rpStep) { const l = this.logistics(A, hand, Object.assign({}, acts, { play_sr: [] }), roundNo, false); if (l && l[0] === 'play_rps') { this.step = 'Rebuild'; return l } }
+    }
+    // Idle reserves: many units far from the enemy -> SR them now (opts.idleSR = SR-point trigger)
+    if (this.opts.idleSR && this.opts.sr && !this.noMove && acts.play_sr && acts.play_sr.length) {
+      const need = this.srCandidates(A).reduce((a, x) => a + x.cost, 0)
+      if (need >= this.opts.idleSR) {
+        const cards = hand.filter(h => acts.play_sr.includes(h.c) && h.pr < 7 && !this.isKeep(A, h.c)).sort((a, b) => Math.abs(a.d.sr - Math.min(need, 5)) - Math.abs(b.d.sr - Math.min(need, 5)) || a.pr - b.pr)
+        if (cards.length) { this.step = 'Idle reserves'; this.stats.sr++; this.stats.cardUse[cards[0].c] = 'sr'; return ['play_sr', cards[0].c] }
       }
     }
     if (this.opts.gapStep) {
@@ -554,7 +610,7 @@ class Bot {
           if (!acts.play_rps.includes(h.c) || h.pr >= 7 || this.isKeep(A, h.c)) continue
           let v = 0
           for (const k of Object.keys(h.d)) if (k.startsWith('rp')) { const t = k.slice(2) === 'a' ? 'allied' : k.slice(2); const n = need[t] || (t === 'allied' ? (need.be || 0) + (need.sb || 0) + (need.mn || 0) + (need.gr || 0) + (need.ro || 0) : 0); v += Math.min(h.d[k], n) }
-          if (v >= (weak ? 1 : 2) && (!best || v > best.v || (v === best.v && h.pr < best.pr))) best = { c: h.c, v, pr: h.pr }
+          if (v >= (weak ? 1 : (this.opts.rpCard ?? 2)) && (!best || v > best.v || (v === best.v && h.pr < best.pr))) best = { c: h.c, v, pr: h.pr }
         }
         if (best) { this.stats.rp++; this.stats.cardUse[best.c] = 'rp'; return ['play_rps', best.c] }
       }
@@ -634,6 +690,7 @@ class Bot {
   }
 
   leadPiece(A, m, ps) {
+    if (m.kind === 'moApproach') { const mo = A.game[this.side].mo; const nat = mo === 'ah_it' ? 'ah' : mo; const q = ps.filter(p => data.pieces[p].nation === nat).sort((x, y) => A.get_piece_cf(y) - A.get_piece_cf(x)); if (q.length) return q[0] }
     if (m.kind === 'gap' && this.adjEnemy(A, m.from)) return ps.sort((x, y) => A.get_piece_cf(x) - A.get_piece_cf(y))[0]
     if (m.kind === 'entrench') { const a = ps.filter(p => data.pieces[p].type === 'army').sort((x, y) => A.get_piece_cf(y) - A.get_piece_cf(x)); if (a.length) return a[0] }
     return ps.sort((x, y) => A.get_piece_cf(y) - A.get_piece_cf(x))[0]
@@ -656,6 +713,12 @@ class Bot {
       if (sel.length > 1 && acts.stop) return ['stop']
       return this.stepToward(A, acts, m.to)
     }
+    if (m.kind === 'moApproach') {
+      const mo = A.game[this.side].mo; const nat = mo === 'ah_it' ? 'ah' : mo
+      const more = avail.filter(p => data.pieces[p].nation === nat).sort((x, y) => A.get_piece_cf(y) - A.get_piece_cf(x))
+      if (more.length && sel.length + 1 <= total - keep && sel.length < 3) return ['piece', more[0]]
+      return this.stepToward(A, acts, m.to)
+    }
     // add pieces (strongest first) while leaving `keep` behind and respecting stacking at destination
     if (avail.length && sel.length + 1 <= total - keep && sel.length < 3) {
       const nxt = avail.sort((x, y) => A.get_piece_cf(y) - A.get_piece_cf(x))[0]
@@ -666,6 +729,11 @@ class Bot {
   }
 
   stepToward(A, acts, to) {
+    const r = this._stepToward(A, acts, to)
+    if (r && r[0] === 'space') this.lastSpace = r[1]
+    return r
+  }
+  _stepToward(A, acts, to) {
     const sp = acts.space || []
     const cur = A.game.move.current
     if (!sp.length) return acts.stop ? ['stop'] : acts.done ? ['done'] : null
@@ -675,6 +743,8 @@ class Bot {
     const moving = A.game.move.pieces
     for (const s of sp) {
       if (this.enemyUnitsAt(A, s).length) continue
+      if (!A.can_end_move(s, moving)) continue
+      if (this.blocked && this.blocked.has(s)) continue
       if (this.piecesAt(A, s, this.side).length + moving.length > 3) continue
       if (A.has_undestroyed_fort(s, this.enemy) && !A.is_besieged(s)) {
         const armies = moving.some(p => data.pieces[p].type === 'army')
@@ -692,8 +762,9 @@ class Bot {
   s_move_stack(A, g, acts) {
     const m = this.curMove
     const cur = A.game.move.current
-    if (!m) return acts.stop ? ['stop'] : null
-    if (cur === m.to) return acts.stop ? ['stop'] : null
+    const safe = () => { const sp = (acts.space || []).filter(x => A.can_end_move(x, A.game.move.pieces) && !this.enemyUnitsAt(A, x).length); return sp.length ? ['space', sp[0]] : null }
+    if (!m) return acts.stop ? ['stop'] : safe()
+    if (cur === m.to) return acts.stop ? ['stop'] : safe()
     // forward moves stop when reaching a space adjacent to enemy units
     if (m.kind === 'forward' && this.adjEnemy(A, cur)) return acts.stop ? ['stop'] : null
     return this.stepToward(A, acts, m.to)
