@@ -51,7 +51,7 @@ ALL = load('self_*.json') + load('naive_*.json') + load('rnd_*.json')  # evaluat
 if ALL:
     inc = [g for g in ALL if g.get('err') or not g.get('result')]
     exc = sum(len(g.get('exceptions', [])) for g in ALL)
-    viol = Counter(); fb = Counter(); forced = Counter(); undo = 0; hold = 0; called = 0; salf = 0
+    viol = Counter(); fb = Counter(); forced = Counter(); undo = 0; hold = 0; called = 0; salf = 0; thru = 0
     for g in ALL:
         for side in ('ap', 'cp'):
             s_ = g['stats'][side]
@@ -59,6 +59,7 @@ if ALL:
             hold += s_.get('holdMoves', 0) or 0
             called += s_.get('calledOff', 0) or 0
             salf += s_.get('salonikaForced', 0) or 0
+            thru += s_.get('passThrough', 0) or 0
             for k, v in (s_.get('fallback') or {}).items():
                 if k.startswith('viol:'): viol[k.split(':')[2]] += v
                 elif k.startswith('illegal:'): fb['rejected bot proposal: ' + k.split(':')[1]] += v
@@ -80,6 +81,7 @@ if ALL:
     sb = [x for g in ALL for x in g.get('supplyBreaches', [])]
     print(f'| Movement steps that left moving units out of supply (rules §6) | {len(sb)} |')
     print(f'| Units moved one safe step because their planned move was abandoned | {hold} |')
+    print(f'| ... of which passed through a space they could not end in, then returned | {thru} |')
     print(f'| Attacks called off after the final check of the selected units | {called} |')
     print(f'| Salonika transfers with no corps the printed rule allows (safety path) | {salf} |')
     print(f'| Choices with no bot rule, empty handler results or rejected proposals | {sum(fb.values())} |')

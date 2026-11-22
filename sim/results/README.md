@@ -2,9 +2,19 @@
 
 Raw outputs behind the figures in [`../REPORT.md`](../REPORT.md), kept so the summary tables can be checked.
 
+## v0.7.6 (`v0.7.6/`), run-time provenance
+
+Every file was produced from a clean worktree of commit **`31c808a`** (the v0.7.6 code). The paired runs play against the v0.7 reference at **`bc8bef6`**. Every output carries a run-time stamp from `sim/provenance.js`: bot commit, an uncommitted-changes flag (false for all of these) and the engine revision with the hook hash. Every file also has one record per seed. Self-play records include `supplyBreaches`, the movement steps that left the moving units out of supply.
+
+* `self_a`–`self_d.json`: strict self-play, 600 games, seeds 1090000–1090599 (a range not used before).
+* `naive_*.json` and `rnd_*.json`: 140 baseline games.
+* `paired_ap6`, `paired_cp6`, `paired_ap7` and `paired_cp7.json`: the Allied or CP bot against the v0.7 reference, seeds 6001–6300 and 7001–7300.
+* `handicap_<shift>.json`: self-play with the starting VP at 10 + shift, seeds 30001–30150.
+* `summary.md`: the `summarize.py` output.
+
 ## v0.7.5 (`v0.7.5/`), complete per-game records
 
-Every file in this folder was produced from a clean worktree of commit **`9c1326e`** (the v0.7.5 code), so the candidate is pinned. The reference bots for paired runs are the `sim/` folder at commit **`bc8bef6`** (v0.7). Each `paired_*.json` and `handicap_*.json` lists the candidate and reference commits and **one record per seed** under `games`.
+Every file in this folder was produced from a clean worktree of commit **`9c1326e`** (the v0.7.5 code). The reference bots for paired runs are the `sim/` folder at commit **`bc8bef6`** (v0.7). Every file has **one record per seed** under `games`. Only the `paired_*.json` files carry run-time commit stamps. For the others the provenance is declared, not captured: see [`v0.7.5/MANIFEST.md`](v0.7.5/MANIFEST.md), which also lists SHA-256s.
 
 * `self_a`–`self_d.json`: strict self-play, 600 games, seeds 1080000–1080599.
 * `naive_*.json` and `rnd_*.json`: 140 baseline games.

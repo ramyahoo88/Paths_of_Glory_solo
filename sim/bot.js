@@ -234,9 +234,10 @@ class Bot {
     // --- moves with remaining budget
     if (this.opts.moves) {
       const mv = this.moveCandidates(A, fronts, used)
+      const attackSpaces = new Set(plan.attacks.flatMap(x => x.spaces))
       for (const m of mv) {
         if (used.has(m.from)) continue
-        if (!this.hasFirstStep(A, m)) continue
+        if (!this.hasFirstStep(A, m, attackSpaces)) continue
         const k = A.cost_to_activate(m.from, 'move')
         if (plan.cost + k > budget) continue
         plan.moves.push(Object.assign({ cost: k }, m)); used.add(m.from); plan.cost += k
@@ -801,6 +802,11 @@ class Bot {
       if (st) return st
       if (acts.entrench) return ['entrench'] // an entrenchment attempt keeps the units where they are
       if (acts.confirm_odd_entrench) return ['confirm_odd_entrench']
+      // pass through a space where the units may not end (e.g. one activated for attack), keeping stacking and supply,
+      // and come back toward the start on the next step
+      const moving = A.game.move.pieces
+      const through = (acts.space || []).filter(x => !this.enemyUnitsAt(A, x).length && this.piecesAt(A, x, this.side).length + moving.length <= 3 && this.prospectiveSupplied(A, moving, x))
+      if (through.length) { this.stats.passThrough = (this.stats.passThrough || 0) + 1; return ['space', through.sort((a, b) => this.tie(a, b))[0]] }
       return null // no legal exit: counted by decide() as 'nochoice'
     }
     if (m.kind === 'entrench') { if (acts.entrench) { m.kind = 'done'; return ['entrench'] } if (acts.confirm_odd_entrench) { m.kind = 'done'; return ['confirm_odd_entrench'] } }
@@ -851,14 +857,14 @@ class Bot {
   }
   // Planning check (§6, "If no unit can take a step, drop the move"): some adjacent space nearer the destination
   // (or the destination itself) holds no enemy unit and has room for at least one more unit.
-  hasFirstStep(A, m) {
+  hasFirstStep(A, m, attackSpaces) {
     if (m.kind === 'entrench' || this.opts.firstStepCheck === false) return true
     const d0 = B.dist(m.from, m.to)
     const movers = this.piecesAt(A, m.from, this.side).filter(p => A.get_piece_mf(p) > 0 && !A.game.oos_pieces.includes(p) && this.siegeOk(A, m.from, [p]))
     if (!movers.length) return false
     // any single mover with an engine-legal step that is nearer the destination and not full
     return movers.some(p => A.get_connected_spaces(m.from, data.pieces[p].nation).some(s =>
-      (s === m.to || B.dist(s, m.to) < d0) && A.can_move_to(s, [p]) && A.can_end_move(s, [p]) && this.mayStackWith(A, [p], s) && this.piecesAt(A, s, this.side).length < 3 && this.prospectiveSupplied(A, [p], s)))
+      (s === m.to || B.dist(s, m.to) < d0) && !(attackSpaces && attackSpaces.has(s)) && A.can_move_to(s, [p]) && A.can_end_move(s, [p]) && this.mayStackWith(A, [p], s) && this.piecesAt(A, s, this.side).length < 3 && this.prospectiveSupplied(A, [p], s)))
   }
   // Legal next steps for the selected stack: no enemy units, may end its move there, not blocked, fort rule.
   // group: the units the fort-strength test is judged on (default: those selected); the capacity check passes the
