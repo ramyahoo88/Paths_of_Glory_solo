@@ -1,6 +1,6 @@
 # General Staff — a card-driven solo opponent for *Paths of Glory*
 
-**Version 0.7.4 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
+**Version 0.7.5 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
 
 General Staff can command **either side**; you play the other side normally. The bot follows the same rules you do. It holds a hand of real strategy cards and takes six action rounds a turn. Each round it plays a card as an Event, for Operations (OPS), for Strategic Redeployment (SR) or for Replacement Points (RP), or it takes the 1-OP Automatic Operation. It never breaks a rule, never looks at your hand and never rolls dice to make a decision. Its decisions come from a deck of **Staff cards** and the fixed priorities in this booklet. Dice are rolled only where the game rules call for them (combat, mandated offensives, entrenching, sieges and so on).
 
@@ -150,7 +150,7 @@ The **Move list** holds every move below that the bot could make, ranked by **Mo
 
 Once a space is activated, ignore its other entries on the list.
 
-**How a stack moves.** Move the strongest units of the stack, up to three, but no more than the first step can take without overstacking (the Guard rule still applies). If no unit can take a step, drop the move. At each step, enter the adjacent space nearest the destination (ties: the Tie) that the stack may legally enter and end its move in, that holds no enemy unit, that would not overstack, and that is not an enemy fort the stack cannot besiege. Stop if no such space is nearer the destination than the stack is, or if the next space would be out of supply.
+**How a stack moves.** Move the strongest units of the stack, up to three, but no more than the first step can take without overstacking (the Guard rule still applies). Units besieging an enemy fort keep a legal besieging force behind (an army, or as many corps as the fort's level, 15.2.4): skip any unit whose departure would leave less. If no unit can take a step, or none may leave a siege, drop the move. At each step, enter the adjacent space nearest the destination (ties: the Tie) that the stack may legally enter and end its move in, that holds no enemy unit, that would not overstack, and that is not an enemy fort the stack cannot besiege. Stop if no such space is nearer the destination than the stack is, or if the next space would be out of supply.
 
 **Guard rule.** When a stack of two or more units leaves a bot-controlled space that is in contact, it leaves its weakest unit behind, unless it is capturing a VP space. A lone unit may move.
 

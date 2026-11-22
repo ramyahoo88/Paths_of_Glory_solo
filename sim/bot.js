@@ -771,7 +771,8 @@ class Bot {
     if (acts.done) return ['done']
     if (acts.end_action) return ['end_action']
     // the engine still requires these units to move (their planned move was abandoned): take them one safe step
-    const p = pcs.slice().sort((x, y) => A.get_piece_cf(x) - A.get_piece_cf(y))[0]
+    const free = pcs.filter(q => this.siegeOk(A, A.game.location[q], [q]))
+    const p = (free.length ? free : pcs).slice().sort((x, y) => A.get_piece_cf(x) - A.get_piece_cf(y))[0]
     const at = A.game.location[p]
     this.curMove = { kind: 'hold', from: at, to: at, abandon: true }
     this.stats.holdMoves = (this.stats.holdMoves || 0) + 1
@@ -779,6 +780,8 @@ class Bot {
   }
 
   leadPiece(A, m, ps) {
+    const free = ps.filter(p => this.siegeOk(A, A.game.location[p], [p]))
+    if (free.length) ps = free
     if (m.kind === 'moApproach') { const mo = A.game[this.side].mo; const nat = mo === 'ah_it' ? 'ah' : mo; const q = ps.filter(p => data.pieces[p].nation === nat).sort((x, y) => A.get_piece_cf(y) - A.get_piece_cf(x)); if (q.length) return q[0] }
     if (m.kind === 'gap' && this.adjEnemy(A, m.from)) return ps.sort((x, y) => A.get_piece_cf(x) - A.get_piece_cf(y))[0]
     if (m.kind === 'entrench') { const a = ps.filter(p => data.pieces[p].type === 'army').sort((x, y) => A.get_piece_cf(y) - A.get_piece_cf(x)); if (a.length) return a[0] }
@@ -818,13 +821,15 @@ class Bot {
     if (m.kind === 'moApproach') {
       const mo = A.game[this.side].mo; const nat = mo === 'ah_it' ? 'ah' : mo
       const more = avail.filter(p => data.pieces[p].nation === nat).sort((x, y) => A.get_piece_cf(y) - A.get_piece_cf(x))
-      if (more.length && sel.length + 1 <= total - keep && sel.length < cap) return ['piece', more[0]]
+      const ok = more.filter(p => this.siegeOk(A, here, sel.concat([p])))
+      if (ok.length && sel.length + 1 <= total - keep && sel.length < cap) return ['piece', ok[0]]
       return this.stepToward(A, acts, m.to)
     }
     // add pieces (strongest first) while leaving `keep` behind and no more than the first step can take
     if (avail.length && sel.length + 1 <= total - keep && sel.length < cap) {
-      const nxt = avail.sort((x, y) => A.get_piece_cf(y) - A.get_piece_cf(x))[0]
-      return ['piece', nxt]
+      // strongest first, skipping a unit whose departure would leave a siege too weak
+      const nxt = avail.sort((x, y) => A.get_piece_cf(y) - A.get_piece_cf(x)).find(p => this.siegeOk(A, here, sel.concat([p])))
+      if (nxt !== undefined) return ['piece', nxt]
     }
     if (sel.length > total - keep && acts.stop) { return ['stop'] }
     const r = this.stepToward(A, acts, m.to)
@@ -833,12 +838,19 @@ class Bot {
     return r
   }
 
+  // Siege rule (15.2.4; §6): units besieging an enemy fort keep a legal besieging force behind (an army, or as many
+  // corps as the fort's level) when others leave. leaving = the units that would go.
+  siegeOk(A, here, leaving) {
+    if (this.opts.siegeKeep === false || !A.is_besieged(here) || !A.has_undestroyed_fort(here, this.enemy)) return true
+    const rest = this.piecesAt(A, here, this.side).filter(p => !leaving.includes(p))
+    return rest.length > 0 && A.can_besiege(here, rest)
+  }
   // Planning check (§6, "If no unit can take a step, drop the move"): some adjacent space nearer the destination
   // (or the destination itself) holds no enemy unit and has room for at least one more unit.
   hasFirstStep(A, m) {
     if (m.kind === 'entrench' || this.opts.firstStepCheck === false) return true
     const d0 = B.dist(m.from, m.to)
-    const movers = this.piecesAt(A, m.from, this.side).filter(p => A.get_piece_mf(p) > 0 && !A.game.oos_pieces.includes(p))
+    const movers = this.piecesAt(A, m.from, this.side).filter(p => A.get_piece_mf(p) > 0 && !A.game.oos_pieces.includes(p) && this.siegeOk(A, m.from, [p]))
     if (!movers.length) return false
     // any single mover with an engine-legal step that is nearer the destination and not full
     return movers.some(p => A.get_connected_spaces(m.from, data.pieces[p].nation).some(s =>
