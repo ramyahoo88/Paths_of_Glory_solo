@@ -22,4 +22,4 @@ for (let seed = n0; seed < n1; seed++) {
   n++; if (g.result === 'Allied Powers') ap++; else if (g.result === 'Central Powers') cp++
   games.push({ seed, result: g.result, victory: g.victory, turn: g.turn, vp: g.vp, substituted })
 }
-console.log(JSON.stringify({ shift, startVP: 10 + shift, n, errors, ap: +(ap / n).toFixed(3), cp: +(cp / n).toFixed(3), games }))
+console.log(JSON.stringify({ shift, startVP: 10 + shift, n, errors, ap: +(ap / n).toFixed(3), cp: +(cp / n).toFixed(3), bot: require('./provenance.js').stamp(__dirname), games }))

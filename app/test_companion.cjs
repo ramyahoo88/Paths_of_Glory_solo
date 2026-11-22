@@ -77,6 +77,31 @@ c = boot(); c.nodes.tround.value = '5'; c.nodes.tround.onchange(); ok(c.nodes.th
 c.nodes.tmo.checked = true; c.nodes.tmo.onchange(); ok(!c.nodes.thint.textContent.includes('MO last chance'), 'tracker: MO met hides the MO steps')
 c = boot(JSON.stringify(Object.assign(JSON.parse(before), { track: { turn: 'x', round: 99 } }))); ok(c.error === null && c.state().track.round === 1 && c.state().discard.length === 18, 'tracker: bad tracker values fall back to defaults without losing the deck')
 
+// C05: inherited-property commitment names are rejected (control: an ordinary bad string)
+for (const lvl of ['constructor', '__proto__', 'toString', 'nonsense']) {
+  const bad = Object.assign(JSON.parse(before), { lvl })
+  const c5 = boot(JSON.stringify(bad))
+  ok(c5.error === null && c5.state().lvl === 'mobilization' && c5.nodes.notice.textContent.includes('damaged') && !c5.nodes.card.innerHTML.includes('undefined'), `C05: commitment "${lvl}" is rejected with a notice`)
+}
+// Next round / Next turn, with Undo
+c = boot(); c.nodes.tmo.checked = true; c.nodes.tmo.onchange(); c.nodes.trp.checked = true; c.nodes.trp.onchange()
+for (let i = 0; i < 7; i++) c.nodes.nextround.onclick()
+ok(c.state().track.round === 6, 'Next round stops at round 6')
+c.nodes.nextturn.onclick(); let t = c.state().track
+ok(t.turn === 2 && t.round === 1 && !t.mo && !t.rp, 'Next turn: turn 2, round 1, MO and RP boxes cleared')
+c.nodes.undo.onclick(); t = c.state().track
+ok(t.turn === 1 && t.round === 6 && t.mo && t.rp, 'Undo restores the tracker from before Next turn')
+c.nodes.draw.onclick(); c.nodes.nextround.onclick(); c.nodes.undo.onclick(); ok(c.state().cur !== null && c.state().track.round === 6, 'Undo of Next round keeps the drawn card')
+// export / import
+c = boot(); for (let i = 0; i < 5; i++) c.nodes.draw.onclick(); c.nodes.export.onclick()
+const text = c.nodes.iotext.value, exported = c.state()
+let d2 = boot(); d2.nodes.iotext.value = text; d2.nodes.import.onclick()
+ok(JSON.stringify(d2.state().discard) === JSON.stringify(exported.discard) && d2.state().cur === exported.cur && d2.nodes.ioinfo.textContent.startsWith('Imported'), 'export then import moves the deck, current card and tracker')
+d2.nodes.undo.onclick(); ok(d2.state().discard.length === 0, 'Undo after Import returns to the previous deck')
+const d3 = boot(); const pre = JSON.stringify(d3.state()); d3.nodes.iotext.value = text.replace('"discard":[', '"discard":[1,1,'); d3.nodes.import.onclick()
+ok(JSON.stringify(d3.state()) === pre && d3.nodes.ioinfo.textContent.includes('rejected'), 'a damaged import is rejected and changes nothing')
+d3.nodes.iotext.value = '{not json'; d3.nodes.import.onclick(); ok(d3.nodes.ioinfo.textContent.includes('rejected'), 'malformed import text is rejected')
+
 // search
 c = boot(); c.nodes.evq.value = '55'; c.nodes.evq.oninput(); ok(c.nodes.evlist.innerHTML.includes('Lloyd George'), 'card-number search')
 c.nodes.side.onchange({ target: { value: 'ap' } }); ok(c.nodes.evlist.innerHTML.includes('Over There'), 'side switch changes the event list')

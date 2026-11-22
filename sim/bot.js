@@ -264,7 +264,7 @@ class Bot {
   bySpace(A, pieces) {
     const m = new Map()
     for (const p of pieces) { const s = A.game.location[p]; if (!m.has(s)) m.set(s, []); m.get(s).push(p) }
-    return [...m].map(([s, ps]) => ({ s, ps, cf: this.cf(A, ps) })).sort((a, b) => b.cf - a.cf || a.s - b.s)
+    return [...m].map(([s, ps]) => ({ s, ps, cf: this.cf(A, ps) })).sort((a, b) => b.cf - a.cf || this.tie(a.s, b.s))
   }
 
   attackCandidates(A, fronts, mo, roundNo) {
@@ -287,7 +287,7 @@ class Bot {
         }
         if (!spaces.length) continue
         seen.add(t)
-        spaces.sort((a, b) => b.cf - a.cf)
+        spaces.sort((a, b) => b.cf - a.cf || this.tie(a.s, b.s)) // strongest first; equal CF: the Tie
         let bonus = 0
         if (t === obj) bonus += 1.0
         else if (obj && B.dist(t, obj) <= 2) bonus += 0.4
@@ -460,13 +460,13 @@ class Bot {
       }
       const fo = m => { const i = fronts.indexOf(B.FRONT[m.from]); return i < 0 ? 9 : i }
       for (const m of out) m.score = val(m)
-      out.sort((a, b) => b.score - a.score || fo(a) - fo(b) || this.tie(a.from, b.from))
+      out.sort((a, b) => b.score - a.score || fo(a) - fo(b) || this.tie(a.from, b.from) || this.tie(a.to, b.to))
       return out
     }
     if (this.opts.moveMode === 'ordered' || (this.opts.targetMode === 'ordered' && this.opts.moveMode !== 'best')) {
       const rk = m => m.kind === 'fill' ? 0 : (m.kind === 'capture' && data.spaces[m.to].vp) ? 1 : m.kind === 'siege' ? 2 : m.kind === 'capture' ? 3 : m.kind === 'entrench' ? (this.dir && this.dir.stance === 'H' ? 1.5 : 4) : 5
       const fo = m => { const i = fronts.indexOf(B.FRONT[m.from]); return i < 0 ? 9 : i }
-      out.sort((a, b) => rk(a) - rk(b) || fo(a) - fo(b) || this.tie(a.from, b.from))
+      out.sort((a, b) => rk(a) - rk(b) || fo(a) - fo(b) || this.tie(a.from, b.from) || this.tie(a.to, b.to))
       return out
     }
     out.sort((a, b) => b.score - a.score)
@@ -801,9 +801,7 @@ class Bot {
       if (st) return st
       if (acts.entrench) return ['entrench'] // an entrenchment attempt keeps the units where they are
       if (acts.confirm_odd_entrench) return ['confirm_odd_entrench']
-      // last resort: any space that does not overstack
-      const room = (acts.space || []).filter(x => this.piecesAt(A, x, this.side).length + A.game.move.pieces.length <= 3 && !this.enemyUnitsAt(A, x).length)
-      return room.length ? ['space', room.sort((a, b) => this.tie(a, b))[0]] : null
+      return null // no legal exit: counted by decide() as 'nochoice'
     }
     if (m.kind === 'entrench') { if (acts.entrench) { m.kind = 'done'; return ['entrench'] } if (acts.confirm_odd_entrench) { m.kind = 'done'; return ['confirm_odd_entrench'] } }
     const sel = A.game.move.pieces
@@ -817,7 +815,13 @@ class Bot {
       if (sel.length > 1 && acts.stop) return ['stop']
       return this.stepToward(A, acts, m.to)
     }
-    const cap = this.opts.stepCap === false ? 3 : Math.min(3, this.stepCapacity(A, acts, m.to))
+    // the complete group that could still be formed (strongest first, Guard and siege rules applied)
+    const potential = sel.slice()
+    for (const p of avail.slice().sort((x, y) => A.get_piece_cf(y) - A.get_piece_cf(x))) {
+      if (potential.length >= Math.min(3, total - keep)) break
+      if (this.siegeOk(A, here, potential.concat([p]))) potential.push(p)
+    }
+    const cap = this.opts.stepCap === false ? 3 : Math.min(3, this.stepCapacity(A, acts, m.to, potential))
     if (m.kind === 'moApproach') {
       const mo = A.game[this.side].mo; const nat = mo === 'ah_it' ? 'ah' : mo
       const more = avail.filter(p => data.pieces[p].nation === nat).sort((x, y) => A.get_piece_cf(y) - A.get_piece_cf(x))
@@ -854,17 +858,19 @@ class Bot {
     if (!movers.length) return false
     // any single mover with an engine-legal step that is nearer the destination and not full
     return movers.some(p => A.get_connected_spaces(m.from, data.pieces[p].nation).some(s =>
-      (s === m.to || B.dist(s, m.to) < d0) && A.can_move_to(s, [p]) && A.can_end_move(s, [p]) && this.mayStackWith(A, [p], s) && this.piecesAt(A, s, this.side).length < 3))
+      (s === m.to || B.dist(s, m.to) < d0) && A.can_move_to(s, [p]) && A.can_end_move(s, [p]) && this.mayStackWith(A, [p], s) && this.piecesAt(A, s, this.side).length < 3 && this.prospectiveSupplied(A, [p], s)))
   }
   // Legal next steps for the selected stack: no enemy units, may end its move there, not blocked, fort rule.
-  legalSteps(A, acts) {
-    const moving = A.game.move.pieces
+  // group: the units the fort-strength test is judged on (default: those selected); the capacity check passes the
+  // complete group that could still be formed, so two corps can be gathered to besiege a level-2 fort.
+  legalSteps(A, acts, group) {
+    const moving = A.game.move.pieces, judged = group || moving
     return (acts.space || []).filter(s => {
       if (this.enemyUnitsAt(A, s).length || !A.can_end_move(s, moving)) return false
       if (this.blocked && this.blocked.has(s)) return false
       if (A.has_undestroyed_fort(s, this.enemy) && !A.is_besieged(s)) {
-        const armies = moving.some(p => data.pieces[p].type === 'army')
-        if (!armies && moving.length < (data.spaces[s].fort || 0)) return false
+        const armies = judged.some(p => data.pieces[p].type === 'army')
+        if (!armies && judged.length < (data.spaces[s].fort || 0)) return false
       }
       if (!this.mayStackWith(A, moving, s)) return false
       return true
@@ -880,16 +886,33 @@ class Bot {
   }
   // How many units may move together: the most that fit (stacking limit 3) into a legal first step nearer the destination,
   // or into any legal step if none is nearer. Rules §6: never move more units than the first step can take.
-  stepCapacity(A, acts, to) {
-    const cur = A.game.move.current, steps = this.legalSteps(A, acts)
+  stepCapacity(A, acts, to, group) {
+    const cur = A.game.move.current, steps = this.legalSteps(A, acts, group).filter(s => this.prospectiveSupplied(A, A.game.move.pieces, s))
     const nearer = steps.filter(s => B.dist(s, to) < B.dist(cur, to))
     const pool = nearer.length ? nearer : steps
     return pool.reduce((m, s) => Math.max(m, 3 - this.piecesAt(A, s, this.side).length), 0)
   }
+  // Would these units be in supply in space s after moving there (taking control of it)? (§6: never step out of supply.)
+  // Uses the engine on a copy of the game, so a capture that opens a supply route counts as supplied.
+  prospectiveSupplied(A, pieces, s) {
+    if (this.opts.supplyCheck === false || !pieces.length || s >= B.N) return true
+    if (pieces.every(p => A.is_unit_supplied_in(p, s))) return true
+    const orig = A.game, c = structuredClone(orig)
+    let ok = false
+    try {
+      R.__with(c, A2 => {
+        for (const p of pieces) c.location[p] = s
+        if (!A2.is_controlled_by(s, this.side)) A2.set_control(s, this.side)
+        A2.update_supply()
+        ok = pieces.every(p => A2.is_unit_supplied(p))
+      })
+    } finally { R.__with(orig, () => {}) }
+    return ok
+  }
   // a legal step that does not overstack, nearest the destination (ties: the Tie); null if there is none
   safeStep(A, acts, to) {
     const moving = A.game.move.pieces
-    const ok = this.legalSteps(A, acts).filter(s => this.piecesAt(A, s, this.side).length + moving.length <= 3)
+    const ok = this.legalSteps(A, acts).filter(s => this.piecesAt(A, s, this.side).length + moving.length <= 3 && this.prospectiveSupplied(A, moving, s))
     if (!ok.length) return null
     ok.sort((a, b) => B.dist(a, to) - B.dist(b, to) || this.tie(a, b))
     return ['space', ok[0]]
@@ -909,20 +932,17 @@ class Bot {
     let best = null, bd = B.dist(cur, to)
     const moving = A.game.move.pieces
     const legal = new Set(this.legalSteps(A, acts))
-    for (const s of sp) {
-      if (!legal.has(s)) continue
-      if (this.piecesAt(A, s, this.side).length + moving.length > 3) continue
-      const d = B.dist(s, to)
-      // don't end in an unsupplied space
-      // nearest the destination; ties: the Staff card's Tie
-      if (d < bd || (this.opts.stepTie !== false && d === bd && best !== null && this.tie(s, best) < 0)) { bd = d; best = s }
-    }
+    // nearer steps, nearest first (ties: the Staff card's Tie); the first where the units stay in supply
+    const nearer = sp.filter(s => legal.has(s) && this.piecesAt(A, s, this.side).length + moving.length <= 3 && B.dist(s, to) < bd)
+      .sort((a, b) => B.dist(a, to) - B.dist(b, to) || (this.opts.stepTie !== false ? this.tie(a, b) : a - b))
+    let unsupplied = false
+    for (const s of nearer) { if (this.prospectiveSupplied(A, moving, s)) { best = s; break } unsupplied = true }
+    if (best === null && unsupplied) { this.stats.supplyStops = (this.stats.supplyStops || 0) + 1; return acts.stop ? ['stop'] : null }
     if (best === null) {
       if (acts.stop) return ['stop']
       // no step toward the target: take any safe step (no overstack, can end there), nearest the target
       return this.safeStep(A, acts, to)
     }
-    if (!A.is_space_supplied(best, this.side) && acts.stop) return ['stop']
     return ['space', best]
   }
 
@@ -1148,9 +1168,18 @@ class Bot {
     return ['done']
   }
 
-  s_attrition_phase(A, g, acts) { return fallback(acts) }
-  s_siege_phase(A, g, acts) { return fallback(acts) }
-  s_trench_rolls(A, g, acts) { return fallback(acts) }
+  // §9 Other choices: attrition, siege rolls and trench rolls are taken in front order, then the Tie
+  s_attrition_phase(A, g, acts) { return this.phaseOrder(A, acts) }
+  s_siege_phase(A, g, acts) { return this.phaseOrder(A, acts) }
+  s_trench_rolls(A, g, acts) { return this.phaseOrder(A, acts) }
+  phaseOrder(A, acts) {
+    const sp = acts.space || [], ps = acts.piece || []
+    if (sp.length) return ['space', this.byFrontThenTie(A, sp)[0]]
+    if (ps.length) { const o = this.byFrontThenTie(A, ps.map(p => A.game.location[p])); return ['piece', ps.slice().sort((x, y) => o.indexOf(A.game.location[x]) - o.indexOf(A.game.location[y]) || x - y)[0]] }
+    return fallback(acts)
+  }
+  // Brusilov Offensive: cancel trench effects on the first eligible Russian attack (the engine offers it only where allowed)
+  s_brusilov_offensive_option(A, g, acts) { if (this.opts.eventChoices === false) return null; return acts.use ? ['use'] : acts.pass ? ['pass'] : null }
   s_confirm_mo(A, g, acts) { return ['next'] }
   s_confirm_move_violations(A, g, acts) {
     this.resets = (this.resets || 0) + 1

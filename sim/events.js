@@ -87,6 +87,8 @@ const NOTE = {
   44: '5 if Bulgaria is at war, otherwise 2.', 27: 'Never as an event.',
   71: '0 on turn 1; 6 from turn 2 while no Entrench event has been played.',
   30: 'Not as an event unless a BR or FR corps can go: in the Reserve Box, or in an Allied port space out of contact.',
+  46: 'Use its trench cancellation on the first Russian attack that can take it.',
+  45: 'Use its +2 on the first Russian attack that can take it.',
   98: '3 once Independent Air Force has been played.', 112: '8 if the Allied MO this turn is France.', 120: 'Never as an event.',
 }
 // Printed priority (situational cards show their usual value; the note gives the rule).

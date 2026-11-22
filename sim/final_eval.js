@@ -26,6 +26,7 @@ for (let seed = start; seed < start + n; seed++) {
   const vpByTurn = [], milestones = {}
   let turn = 1, steps = 0, err = null
   const exceptions = [] // every decision exception, with where it happened
+  const supplyBreaches = [] // movement steps that left moving units out of supply
   try {
     while (g.state !== 'game_over' && steps < MAX_STEPS) {
       const role = g.active
@@ -37,7 +38,14 @@ for (let seed = start; seed < start + n; seed++) {
         a = null
       }
       if (!a) a = fallback(v.actions)
+      const moving = (g.state === 'choose_pieces_to_move' || g.state === 'move_stack') && a[0] === 'space' && g.move ? g.move.pieces.slice() : null
       g = R.action(g, role, a[0], a[1])
+      // supply-policy check (rules §6): after each movement step, are the moving units in supply? (judged on a copy)
+      if (moving && moving.length) {
+        const c = structuredClone(g)
+        const out = R.__with(c, A => { A.update_supply(); return moving.filter(p => !A.is_unit_supplied(p)) })
+        if (out.length) supplyBreaches.push({ side: role === ROLE.ap ? 'ap' : 'cp', turn: g.turn, space: g.location[moving[0]], pieces: out })
+      }
       if (g.log.length > 400) g.log = g.log.slice(-100)
       steps++
       if (g.turn !== turn) { vpByTurn.push(g.vp); turn = g.turn }
@@ -53,7 +61,7 @@ for (let seed = start; seed < start + n; seed++) {
   if (!err && g.state !== 'game_over') err = 'unfinished: step cap reached'
   const st = s => P[ROLE[s]].stats || {}
   games.push({
-    seed, result: g.result || null, victory: g.victory || null, turn: g.turn, vp: g.vp, err, complete: !err && g.state === 'game_over', exceptions, steps, vpByTurn, milestones,
+    seed, result: g.result || null, victory: g.victory || null, turn: g.turn, vp: g.vp, err, complete: !err && g.state === 'game_over', exceptions, supplyBreaches, steps, vpByTurn, milestones,
     missedMO: { ap: (g.ap.missed_mo || []).length, cp: (g.cp.missed_mo || []).length },
     stats: { ap: pick(st('ap')), cp: pick(st('cp')) },
   })
@@ -67,4 +75,4 @@ function pick(s) {
   o.steps = s.steps
   return o
 }
-console.log(JSON.stringify({ job, pairing, n, start, games }))
+console.log(JSON.stringify({ job, pairing, n, start, bot: require('./provenance.js').stamp(__dirname), games }))

@@ -1,6 +1,6 @@
 # General Staff — a card-driven solo opponent for *Paths of Glory*
 
-**Version 0.7.5 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
+**Version 0.7.6 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
 
 General Staff can command **either side**; you play the other side normally. The bot follows the same rules you do. It holds a hand of real strategy cards and takes six action rounds a turn. Each round it plays a card as an Event, for Operations (OPS), for Strategic Redeployment (SR) or for Replacement Points (RP), or it takes the 1-OP Automatic Operation. It never breaks a rule, never looks at your hand and never rolls dice to make a decision. Its decisions come from a deck of **Staff cards** and the fixed priorities in this booklet. Dice are rolled only where the game rules call for them (combat, mandated offensives, entrenching, sieges and so on).
 
@@ -93,7 +93,7 @@ A **target** is an enemy-occupied space, or an enemy-controlled fort that is not
 
 For each target, the **attackers** are the bot units able to attack it, from one or more adjacent spaces.
 
-**Attacking together.** Units in several spaces can join one attack only where the rules allow it. In particular, when units of different nationalities attack from more than one space, one attacking space must hold units of every nationality taking part (12.1.11.1). Build the attacking group space by space, strongest space first, and skip a space whose units could not legally join the units already taken. The Score of a target (§5.3) always uses this group.
+**Attacking together.** Units in several spaces can join one attack only where the rules allow it. In particular, when units of different nationalities attack from more than one space, one attacking space must hold units of every nationality taking part (12.1.11.1). Build the attacking group space by space, strongest space first (equal CF: the Tie), and skip a space whose units could not legally join the units already taken. The Score of a target (§5.3) always uses this group.
 
 Make a **shortlist** across the whole map: the **three** targets with the largest **CF difference**, counting the CF of every bot unit able to attack the target (whatever the OPS) minus the defending CF and any undestroyed fort's value. Add any target that is the Objective of its own front, and any target where an attack by its attacking group would satisfy the bot's unmet MO. Rank the shortlist by Score (§5.3), using each target's attacking group.
 
@@ -138,7 +138,7 @@ Each attacking space joins only one attack. The bot plans **at most three attack
 
 ## 6. Moves
 
-The **Move list** holds every move below that the bot could make, ranked by **Move value** (highest first; ties by the front order of the moving stack's space, then the Tie).
+The **Move list** holds every move below that the bot could make, ranked by **Move value** (highest first; ties by the front order of the moving stack's space, then the Tie for that space, then the Tie for the destination).
 
 | Move | What happens | Value |
 |---|---|---|
@@ -150,7 +150,14 @@ The **Move list** holds every move below that the bot could make, ranked by **Mo
 
 Once a space is activated, ignore its other entries on the list.
 
-**How a stack moves.** Move the strongest units of the stack, up to three, but no more than the first step can take without overstacking (the Guard rule still applies). Units besieging an enemy fort keep a legal besieging force behind (an army, or as many corps as the fort's level, 15.2.4): skip any unit whose departure would leave less. If no unit can take a step, or none may leave a siege, drop the move. At each step, enter the adjacent space nearest the destination (ties: the Tie) that the stack may legally enter and end its move in, that holds no enemy unit, that would not overstack, and that is not an enemy fort the stack cannot besiege. Stop if no such space is nearer the destination than the stack is, or if the next space would be out of supply.
+**How a stack moves.** Move the strongest units of the stack, up to three, but no more than the first step can take without overstacking (the Guard rule still applies). Units besieging an enemy fort keep a legal besieging force behind (an army, or as many corps as the fort's level, 15.2.4): skip any unit whose departure would leave less. If no unit can take a step, or none may leave a siege, drop the move. At each step, enter the adjacent space nearest the destination (ties: the Tie) that meets all of these:
+
+* the stack may legally enter it and end its move there;
+* it holds no enemy unit and would not overstack;
+* it is not an enemy fort the stack cannot besiege (judge corps by the whole group that will move, so two corps may gather to besiege a level-2 fort);
+* the moving units would be **in supply** there, counting any supply route their arrival opens.
+
+Stop when no such space is nearer the destination than the stack is. If that happens on the first step, drop the move.
 
 **Guard rule.** When a stack of two or more units leaves a bot-controlled space that is in contact, it leaves its weakest unit behind, unless it is capturing a VP space. A lone unit may move.
 
@@ -213,9 +220,9 @@ When the bot chooses a card for OPS, SR or RP, a combat card counts as priority 
 | **Advance after combat** | Advance into the battle space if it is a VP space, a fort, or on its front's Objective list, or if the Staff card is Assault or Press. Move the strongest units first, up to three in the space. Leave one unit behind in any bot-controlled space that would otherwise be emptied while it is still in contact with other enemy units. Advance one space only. |
 | **Replacement Phase** | Spend RP on armies in contact first, then other armies on the map, then eliminated armies; then corps in the same order. Rebuild an eliminated army in the legal space on the earliest front in the order West, East, Italy, Balkans, Near East (ignore the Staff card), without overstacking; ties: the Tie. |
 | **Draw phase** | Before drawing, if the bot holds three or more combat cards, discard the one with the lowest keep value (ties: lower card number); repeat until it holds two. Never discard other cards. |
-| **Attacks granted by an event** (Guns of August and the like) | Attack the target with the best Edge (no bonuses) that meets the Stance, then the next, as in §4 step 4. If none meets the Stance, make no attack. |
+| **Operations and attacks granted by an event** | An event that grants a whole Operation (Guns of August and the like) is planned like any Operation (§4–§6) with the OPS the event gives. Units an event lets attack outside such a plan attack the target with the best Edge (no bonuses) that meets the Stance, then the next, as in §4 step 4. If none meets the Stance, they make no attack. |
 | **French Mutiny** | While French Mutiny replaces the Allied MO, the Allied bot treats its MO as met (no MO bonus, no MO steps). Its French units still attack normally; pay any VP the rules charge. |
-| **Other choices** (attrition, sieges, where to place an event trench, which army entrenches) | Follow the rules; where the bot must choose, use front order, then the Tie. When an army entrenches, use the strongest. |
+| **Other choices** (attrition, the order of siege and entrenchment rolls, where to place an event trench, which army entrenches) | Follow the rules; where the bot must choose, use front order, then the Tie. When an army entrenches, use the strongest. |
 
 **Event choices.** When an event the bot played, or an event affecting the bot, asks it to choose:
 
@@ -228,6 +235,7 @@ When the bot chooses a card for OPS, SR or RP, a combat card counts as priority 
 | **Withdrawal** (bot defending) | Negate the loss that eliminated a unit first, otherwise the loss of the strongest unit. |
 | **Trench-negating combat cards** | Play them when the rules offer them, as for any combat card when attacking. |
 | **Kerensky Offensive** | Use the +2 on the first Russian attack that can take it. |
+| **Brusilov Offensive** | Cancel trench effects on the first Russian attack where the rules allow it (not against German defenders). |
 
 ---
 

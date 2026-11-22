@@ -13,4 +13,6 @@ mkdir -p ../engine
 cp rtt-pog/data.js rtt-pog/lz4.js ../engine/
 cp rtt-pog/rules.js ../engine/rules.js
 cat engine_hook.js >> ../engine/rules.js
+# provenance: the engine revision and a hash of the hook, read by sim/provenance.js
+printf '{"engine":"%s","hook_sha256":"%s"}\n' "$(cd rtt-pog && git rev-parse HEAD)" "$(sha256sum engine_hook.js | cut -d' ' -f1)" > ../engine/VERSION.json
 echo "Engine ready in ../engine"

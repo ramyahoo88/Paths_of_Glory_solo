@@ -77,6 +77,8 @@ if ALL:
     hit = sum(1 for g in ALL if any(g['stats'][x].get('violations') for x in ('ap', 'cp')))
     print(f'| Rule-violation resets (' + (', '.join(f'{k} {v}' for k, v in viol.most_common()) or 'none') + f'); games affected: {hit} | {resets} |')
     print(f'| Undo of a dead-end step | {undo} |')
+    sb = [x for g in ALL for x in g.get('supplyBreaches', [])]
+    print(f'| Movement steps that left moving units out of supply (rules §6) | {len(sb)} |')
     print(f'| Units moved one safe step because their planned move was abandoned | {hold} |')
     print(f'| Attacks called off after the final check of the selected units | {called} |')
     print(f'| Salonika transfers with no corps the printed rule allows (safety path) | {salf} |')

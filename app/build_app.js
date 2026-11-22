@@ -8,7 +8,7 @@ const B = require(path.join(root, 'sim/board.js'))
 const R = require(path.join(root, 'engine/rules.js'))
 const POLICY = require(path.join(root, 'research/event_policy.json'))
 const EP = require(path.join(root, 'sim/events.js'))
-const VERSION = process.env.GS_VERSION || '0.7.5'
+const VERSION = process.env.GS_VERSION || '0.7.6'
 
 const FN = { WEST: 'West', EAST: 'East', ITALY: 'Italy', BALKANS: 'Balkans', NEAREAST: 'Near East' }
 const objectives = {}
@@ -75,9 +75,13 @@ td, th { border-bottom:1px solid #e2d7bb; padding:4px; text-align:left; vertical
 <div id="card" class="staff"><div class="muted">Draw a card at the start of each bot action round.</div></div>
 <div class="row" style="margin-top:10px"><button class="primary" id="draw">Draw Staff card</button><button id="undo">Undo</button><button id="newdeck" title="Shuffle all 18 cards into a new deck (Undo can restore the old one)">New deck</button><span class="muted" id="deckinfo"></span></div>
 <div id="notice" class="no" style="margin-top:6px"></div>
+<details style="margin-top:8px"><summary>Move this session to another device</summary>
+<div class="row"><button id="export">Export</button><button id="import">Import</button><span class="muted" id="ioinfo"></span></div>
+<textarea id="iotext" rows="4" style="width:100%" aria-label="Session text to copy or paste" placeholder="Export puts the session here to copy; paste a session here and press Import."></textarea></details>
 </section>
 <section><h2>Action round</h2>
-<div class="row"><label>Turn <input type="number" id="tturn" value="1" min="1" max="20"></label><label>Round <input type="number" id="tround" value="1" min="1" max="7"></label><label><input type="checkbox" id="tmo"> MO met this turn</label><label><input type="checkbox" id="trp"> RP card played this turn</label></div>
+<div class="row"><label>Turn <input type="number" id="tturn" value="1" min="1" max="20"></label><label>Round <input type="number" id="tround" value="1" min="1" max="6"></label><button id="nextround" title="Next bot action round">Next round</button><button id="nextturn" title="Turn + 1, round 1, and clear both boxes (Undo restores)">Next turn</button></div>
+<div class="row"><label><input type="checkbox" id="tmo"> MO met this turn</label><label><input type="checkbox" id="trp"> RP card played this turn</label></div>
 <div id="thint" class="muted" style="margin:4px 0 6px"></div>
 <ol>
 <li><b>Forced play</b> (Guns of August).</li>
@@ -108,7 +112,7 @@ td, th { border-bottom:1px solid #e2d7bb; padding:4px; text-align:left; vertical
 const D = ${JSON.stringify(DATA)};
 const S = { side: 'cp', lvl: 'mobilization', deck: [], discard: [], hist: [], cur: null, track: { turn: 1, round: 1, mo: false, rp: false } };
 const $ = id => document.getElementById(id);
-const FORMAT = 1, KEY = 'gs-companion';
+const FORMAT = 1, KEY = 'gs-companion', LEVELS = ['mobilization', 'limited', 'total'];
 let notices = [];
 function note(msg) { if (!notices.includes(msg)) notices.push(msg); const n = $('notice'); if (n) n.textContent = notices.join(' ') }
 function save() {
@@ -127,7 +131,7 @@ function validDeck(x) {
 function cleanTrack(t) {
   const n = (v, lo, hi, d) => Number.isInteger(v) && v >= lo && v <= hi ? v : d;
   t = t && typeof t === 'object' ? t : {};
-  return { turn: n(t.turn, 1, 20, 1), round: n(t.round, 1, 7, 1), mo: t.mo === true, rp: t.rp === true };
+  return { turn: n(t.turn, 1, 20, 1), round: n(t.round, 1, 6, 1), mo: t.mo === true, rp: t.rp === true };
 }
 function renderTrack() {
   const t = S.track; $('tturn').value = t.turn; $('tround').value = t.round; $('tmo').checked = t.mo; $('trp').checked = t.rp;
@@ -139,7 +143,7 @@ function renderTrack() {
   $('thint').textContent = h.join(' ');
 }
 function validSession(x) {
-  if (!x || typeof x !== 'object' || !['cp', 'ap'].includes(x.side) || !D.frontTable.cp[x.lvl]) return false;
+  if (!x || typeof x !== 'object' || !['cp', 'ap'].includes(x.side) || !LEVELS.includes(x.lvl)) return false;
   if (!validDeck(x) || !Array.isArray(x.hist)) return false;
   return x.hist.every(h => { try { return typeof h === 'string' && validDeck(JSON.parse(h)) } catch (e) { return false } });
 }
@@ -202,18 +206,28 @@ function renderTabs() {
   const q = ($('evq').value || '').toLowerCase();
   $('evlist').innerHTML = '<table><tr><th>#</th><th>Card</th><th>Pri</th><th>Notes</th></tr>' + D.events[S.side].filter(e => !q || String(e.n) === q || e.name.toLowerCase().includes(q)).map(e => '<tr><td>' + e.n + '</td><td>' + e.name + '</td><td>' + e.pri + '</td><td>' + e.when + '</td></tr>').join('') + '</table><p class="muted">Play an event only when the rules allow it. Priority 7–9 urgent; 5–6 at the Event step of the Plan; 3–4 fallback; 0–2 never. CC n = combat card with keep value n.</p>';
 }
-function snapshot() { S.hist.push(JSON.stringify({ deck: S.deck, discard: S.discard, cur: S.cur })); if (S.hist.length > 30) S.hist.shift() }
+function snapshot() { S.hist.push(JSON.stringify({ deck: S.deck, discard: S.discard, cur: S.cur, track: S.track })); if (S.hist.length > 30) S.hist.shift() }
 // the snapshot is taken before any reshuffle, so Undo restores the exact state before the draw
 $('draw').onclick = () => { snapshot(); if (!S.deck.length) { S.deck = shuffle(S.discard.slice()); S.discard = [] } S.cur = S.deck.pop(); S.discard.push(S.cur); render() };
 $('undo').onclick = () => {
   while (S.hist.length) {
     let x = null; try { x = JSON.parse(S.hist.pop()) } catch (e) {}
-    if (validDeck(x)) { S.deck = x.deck; S.discard = x.discard; S.cur = x.cur ?? null; break }
+    if (validDeck(x)) { S.deck = x.deck; S.discard = x.discard; S.cur = x.cur ?? null; if (x.track) S.track = cleanTrack(x.track); break }
     note('A damaged Undo step was skipped.');
   }
   render();
 };
 $('newdeck').onclick = () => { snapshot(); S.deck = shuffle(D.deck.map(c => c.id)); S.discard = []; S.cur = null; render() };
+$('nextround').onclick = () => { snapshot(); S.track = cleanTrack(Object.assign({}, S.track, { round: Math.min(6, S.track.round + 1) })); render() };
+$('nextturn').onclick = () => { snapshot(); S.track = cleanTrack({ turn: Math.min(20, S.track.turn + 1), round: 1, mo: false, rp: false }); render() };
+$('export').onclick = () => { $('iotext').value = JSON.stringify(Object.assign({ v: FORMAT }, S)); $('ioinfo').textContent = 'Copied into the box below: copy it to the other device.' };
+$('import').onclick = () => {
+  let x = null; try { x = JSON.parse($('iotext').value) } catch (e) {}
+  if (!validSession(x)) { $('ioinfo').textContent = 'Import rejected: that is not a complete, undamaged session. Nothing was changed.'; return }
+  snapshot(); const keep = S.hist;
+  S.side = x.side; S.lvl = x.lvl; S.deck = x.deck; S.discard = x.discard; S.cur = x.cur ?? null; S.track = cleanTrack(x.track); S.hist = x.hist.concat(keep.slice(-1)).slice(-30);
+  $('ioinfo').textContent = 'Imported. Undo returns to your previous deck and tracker.'; render();
+};
 $('side').onchange = e => { S.side = e.target.value; render() };
 for (const id of ['tturn', 'tround', 'tmo', 'trp']) $(id).onchange = $(id).oninput = () => { S.track = cleanTrack({ turn: Math.round(+$('tturn').value), round: Math.round(+$('tround').value), mo: $('tmo').checked, rp: $('trp').checked }); render() };
 $('lvl').onchange = e => { S.lvl = e.target.value; render() };
