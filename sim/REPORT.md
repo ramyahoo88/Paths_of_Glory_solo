@@ -1,13 +1,14 @@
 # General Staff — simulation report
 
-*Covers General Staff **v0.7**, with checks of **v0.7.1** and **v0.7.2** (rules: [`bot/General_Staff_Rules.md`](../bot/General_Staff_Rules.md)). Written 22 November 2026.*
+*Covers General Staff **v0.7**, with checks of **v0.7.1**, **v0.7.2** and **v0.7.3** (rules: [`bot/General_Staff_Rules.md`](../bot/General_Staff_Rules.md)). Written 22 November 2026.*
 
 ## Summary
 
-* **v0.7.2 (current).** v0.7.2 fixes the five findings of an independent review: MO credit, a Companion error, one shared Edge-table precision, evaluation honesty and engine setup. Strict self-play over 600 games is **67% Allies / 33% CP**, with no exceptions and no unfinished games (see *v0.7.2: review fixes*). v0.7.1 had made the Allied bot about seven points stronger by following the printed Capture tie-break. The rest of this summary describes v0.7.
+* **v0.7.3 (current).** v0.7.3 fixes the nine findings of a comprehensive audit. The simulator now follows the printed procedure in every choice it meets, including event choices and event-granted Operations. Both bots are much stronger against the v0.7 reference: Allies 90–95%, CP 49–56%. Strict self-play is **84% Allies / 16% CP**, with one rule-violation reset in 740 games (see *v0.7.3: comprehensive audit fixes*).
+* **v0.7.2.** v0.7.2 fixes the five findings of an independent review: MO credit, a Companion error, one shared Edge-table precision, evaluation honesty and engine setup. Strict self-play over 600 games is **67% Allies / 33% CP**, with no exceptions and no unfinished games (see *v0.7.2: review fixes*). v0.7.1 had made the Allied bot about seven points stronger by following the printed Capture tie-break. The rest of this summary describes v0.7.
 * In **200 self-play campaigns** (bot against bot), the Allied bot won **62%** and the Central Powers bot **38%**. Mean VP stayed between 8 and 12 all war.
 * Against a **random** player and against a **naive** one-attack, no-events bot, General Staff won **every** game on both sides: 260 of 260.
-* About **27,000 further campaigns** compared design alternatives in paired tests. They settled the main choices:
+* About **32,000 further campaigns** compared design alternatives in paired tests. They settled the main choices:
   * attack the best Score, not the first acceptable target;
   * advance after combat;
   * fill endangered spaces by movement, not SR;
@@ -29,6 +30,55 @@
 * **Naive**: the same machinery with the main features off. It plays only forced events and makes one attack per action round. It does not advance, move, use SR or fill crisis spaces, and it checks every target. This is roughly a first-draft "one order per round" bot.
 
 **Design comparisons.** A candidate bot played one side against a frozen reference bot on the other side, on the same seeds: 120 or 150 per side. At those sizes the standard error of a win rate near 50% is about ±4 points. Only differences of about 10 points or more were treated as real. When a change made no difference, the simpler procedure was kept.
+
+## v0.7.3: comprehensive audit fixes
+
+A comprehensive audit of v0.7.2 ([`audits/general-staff-v0.7.2-comprehensive/`](../audits/general-staff-v0.7.2-comprehensive/)) reported nine problems:
+
+* Staff cards split across PDF pages;
+* two calculator verdicts;
+* incompatible multinational attack groups;
+* event choices left to engine defaults;
+* abandoned moves resumed by the fallback;
+* an unprinted event-trench rule;
+* saved-session recovery;
+* Undo at the reshuffle.
+
+All nine are fixed ([response](../audits/general-staff-v0.7.2-comprehensive/Response.md)).
+
+Fixing them also exposed a larger fault. When an **event granted an Operation**, the plan made for it was thrown away, so its moves were made by the generic fallback. Making the simulator follow the printed procedure everywhere made **both bots much stronger**:
+
+| Test (against the v0.7 reference bots, 300 paired games each) | v0.7.2 | v0.7.3 |
+|---|---|---|
+| Allied bot, seeds 6001–6300 / 7001–7300 | 66% / 68% | **90% / 95%** |
+| CP bot, seeds 6001–6300 / 7001–7300 | 45% / 32% | **49% / 56%** |
+| Self-play, seeds 10001–10300 and 20001–20300 (600 games) | Allies 67% / CP 33% | **Allies 84% / CP 16%** |
+| Mandated offensives missed per game (self-play) | Allies 3.1, CP 1.3 | Allies 2.7, CP 1.1 |
+| Against random and naive opponents (140 games) | won all 140 | won all 140 |
+
+Where the gain comes from (seeds 7001–7300, Allied / CP bot, each change undone on its own):
+
+| Undone | Allied bot | CP bot |
+|---|---|---|
+| Nothing (v0.7.3) | 95% | 56% |
+| Event-granted Operations keep their plan | 83% | 47% |
+| Named event choices (Landwehr, War in Africa, Salonika, neutral placement, etc.) | 88% | 49% |
+| Legal attack groups, step capacity and first-step check | 87% (39 decision errors) | 50% (72 decision errors) |
+| War in Africa: give the VP instead of a corps | 92% (and 89% vs 90% on seeds 6001–6300) | — |
+
+Each fix helps both sides. The Allied bot gains more, so self-play balance moved toward the Allies. The handicap needed for an even bot-versus-bot game is now about **five VP** for the CP bot (table below).
+
+**Run health, strict mode** (740 v0.7.3 evaluation games):
+
+| Check | v0.7.2 | v0.7.3 |
+|---|---|---|
+| Unfinished games, harness errors, decision exceptions | 0 | 0 |
+| Rule-violation resets | 67 (32 games) | **1** (an army too weak to besiege) |
+| Choice-bearing states with no bot rule | about 14 a game | **0** |
+| Units moved one safe step after an abandoned move | — | 8 |
+| Attacks called off at the final selected-unit check | — | 0 |
+
+The companion, card PDF and attack-group fixes have their own regression checks: `app/test_companion.cjs` (28 checks), `print/check_print.py` and `sim/tests/multinational.js`. The companion was also loaded in headless Chrome at desktop and phone widths, which confirmed that its script runs and renders. That is not a test on a real device.
 
 ## v0.7.2: review fixes
 
@@ -103,6 +153,12 @@ Moving the starting VP marker changes the self-play result by about **five or si
 |---|---|---|---|---|---|
 | v0.7: Allied / CP wins | 69% / 31% | 66% / 34% | 60% / 40% | 53% / 47% | 46% / 54% |
 | v0.7.1: Allied / CP wins | 76% / 24% | 71% / 29% | 66% / 34% | 62% / 38% | 54% / 46% |
+
+v0.7.3, starting VP moved in the CP bot's favour (seeds 30001–30150):
+
+| Starting VP | 10 (normal) | 11 | 12 | 13 | 14 | 15 | 16 |
+|---|---|---|---|---|---|---|---|
+| Allied / CP wins | 80% / 20% | 78% / 22% | 69% / 31% | 65% / 35% | 60% / 40% | 53% / 47% | 40% / 60% |
 
 The rules offer this as an optional difficulty setting (§1).
 
@@ -223,8 +279,8 @@ These are counts, not clock times. Table time has not been measured.
 * **The Allied bot misses mandated offensives** about 3.3 times a game, often because no British or Italian unit is in contact with a valid target. Moving those units into contact (MO preparation) made no difference in testing, so it was left out.
 * **Events are played by priority and legality, with a few situational adjustments.** The finer timing advice in [`research/event_policy.md`](../research/event_policy.md) is research, not part of the procedure.
 * **The tests used Rally the Troops' rules implementation.** Any difference between it and your printed rules would affect these results.
-* **Some sub-choices took the engine's first legal option**: where to place an event trench, entering neutral units, and some event follow-ups (about 14 a game, counted in the v0.7.2 run-health table). At the table the rules say to use front order and the Tie, so those choices were never tested.
-* **Rule-violation resets.** In about one game in 23, a planned move would overstack. The harness then undoes the round and replans it with attacks only. A person at the table would just pick another space.
+* **Event sub-choices (fixed in v0.7.3).** Up to v0.7.2, where to place an event trench, entering neutral units and some event follow-ups took the engine's first legal option (about 14 a game). v0.7.3 has a printed rule for each, and strict campaigns record none left to the engine.
+* **Rule-violation resets.** In v0.7.2, about one game in 23 had a planned move that would overstack. The harness then undid the round and replanned it with attacks only. In v0.7.3 this happened once in 740 games. A person at the table would just pick another space.
 
 ## What to watch for in playtesting
 

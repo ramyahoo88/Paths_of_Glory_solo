@@ -1,7 +1,10 @@
 <!doctype html><meta charset="utf-8"><style>
 @page { size: letter; margin: 0.4in; }
 body { font-family: 'DejaVu Sans', Arial, sans-serif; color: #1d1d1b; margin: 0; }
-.sheet { display: grid; grid-template-columns: repeat(3, 2.5in); grid-auto-rows: 3.5in; gap: 0.08in; justify-content: center; page-break-after: always; }
+.sheet { display: grid; grid-template-columns: repeat(3, 2.5in); grid-template-rows: repeat(2, 3.5in); gap: 0.08in; justify-content: center; page-break-after: always; break-inside: avoid; }
+.card { break-inside: avoid; page-break-inside: avoid; }
+.sheetnote { text-align: center; font-size: 8pt; color: #6b5a3a; margin-top: 0.12in; }
+section.pg { page-break-after: always; } section.pg:last-of-type { page-break-after: auto; } section.pg .sheet { page-break-after: auto; }
 .card { box-sizing: border-box; border: 1.5px solid #555; border-radius: 0.12in; padding: 0.12in; display: flex; flex-direction: column; background: #f6f1e4; position: relative; overflow: hidden; }
 .card .hdr { font-size: 8pt; letter-spacing: 0.12em; text-transform: uppercase; color: #6b5a3a; display: flex; justify-content: space-between; border-bottom: 1px solid #b9a77f; padding-bottom: 3px; }
 .num { margin: 0.12in auto 0.04in; width: 0.95in; height: 0.95in; border-radius: 50%; border: 3px solid #1d1d1b; display: flex; align-items: center; justify-content: center; font-size: 44pt; font-weight: bold; background: #fffdf6; }
@@ -24,112 +27,112 @@ th { background: #e8e2d0; }
 .two { columns: 2; column-gap: 0.25in; }
 .small { font-size: 7.5pt; } .pb { page-break-before: always; } .rec td { height: 30px; } .rec th { font-size: 8pt; }
 ol, ul { margin: 2px 0 4px 16px; padding: 0; } li { margin: 1px 0; }
-</style><div class="sheet"><div class="card">
+</style><section class="pg"><div class="sheet"><div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">1</div><div class="flabel">Front number</div>
   <div class="row st-A"><div class="k">Stance</div><div class="v">Assault</div><div class="s">Attack if Score &ge; CP 0 · Allies +1</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">Event</div><div class="s">Event · Attack · Logistics</div></div>
   <div class="tie">Tie: &#9650; North</div>
-  <div class="cardno">1/18 · v0.7.2</div></div><div class="card">
+  <div class="cardno">1/18 · v0.7.3</div></div><div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">1</div><div class="flabel">Front number</div>
   <div class="row st-P"><div class="k">Stance</div><div class="v">Press</div><div class="s">Attack if Score &ge; CP +0.75 · Allies +1.75</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">Logistics</div><div class="s">Logistics · Attack · Event</div></div>
   <div class="tie">Tie: &#9660; South</div>
-  <div class="cardno">2/18 · v0.7.2</div></div><div class="card">
+  <div class="cardno">2/18 · v0.7.3</div></div><div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">1</div><div class="flabel">Front number</div>
   <div class="row st-H"><div class="k">Stance</div><div class="v">Hold</div><div class="s">Attack if Score &ge; CP +1.5 · Allies +2.5</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">Ops</div><div class="s">Attack · Event · Logistics</div></div>
   <div class="tie">Tie: &#9650; North</div>
-  <div class="cardno">3/18 · v0.7.2</div></div><div class="card">
+  <div class="cardno">3/18 · v0.7.3</div></div><div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">2</div><div class="flabel">Front number</div>
   <div class="row st-A"><div class="k">Stance</div><div class="v">Assault</div><div class="s">Attack if Score &ge; CP 0 · Allies +1</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">Logistics</div><div class="s">Logistics · Attack · Event</div></div>
   <div class="tie">Tie: &#9660; South</div>
-  <div class="cardno">4/18 · v0.7.2</div></div><div class="card">
+  <div class="cardno">4/18 · v0.7.3</div></div><div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">2</div><div class="flabel">Front number</div>
   <div class="row st-P"><div class="k">Stance</div><div class="v">Press</div><div class="s">Attack if Score &ge; CP +0.75 · Allies +1.75</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">Ops</div><div class="s">Attack · Event · Logistics</div></div>
   <div class="tie">Tie: &#9650; North</div>
-  <div class="cardno">5/18 · v0.7.2</div></div><div class="card">
+  <div class="cardno">5/18 · v0.7.3</div></div><div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">2</div><div class="flabel">Front number</div>
   <div class="row st-H"><div class="k">Stance</div><div class="v">Hold</div><div class="s">Attack if Score &ge; CP +1.5 · Allies +2.5</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">Event</div><div class="s">Event · Attack · Logistics</div></div>
   <div class="tie">Tie: &#9660; South</div>
-  <div class="cardno">6/18 · v0.7.2</div></div><div class="card">
+  <div class="cardno">6/18 · v0.7.3</div></div></div><div class="sheetnote">Staff cards 1&ndash;6 &middot; faces 1 of 3 &middot; print at 100% (actual size)</div></section><section class="pg"><div class="sheet"><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div></div><div class="sheetnote">Backs for cards 1&ndash;6 &middot; duplex, flip on long edge (optional)</div></section><section class="pg"><div class="sheet"><div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">3</div><div class="flabel">Front number</div>
   <div class="row st-A"><div class="k">Stance</div><div class="v">Assault</div><div class="s">Attack if Score &ge; CP 0 · Allies +1</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">Ops</div><div class="s">Attack · Event · Logistics</div></div>
   <div class="tie">Tie: &#9650; North</div>
-  <div class="cardno">7/18 · v0.7.2</div></div><div class="card">
+  <div class="cardno">7/18 · v0.7.3</div></div><div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">3</div><div class="flabel">Front number</div>
   <div class="row st-P"><div class="k">Stance</div><div class="v">Press</div><div class="s">Attack if Score &ge; CP +0.75 · Allies +1.75</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">Event</div><div class="s">Event · Attack · Logistics</div></div>
   <div class="tie">Tie: &#9660; South</div>
-  <div class="cardno">8/18 · v0.7.2</div></div><div class="card">
+  <div class="cardno">8/18 · v0.7.3</div></div><div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">3</div><div class="flabel">Front number</div>
   <div class="row st-H"><div class="k">Stance</div><div class="v">Hold</div><div class="s">Attack if Score &ge; CP +1.5 · Allies +2.5</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">Logistics</div><div class="s">Logistics · Attack · Event</div></div>
   <div class="tie">Tie: &#9650; North</div>
-  <div class="cardno">9/18 · v0.7.2</div></div></div><div class="sheet"><div class="card">
+  <div class="cardno">9/18 · v0.7.3</div></div><div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">4</div><div class="flabel">Front number</div>
   <div class="row st-A"><div class="k">Stance</div><div class="v">Assault</div><div class="s">Attack if Score &ge; CP 0 · Allies +1</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">Event</div><div class="s">Event · Attack · Logistics</div></div>
   <div class="tie">Tie: &#9660; South</div>
-  <div class="cardno">10/18 · v0.7.2</div></div><div class="card">
+  <div class="cardno">10/18 · v0.7.3</div></div><div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">4</div><div class="flabel">Front number</div>
   <div class="row st-P"><div class="k">Stance</div><div class="v">Press</div><div class="s">Attack if Score &ge; CP +0.75 · Allies +1.75</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">Logistics</div><div class="s">Logistics · Attack · Event</div></div>
   <div class="tie">Tie: &#9650; North</div>
-  <div class="cardno">11/18 · v0.7.2</div></div><div class="card">
+  <div class="cardno">11/18 · v0.7.3</div></div><div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">4</div><div class="flabel">Front number</div>
   <div class="row st-H"><div class="k">Stance</div><div class="v">Hold</div><div class="s">Attack if Score &ge; CP +1.5 · Allies +2.5</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">Ops</div><div class="s">Attack · Event · Logistics</div></div>
   <div class="tie">Tie: &#9660; South</div>
-  <div class="cardno">12/18 · v0.7.2</div></div><div class="card">
+  <div class="cardno">12/18 · v0.7.3</div></div></div><div class="sheetnote">Staff cards 7&ndash;12 &middot; faces 2 of 3 &middot; print at 100% (actual size)</div></section><section class="pg"><div class="sheet"><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div></div><div class="sheetnote">Backs for cards 7&ndash;12 &middot; duplex, flip on long edge (optional)</div></section><section class="pg"><div class="sheet"><div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">5</div><div class="flabel">Front number</div>
   <div class="row st-A"><div class="k">Stance</div><div class="v">Assault</div><div class="s">Attack if Score &ge; CP 0 · Allies +1</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">Logistics</div><div class="s">Logistics · Attack · Event</div></div>
   <div class="tie">Tie: &#9650; North</div>
-  <div class="cardno">13/18 · v0.7.2</div></div><div class="card">
+  <div class="cardno">13/18 · v0.7.3</div></div><div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">5</div><div class="flabel">Front number</div>
   <div class="row st-P"><div class="k">Stance</div><div class="v">Press</div><div class="s">Attack if Score &ge; CP +0.75 · Allies +1.75</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">Ops</div><div class="s">Attack · Event · Logistics</div></div>
   <div class="tie">Tie: &#9660; South</div>
-  <div class="cardno">14/18 · v0.7.2</div></div><div class="card">
+  <div class="cardno">14/18 · v0.7.3</div></div><div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">5</div><div class="flabel">Front number</div>
   <div class="row st-H"><div class="k">Stance</div><div class="v">Hold</div><div class="s">Attack if Score &ge; CP +1.5 · Allies +2.5</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">Event</div><div class="s">Event · Attack · Logistics</div></div>
   <div class="tie">Tie: &#9650; North</div>
-  <div class="cardno">15/18 · v0.7.2</div></div><div class="card">
+  <div class="cardno">15/18 · v0.7.3</div></div><div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">6</div><div class="flabel">Front number</div>
   <div class="row st-A"><div class="k">Stance</div><div class="v">Assault</div><div class="s">Attack if Score &ge; CP 0 · Allies +1</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">Ops</div><div class="s">Attack · Event · Logistics</div></div>
   <div class="tie">Tie: &#9660; South</div>
-  <div class="cardno">16/18 · v0.7.2</div></div><div class="card">
+  <div class="cardno">16/18 · v0.7.3</div></div><div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">6</div><div class="flabel">Front number</div>
   <div class="row st-P"><div class="k">Stance</div><div class="v">Press</div><div class="s">Attack if Score &ge; CP +0.75 · Allies +1.75</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">Event</div><div class="s">Event · Attack · Logistics</div></div>
   <div class="tie">Tie: &#9650; North</div>
-  <div class="cardno">17/18 · v0.7.2</div></div><div class="card">
+  <div class="cardno">17/18 · v0.7.3</div></div><div class="card">
   <div class="hdr"><span>General Staff</span><span>Staff card</span></div>
   <div class="num">6</div><div class="flabel">Front number</div>
   <div class="row st-H"><div class="k">Stance</div><div class="v">Hold</div><div class="s">Attack if Score &ge; CP +1.5 · Allies +2.5</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">Logistics</div><div class="s">Logistics · Attack · Event</div></div>
   <div class="tie">Tie: &#9660; South</div>
-  <div class="cardno">18/18 · v0.7.2</div></div></div><div class="sheet"><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div></div>
+  <div class="cardno">18/18 · v0.7.3</div></div></div><div class="sheetnote">Staff cards 13&ndash;18 &middot; faces 3 of 3 &middot; print at 100% (actual size)</div></section><section class="pg"><div class="sheet"><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div><div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div></div><div class="sheetnote">Backs for cards 13&ndash;18 &middot; duplex, flip on long edge (optional)</div></section>

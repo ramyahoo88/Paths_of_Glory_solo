@@ -8,7 +8,7 @@ const B = require(path.join(root, 'sim/board.js'))
 const POLICY = require(path.join(root, 'research/event_policy.json'))
 const EP = require(path.join(root, 'sim/events.js'))
 const out = path.join(root, 'print/out'); fs.mkdirSync(out, { recursive: true })
-const VERSION = process.env.GS_VERSION || '0.7.2'
+const VERSION = process.env.GS_VERSION || '0.7.3'
 
 const STANCE = { A: ['Assault', 'CP 0 · Allies +1'], P: ['Press', 'CP +0.75 · Allies +1.75'], H: ['Hold', 'CP +1.5 · Allies +2.5'] }
 const PLAN = { O: ['Ops', 'Attack · Event · Logistics'], E: ['Event', 'Event · Attack · Logistics'], L: ['Logistics', 'Logistics · Attack · Event'] }
@@ -18,7 +18,10 @@ const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
 const css = `
 @page { size: letter; margin: 0.4in; }
 body { font-family: 'DejaVu Sans', Arial, sans-serif; color: #1d1d1b; margin: 0; }
-.sheet { display: grid; grid-template-columns: repeat(3, 2.5in); grid-auto-rows: 3.5in; gap: 0.08in; justify-content: center; page-break-after: always; }
+.sheet { display: grid; grid-template-columns: repeat(3, 2.5in); grid-template-rows: repeat(2, 3.5in); gap: 0.08in; justify-content: center; page-break-after: always; break-inside: avoid; }
+.card { break-inside: avoid; page-break-inside: avoid; }
+.sheetnote { text-align: center; font-size: 8pt; color: #6b5a3a; margin-top: 0.12in; }
+section.pg { page-break-after: always; } section.pg:last-of-type { page-break-after: auto; } section.pg .sheet { page-break-after: auto; }
 .card { box-sizing: border-box; border: 1.5px solid #555; border-radius: 0.12in; padding: 0.12in; display: flex; flex-direction: column; background: #f6f1e4; position: relative; overflow: hidden; }
 .card .hdr { font-size: 8pt; letter-spacing: 0.12em; text-transform: uppercase; color: #6b5a3a; display: flex; justify-content: space-between; border-bottom: 1px solid #b9a77f; padding-bottom: 3px; }
 .num { margin: 0.12in auto 0.04in; width: 0.95in; height: 0.95in; border-radius: 50%; border: 3px solid #1d1d1b; display: flex; align-items: center; justify-content: center; font-size: 44pt; font-weight: bold; background: #fffdf6; }
@@ -55,8 +58,15 @@ function cardHtml(c) {
 }
 const deck = makeDeck()
 let cardsHtml = `<!doctype html><meta charset="utf-8"><style>${css}</style>`
-for (let i = 0; i < deck.length; i += 9) cardsHtml += `<div class="sheet">${deck.slice(i, i + 9).map(cardHtml).join('')}</div>`
-cardsHtml += `<div class="sheet">${Array(9).fill('<div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div>').join('')}</div>`
+// Six poker-size cards per Letter page (three rows of 3.5 in do not fit inside the margins).
+// Faces and backs alternate, so a long-edge duplex print puts a back behind every face; for single-sided printing, print the odd pages only.
+const PER_PAGE = 6
+const backs = Array(PER_PAGE).fill('<div class="card back"><div class="t">GENERAL<br>STAFF</div><div class="u">Paths of Glory solo bot</div></div>').join('')
+for (let i = 0; i < deck.length; i += PER_PAGE) {
+  const page = i / PER_PAGE + 1, pages = Math.ceil(deck.length / PER_PAGE)
+  cardsHtml += `<section class="pg"><div class="sheet">${deck.slice(i, i + PER_PAGE).map(cardHtml).join('')}</div><div class="sheetnote">Staff cards ${i + 1}&ndash;${Math.min(i + PER_PAGE, deck.length)} &middot; faces ${page} of ${pages} &middot; print at 100% (actual size)</div></section>`
+  cardsHtml += `<section class="pg"><div class="sheet">${backs}</div><div class="sheetnote">Backs for cards ${i + 1}&ndash;${Math.min(i + PER_PAGE, deck.length)} &middot; duplex, flip on long edge (optional)</div></section>`
+}
 fs.writeFileSync(path.join(out, 'staff_cards.html'), cardsHtml)
 
 // ---------- Reference sheets ----------

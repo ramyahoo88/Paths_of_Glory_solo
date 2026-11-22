@@ -8,7 +8,7 @@ const B = require(path.join(root, 'sim/board.js'))
 const R = require(path.join(root, 'engine/rules.js'))
 const POLICY = require(path.join(root, 'research/event_policy.json'))
 const EP = require(path.join(root, 'sim/events.js'))
-const VERSION = process.env.GS_VERSION || '0.7.2'
+const VERSION = process.env.GS_VERSION || '0.7.3'
 
 const FN = { WEST: 'West', EAST: 'East', ITALY: 'Italy', BALKANS: 'Balkans', NEAREAST: 'Near East' }
 const objectives = {}
@@ -42,7 +42,7 @@ header .sp { flex:1 }
 select, input, button { font: inherit; font-size:15px; }
 button { background:#3b3a36; color:#f4efe2; border:0; border-radius:8px; padding:8px 12px; cursor:pointer; }
 button.primary { background: var(--A); font-weight:bold; }
-button:disabled { opacity:.4 }
+button:disabled, input:disabled, select:disabled { opacity:.4 }
 main { max-width: 980px; margin: 0 auto; padding: 12px; display:grid; gap:12px; grid-template-columns: 1fr; }
 @media (min-width: 860px) { main { grid-template-columns: 360px 1fr; } }
 section { background: var(--card); border:1px solid var(--line); border-radius:12px; padding:12px; }
@@ -73,9 +73,12 @@ td, th { border-bottom:1px solid #e2d7bb; padding:4px; text-align:left; vertical
 <div style="display:grid; gap:12px; align-content:start">
 <section><h2>Staff card</h2>
 <div id="card" class="staff"><div class="muted">Draw a card at the start of each bot action round.</div></div>
-<div class="row" style="margin-top:10px"><button class="primary" id="draw">Draw Staff card</button><button id="undo">Undo</button><span class="muted" id="deckinfo"></span></div>
+<div class="row" style="margin-top:10px"><button class="primary" id="draw">Draw Staff card</button><button id="undo">Undo</button><button id="newdeck" title="Shuffle all 18 cards into a new deck (Undo can restore the old one)">New deck</button><span class="muted" id="deckinfo"></span></div>
+<div id="notice" class="no" style="margin-top:6px"></div>
 </section>
 <section><h2>Action round</h2>
+<div class="row"><label>Turn <input type="number" id="tturn" value="1" min="1" max="20"></label><label>Round <input type="number" id="tround" value="1" min="1" max="7"></label><label><input type="checkbox" id="tmo"> MO met this turn</label><label><input type="checkbox" id="trp"> RP card played this turn</label></div>
+<div id="thint" class="muted" style="margin:4px 0 6px"></div>
 <ol>
 <li><b>Forced play</b> (Guns of August).</li>
 <li><b>MO last chance</b>: rounds 5–6, MO unmet, MO attack exists.</li>
@@ -94,7 +97,7 @@ td, th { border-bottom:1px solid #e2d7bb; padding:4px; text-align:left; vertical
 <div class="row"><label>Terrain</label><select id="terr"><option value="0">clear/forest/desert</option><option value="1">mountain or swamp</option></select><label>Trench <select id="tr"><option>0</option><option>1</option><option>2</option></select></label></div>
 <div class="row"><label>Bonuses</label>
 <label><input type="checkbox" id="bobj"> Objective (+1)</label><label><input type="checkbox" id="bnear"> else within 2 of it (+0.4)</label><label><input type="checkbox" id="bvp"> VP (+0.5)</label><label><input type="checkbox" id="boos"> defender OOS (+0.5)</label></div>
-<div class="row"><label>MO attack</label><select id="bmo"><option value="0">no</option><option value="1">rounds 1–2 (+1)</option><option value="2.5">rounds 3–4 (+2.5)</option><option value="6">rounds 5–6 (+6)</option></select><label>Front position <select id="bfront"><option value="0">1st</option><option value="-0.25">2nd</option><option value="-0.5">3rd</option><option value="-0.75">4th</option><option value="-1">5th</option></select></label></div>
+<div class="row"><label title="Tick only when the units chosen for this attack would satisfy the bot's unmet MO">Attack meets an unmet MO</label><select id="bmo"><option value="0">no</option><option value="1">yes, rounds 1–2 (+1)</option><option value="2.5">yes, rounds 3–4 (+2.5)</option><option value="6">yes, rounds 5–6 (+6, mandatory)</option></select><label>Front position <select id="bfront"><option value="0">1st</option><option value="-0.25">2nd</option><option value="-0.5">3rd</option><option value="-0.75">4th</option><option value="-1">5th</option></select></label></div>
 <div id="edge" class="res"></div></section>
 <section><div class="row tabs"><button data-t="obj" class="on">Objectives</button><button data-t="front">Front Table</button><button data-t="ev">Event priorities</button></div>
 <div id="t-obj"></div><div id="t-front" class="hidden"></div><div id="t-ev" class="hidden"><div class="row"><input id="evq" placeholder="card number or name" style="flex:1"></div><div id="evlist"></div></div>
@@ -103,10 +106,52 @@ td, th { border-bottom:1px solid #e2d7bb; padding:4px; text-align:left; vertical
 </main>
 <script>
 const D = ${JSON.stringify(DATA)};
-const S = { side: 'cp', lvl: 'mobilization', deck: [], discard: [], hist: [], cur: null };
+const S = { side: 'cp', lvl: 'mobilization', deck: [], discard: [], hist: [], cur: null, track: { turn: 1, round: 1, mo: false, rp: false } };
 const $ = id => document.getElementById(id);
-function save() { try { localStorage.setItem('gs-companion', JSON.stringify(S)) } catch (e) {} }
-function load() { try { const x = JSON.parse(localStorage.getItem('gs-companion') || 'null'); if (x && x.deck) Object.assign(S, x) } catch (e) {} }
+const FORMAT = 1, KEY = 'gs-companion';
+let notices = [];
+function note(msg) { if (!notices.includes(msg)) notices.push(msg); const n = $('notice'); if (n) n.textContent = notices.join(' ') }
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(Object.assign({ v: FORMAT }, S))) }
+  catch (e) { note('Not saved: this browser is not keeping the session (storage blocked or full). Draws will be lost if the page reloads.') }
+}
+// A deck state is valid when deck + discard hold each of the 18 cards exactly once and the current card (if any) is in the discard pile.
+function validDeck(x) {
+  if (!x || !Array.isArray(x.deck) || !Array.isArray(x.discard)) return false;
+  const all = x.deck.concat(x.discard);
+  if (all.length !== D.deck.length || !all.every(n => Number.isInteger(n) && cardById(n))) return false;
+  if (new Set(all).size !== D.deck.length) return false;
+  return x.cur === null || x.cur === undefined || x.discard.includes(x.cur);
+}
+// the round tracker is a convenience: bad values fall back to defaults instead of rejecting the session
+function cleanTrack(t) {
+  const n = (v, lo, hi, d) => Number.isInteger(v) && v >= lo && v <= hi ? v : d;
+  t = t && typeof t === 'object' ? t : {};
+  return { turn: n(t.turn, 1, 20, 1), round: n(t.round, 1, 7, 1), mo: t.mo === true, rp: t.rp === true };
+}
+function renderTrack() {
+  const t = S.track; $('tturn').value = t.turn; $('tround').value = t.round; $('tmo').checked = t.mo; $('trp').checked = t.rp;
+  const h = [];
+  if (t.turn === 1 && t.round === 1 && S.side === 'cp') h.push('Turn 1 round 1: Guns of August is a forced play if held.');
+  if (!t.mo && t.round >= 5) h.push('MO unmet in round ' + t.round + ': step 2 (MO last chance) applies; the first attack that meets the MO is made whatever its Score.');
+  else if (!t.mo && t.round >= 3) h.push('MO unmet: step 4 (MO) applies from round 3.');
+  if (S.side === 'ap') h.push(t.rp ? 'Rebuild: not this turn (an RP card was already played).' : 'Rebuild: check missing steps − RP held ≥ 6.');
+  $('thint').textContent = h.join(' ');
+}
+function validSession(x) {
+  if (!x || typeof x !== 'object' || !['cp', 'ap'].includes(x.side) || !D.frontTable.cp[x.lvl]) return false;
+  if (!validDeck(x) || !Array.isArray(x.hist)) return false;
+  return x.hist.every(h => { try { return typeof h === 'string' && validDeck(JSON.parse(h)) } catch (e) { return false } });
+}
+function load() {
+  let raw = null;
+  try { raw = localStorage.getItem(KEY) } catch (e) { note('This browser is not allowing saved sessions; the deck will not survive a reload.'); return }
+  if (!raw) return;
+  let x = null; try { x = JSON.parse(raw) } catch (e) {}
+  if (validSession(x)) { S.side = x.side; S.lvl = x.lvl; S.deck = x.deck; S.discard = x.discard; S.hist = x.hist; S.cur = x.cur ?? null; S.track = cleanTrack(x.track); return }
+  try { localStorage.setItem(KEY + '-rejected', raw) } catch (e) {}
+  note('The saved session was damaged, so a new deck was started. The old data was kept in browser storage under "' + KEY + '-rejected".');
+}
 function shuffle(a) { const c = (window.crypto && crypto.getRandomValues) ? (n => { const u = new Uint32Array(1); crypto.getRandomValues(u); return u[0] % n }) : (n => Math.floor(Math.random() * n)); for (let i = a.length - 1; i > 0; i--) { const j = c(i + 1); [a[i], a[j]] = [a[j], a[i]] } return a }
 function reset() { S.deck = shuffle(D.deck.map(c => c.id)); S.discard = []; S.hist = []; S.cur = null }
 const ST = { A: 'Assault', P: 'Press', H: 'Hold' }, PL = { O: ['Ops', 'Attack → Event → Logistics'], E: ['Event', 'Event → Attack → Logistics'], L: ['Logistics', 'Logistics → Attack → Event'] };
@@ -126,22 +171,27 @@ function render() {
       '<div style="margin-top:6px"><b>Tie:</b> ' + (c.tie === 'N' ? '▲ North' : '▼ South') + '</div>' +
       '<div class="muted" style="margin-top:6px">Front order: ' + order.join(' → ') + '</div><div class="muted">Card ' + c.id + '/18</div>';
   } else $('card').innerHTML = '<div class="muted">Draw a card at the start of each bot action round.</div>';
-  renderEdge(); renderTabs(); save();
+  renderTrack(); renderEdge(); renderTabs(); save();
 }
 function col(cols, cf, sh) { let i = 1; while (i < cols.length && cols[i] <= cf) i++; i--; i += sh; return Math.max(0, Math.min(cols.length - 1, i)) }
 function renderEdge() {
-  const acf = +$('acf').value || 0, dcf = (+$('dcf').value || 0) + (+$('fort').value || 0);
+  const units = $('dunits').checked;
+  // An empty fort defends with its fort value only: unit CF, the army box and trenches do not apply (their inputs are disabled).
+  $('dcf').disabled = !units; $('darmy').disabled = !units; $('tr').disabled = !units;
+  const acf = Math.max(0, +$('acf').value || 0), dcf = (units ? Math.max(0, +$('dcf').value || 0) : 0) + Math.max(0, +$('fort').value || 0);
   const aA = $('aarmy').checked, dA = $('darmy').checked, tr = +$('tr').value, terr = +$('terr').value;
   // A target always has defending units or a fort, so the defender always fires, even at 0 CF (the Corps table's 0 column).
-  // The trench shifts apply only when defending units are present (not for an empty fort).
-  const units = $('dunits').checked, ash = -terr - (units ? tr : 0), dsh = units && tr > 0 ? 1 : 0;
+  const ash = -terr - (units ? tr : 0), dsh = units && tr > 0 ? 1 : 0;
   const ac = col(aA ? D.armyCols : D.corpsCols, acf, ash), dc = col(dA && units ? D.armyCols : D.corpsCols, dcf, dsh);
   const eA = (aA ? D.army : D.corps)[ac], eD = (dA && units ? D.army : D.corps)[dc];
   const edge = Math.round((eA - eD) * 10) / 10;
   const bonus = ($('bobj').checked ? 1 : ($('bnear').checked ? 0.4 : 0)) + ($('bvp').checked ? 0.5 : 0) + ($('boos').checked ? 0.5 : 0) + (+$('bmo').value) + (+$('bfront').value);
   const score = edge + bonus;
   const c = S.cur ? cardById(S.cur) : null, need = c ? D.stance[c.stance] + (S.side === 'ap' ? 1 : 0) : null;
-  const verdict = need === null ? '' : (score >= need - 1e-9 ? '<span class="ok"> — attack (needs ' + need + ')</span>' : '<span class="no"> — too weak (needs ' + need + ')</span>');
+  const lateMO = +$('bmo').value === 6;
+  const verdict = need === null ? '' : score >= need - 1e-9 ? '<span class="ok"> — attack (needs ' + need + ')</span>'
+    : lateMO ? '<span class="ok"> — attack: last-chance MO. In rounds 5–6 the first attack that meets the unmet MO is made whatever its Score (Score needed otherwise: ' + need + ')</span>'
+    : '<span class="no"> — too weak (needs ' + need + ')</span>';
   $('edge').innerHTML = 'Bot ' + eA.toFixed(1) + ' − defender ' + eD.toFixed(1) + ' = Edge ' + (edge >= 0 ? '+' : '') + edge.toFixed(1) + '<br>Score ' + (score >= 0 ? '+' : '') + score.toFixed(2) + verdict;
 }
 function renderTabs() {
@@ -152,9 +202,20 @@ function renderTabs() {
   const q = ($('evq').value || '').toLowerCase();
   $('evlist').innerHTML = '<table><tr><th>#</th><th>Card</th><th>Pri</th><th>Notes</th></tr>' + D.events[S.side].filter(e => !q || String(e.n) === q || e.name.toLowerCase().includes(q)).map(e => '<tr><td>' + e.n + '</td><td>' + e.name + '</td><td>' + e.pri + '</td><td>' + e.when + '</td></tr>').join('') + '</table><p class="muted">Play an event only when the rules allow it. Priority 7–9 urgent; 5–6 at the Event step of the Plan; 3–4 fallback; 0–2 never. CC n = combat card with keep value n.</p>';
 }
-$('draw').onclick = () => { if (!S.deck.length) { S.deck = shuffle(S.discard); S.discard = [] } S.hist.push(JSON.stringify({ deck: S.deck, discard: S.discard, cur: S.cur })); if (S.hist.length > 30) S.hist.shift(); S.cur = S.deck.pop(); S.discard.push(S.cur); render() };
-$('undo').onclick = () => { const h = S.hist.pop(); if (h) { const x = JSON.parse(h); S.deck = x.deck; S.discard = x.discard; S.cur = x.cur } render() };
+function snapshot() { S.hist.push(JSON.stringify({ deck: S.deck, discard: S.discard, cur: S.cur })); if (S.hist.length > 30) S.hist.shift() }
+// the snapshot is taken before any reshuffle, so Undo restores the exact state before the draw
+$('draw').onclick = () => { snapshot(); if (!S.deck.length) { S.deck = shuffle(S.discard.slice()); S.discard = [] } S.cur = S.deck.pop(); S.discard.push(S.cur); render() };
+$('undo').onclick = () => {
+  while (S.hist.length) {
+    let x = null; try { x = JSON.parse(S.hist.pop()) } catch (e) {}
+    if (validDeck(x)) { S.deck = x.deck; S.discard = x.discard; S.cur = x.cur ?? null; break }
+    note('A damaged Undo step was skipped.');
+  }
+  render();
+};
+$('newdeck').onclick = () => { snapshot(); S.deck = shuffle(D.deck.map(c => c.id)); S.discard = []; S.cur = null; render() };
 $('side').onchange = e => { S.side = e.target.value; render() };
+for (const id of ['tturn', 'tround', 'tmo', 'trp']) $(id).onchange = $(id).oninput = () => { S.track = cleanTrack({ turn: Math.round(+$('tturn').value), round: Math.round(+$('tround').value), mo: $('tmo').checked, rp: $('trp').checked }); render() };
 $('lvl').onchange = e => { S.lvl = e.target.value; render() };
 for (const id of ['acf','dcf','fort','aarmy','darmy','dunits','terr','tr','bobj','bnear','bvp','boos','bmo','bfront']) { $(id).oninput = renderEdge; $(id).onchange = renderEdge }
 $('evq').oninput = renderTabs;

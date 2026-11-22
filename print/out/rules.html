@@ -4,7 +4,7 @@
   blockquote { margin: 6px 0; padding: 4px 10px; background: #f3eee0; border-left: 3px solid #8c2d1e; } code { font-size: 9pt; } li { margin: 2px 0; } hr { border: 0; border-top: 1px solid #bbb; margin: 14px 0; }</style><h1
 id="general-staff--a-card-driven-solo-opponent-for-paths-of-glory">General
 Staff — a card-driven solo opponent for <em>Paths of Glory</em></h1>
-<p><strong>Version 0.7.2 (playtest draft)</strong> · Unofficial fan
+<p><strong>Version 0.7.3 (playtest draft)</strong> · Unofficial fan
 material for GMT Games' <em>Paths of Glory</em> (Deluxe edition,
 Historical scenario / full campaign, the standard 110 strategy cards, no
 optional cards). You need the physical game. Strategy-card numbers below
@@ -27,7 +27,10 @@ page) draws Staff cards, works out Edge and Score, and lists the tables.
 Everything it does is also on the printed sheets.</p>
 <hr />
 <h2 id="1-components-and-setup">1. Components and setup</h2>
-<p><strong>Staff cards (18).</strong> Each card shows:</p>
+<p><strong>Staff cards (18).</strong> Print <code>staff_cards.pdf</code>
+at 100% on US Letter: six poker-size cards per page, each face page
+followed by a page of backs (print double-sided, flipping on the long
+edge, or print the odd pages only). Each card shows:</p>
 <ul>
 <li>a <strong>Front number</strong> (1–6). Find the front on the bot's
 <strong>Front Table</strong> (§10.2) for its current War Commitment
@@ -50,13 +53,13 @@ human player.</p>
 VP marker 1 or 2 spaces in the bot's favour: toward 20 when the bot
 plays the Central Powers, toward 0 when it plays the Allies. For an
 easier game, move it toward you instead. In bot-versus-bot tests, each
-VP of handicap shifted the result by about five or six percentage
-points. The Allied bot is the stronger of the two, so a player facing
-the Central Powers bot may want to start with 1 or 2 VP in the bot's
-favour. Keep the bot's hand face down beside the board and look at it
-when the procedure tells you to. The bot plays to fixed rules, so seeing
-its cards gives you little, but the honest habit is to look only when
-asked.</p>
+VP of handicap shifted the result by about six percentage points. The
+Allied bot is clearly the stronger of the two. A player facing the
+Central Powers bot may want to start with 1 to 3 VP in the bot's favour,
+raising it if the bot still loses. Keep the bot's hand face down beside
+the board and look at it when the procedure tells you to. The bot plays
+to fixed rules, so seeing its cards gives you little, but the honest
+habit is to look only when asked.</p>
 <hr />
 <h2 id="2-terms">2. Terms</h2>
 <ul>
@@ -216,14 +219,14 @@ Then use any OPS left for Move activations, going down the Move list
 once.</li>
 <li><strong>Resolve</strong> movement and then combat, as the rules
 require. Make the planned attacks in order. Before each one, work out
-its Edge again with the units now able to attack, and keep the bonuses
-from planning. If the units now able to attack would no longer satisfy
-the MO, drop the MO bonus: it is now an ordinary attack. Skip it if it
-is no longer possible, or if this new Score has fallen more than 0.5
-below the Stance. Never skip an attack that still satisfies the MO. Then
-units in spaces activated for combat that have not attacked may attack
-the target with the best Edge (no bonuses), if that Edge meets the
-Stance, one attack at a time.</li>
+its Edge again with the attacking group (§5.2) of the units now able to
+attack, and keep the bonuses from planning. If the units now able to
+attack would no longer satisfy the MO, drop the MO bonus: it is now an
+ordinary attack. Skip it if it is no longer possible, or if this new
+Score has fallen more than 0.5 below the Stance. Never skip an attack
+that still satisfies the MO. Then units in spaces activated for combat
+that have not attacked may attack the target with the best Edge (no
+bonuses), if that Edge meets the Stance, one attack at a time.</li>
 </ol>
 <hr />
 <h2 id="5-attack-search">5. Attack Search</h2>
@@ -236,14 +239,21 @@ Near East restrictions and similar rules apply as usual.</p>
 <h3 id="52-shortlist-and-attackers">5.2 Shortlist and attackers</h3>
 <p>For each target, the <strong>attackers</strong> are the bot units
 able to attack it, from one or more adjacent spaces.</p>
+<p><strong>Attacking together.</strong> Units in several spaces can join
+one attack only where the rules allow it. In particular, when units of
+different nationalities attack from more than one space, one attacking
+space must hold units of every nationality taking part (12.1.11.1).
+Build the attacking group space by space, strongest space first, and
+skip a space whose units could not legally join the units already taken.
+The Score of a target (§5.3) always uses this group.</p>
 <p>Make a <strong>shortlist</strong> across the whole map: the
 <strong>three</strong> targets with the largest <strong>CF
 difference</strong>, counting the CF of every bot unit able to attack
 the target (whatever the OPS) minus the defending CF and any undestroyed
 fort's value. Add any target that is the Objective of its own front, and
-any target where an attack by all those units would satisfy the bot's
-unmet MO. Rank the shortlist by Score (§5.3) worked out the same
-way.</p>
+any target where an attack by its attacking group would satisfy the
+bot's unmet MO. Rank the shortlist by Score (§5.3), using each target's
+attacking group.</p>
 <h3 id="53-edge-and-score">5.3 Edge and Score</h3>
 <p>For each shortlisted target, find both fire columns exactly as in
 combat.</p>
@@ -305,7 +315,8 @@ Objective</td>
 <h3 id="54-decision">5.4 Decision</h3>
 <p>Consider the shortlisted targets from the highest Score down. For
 each, take its attacking spaces strongest first, skipping any whose
-activation cost no longer fits the OPS still unspent, and work out the
+activation cost no longer fits the OPS still unspent or whose units
+could not legally join those already taken (§5.2), and work out the
 Score again with only those units. The MO bonus counts only if those
 units would satisfy the MO. Attack if the Score meets the Staff card's
 Stance (a Score equal to the threshold meets it):</p>
@@ -396,7 +407,9 @@ a bot-controlled space below trench level 2, attempts to entrench.</td>
 </table>
 <p>Once a space is activated, ignore its other entries on the list.</p>
 <p><strong>How a stack moves.</strong> Move the strongest units of the
-stack, up to three. At each step, enter the adjacent space nearest the
+stack, up to three, but no more than the first step can take without
+overstacking (the Guard rule still applies). If no unit can take a step,
+drop the move. At each step, enter the adjacent space nearest the
 destination (ties: the Tie) that the stack may legally enter and end its
 move in, that holds no enemy unit, that would not overstack, and that is
 not an enemy fort the stack cannot besiege. Stop if no such space is
@@ -556,10 +569,60 @@ its MO as met (no MO bonus, no MO steps). Its French units still attack
 normally; pay any VP the rules charge.</td>
 </tr>
 <tr class="even">
-<td><strong>Other choices</strong> (attrition, sieges, where to place
-event trenches or entering neutrals, which army entrenches)</td>
+<td><strong>Other choices</strong> (attrition, sieges, where to place an
+event trench, which army entrenches)</td>
 <td>Follow the rules; where the bot must choose, use front order, then
 the Tie. When an army entrenches, use the strongest.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Event choices.</strong> When an event the bot played, or an
+event affecting the bot, asks it to choose:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Event</th>
+<th>The bot's choice</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Landwehr</strong> (CP)</td>
+<td>Use the whole effect. Flip reduced German units in the Replacement
+Phase order: armies in contact, other armies, corps in contact, other
+corps; ties: front order, then the Tie.</td>
+</tr>
+<tr class="even">
+<td><strong>War in Africa</strong> (bot is the Allies)</td>
+<td>Remove a British corps rather than give the VP: one in the Reserve
+Box first, then one out of contact, then any. Among equals, take the one
+whose space is latest in front order. Give the VP only if no corps can
+be removed.</td>
+</tr>
+<tr class="odd">
+<td><strong>Salonika</strong> (Allied bot)</td>
+<td>Send corps to Salonika up to the limit: from the Reserve Box first,
+then from spaces out of contact (latest in front order first). Never
+send a corps that is in contact.</td>
+</tr>
+<tr class="even">
+<td><strong>Entering neutral units</strong></td>
+<td>Place each unit in an empty space of its nation: next to enemy units
+first, then a VP space, then any; ties: the Tie.</td>
+</tr>
+<tr class="odd">
+<td><strong>Withdrawal</strong> (bot defending)</td>
+<td>Negate the loss that eliminated a unit first, otherwise the loss of
+the strongest unit.</td>
+</tr>
+<tr class="even">
+<td><strong>Trench-negating combat cards</strong></td>
+<td>Play them when the rules offer them, as for any combat card when
+attacking.</td>
+</tr>
+<tr class="odd">
+<td><strong>Kerensky Offensive</strong></td>
+<td>Use the +2 on the first Russian attack that can take it.</td>
 </tr>
 </tbody>
 </table>

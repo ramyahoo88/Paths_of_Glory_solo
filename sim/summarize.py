@@ -50,15 +50,20 @@ ALL = load('*.json')
 if ALL:
     inc = [g for g in ALL if g.get('err') or not g.get('result')]
     exc = sum(len(g.get('exceptions', [])) for g in ALL)
-    viol = Counter(); fb = Counter(); undo = 0
+    viol = Counter(); fb = Counter(); forced = Counter(); undo = 0; hold = 0; called = 0
     for g in ALL:
         for side in ('ap', 'cp'):
             s_ = g['stats'][side]
             undo += s_.get('undos', 0) or 0
+            hold += s_.get('holdMoves', 0) or 0
+            called += s_.get('calledOff', 0) or 0
             for k, v in (s_.get('fallback') or {}).items():
                 if k.startswith('viol:'): viol[k.split(':')[2]] += v
-                elif k.startswith('illegal:'): fb['rejected bot proposal (' + k.split(':')[1] + ')'] += v
-                else: fb['engine default: ' + k] += v
+                elif k.startswith('illegal:'): fb['rejected bot proposal: ' + k.split(':')[1]] += v
+                elif k.startswith('forced:'): forced[k.split(':', 1)[1]] += v
+                elif k.startswith('nochoice:'): fb['handler found no choice: ' + k.split(':', 1)[1]] += v
+                elif k.startswith('nohandler:'): fb['no bot rule (engine default): ' + k.split(':', 1)[1]] += v
+                else: fb['engine default (unclassified): ' + k] += v
     print()
     print('**Run health** (all games above)')
     print('| Check | Count |')
@@ -70,9 +75,12 @@ if ALL:
     hit = sum(1 for g in ALL if any(g['stats'][x].get('violations') for x in ('ap', 'cp')))
     print(f'| Rule-violation resets (' + (', '.join(f'{k} {v}' for k, v in viol.most_common()) or 'none') + f'); games affected: {hit} | {resets} |')
     print(f'| Undo of a dead-end step | {undo} |')
-    print(f'| Choices left to the engine default or rejected bot proposals | {sum(fb.values())} |')
+    print(f'| Units moved one safe step because their planned move was abandoned | {hold} |')
+    print(f'| Attacks called off after the final check of the selected units | {called} |')
+    print(f'| Choices with no bot rule, empty handler results or rejected proposals | {sum(fb.values())} |')
     for k, v in fb.most_common(12): print(f'| &nbsp;&nbsp;{k} | {v} |')
-    digest['health'] = dict(games=len(ALL), incomplete=len(inc), exceptions=exc, violations=dict(viol), undos=undo, fallback=dict(fb))
+    print(f'| Forced acknowledgements (one legal action, no choice) | {sum(forced.values())} |')
+    digest['health'] = dict(games=len(ALL), incomplete=len(inc), exceptions=exc, violations=dict(viol), undos=undo, holdMoves=hold, calledOff=called, fallback=dict(fb), forced=dict(forced))
 
 # Self-play details
 G = load('self_*.json')

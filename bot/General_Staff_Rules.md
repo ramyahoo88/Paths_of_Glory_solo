@@ -1,6 +1,6 @@
 # General Staff — a card-driven solo opponent for *Paths of Glory*
 
-**Version 0.7.2 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
+**Version 0.7.3 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
 
 General Staff can command **either side**; you play the other side normally. The bot follows the same rules you do. It holds a hand of real strategy cards and takes six action rounds a turn. Each round it plays a card as an Event, for Operations (OPS), for Strategic Redeployment (SR) or for Replacement Points (RP), or it takes the 1-OP Automatic Operation. It never breaks a rule, never looks at your hand and never rolls dice to make a decision. Its decisions come from a deck of **Staff cards** and the fixed priorities in this booklet. Dice are rolled only where the game rules call for them (combat, mandated offensives, entrenching, sieges and so on).
 
@@ -12,7 +12,7 @@ The optional **General Staff Companion** (an offline web page) draws Staff cards
 
 ## 1. Components and setup
 
-**Staff cards (18).** Each card shows:
+**Staff cards (18).** Print `staff_cards.pdf` at 100% on US Letter: six poker-size cards per page, each face page followed by a page of backs (print double-sided, flipping on the long edge, or print the odd pages only). Each card shows:
 
 * a **Front number** (1–6). Find the front on the bot's **Front Table** (§10.2) for its current War Commitment level;
 * a **Stance**: *Assault*, *Press* or *Hold*. It sets how good an attack must look (§5.4);
@@ -23,7 +23,7 @@ The optional **General Staff Companion** (an offline web page) draws Staff cards
 
 **Setup.** Set up the Historical scenario normally. Shuffle the Staff deck. Deal the bot its strategy cards exactly as for a human player.
 
-**Difficulty (optional).** For a harder game, start the VP marker 1 or 2 spaces in the bot's favour: toward 20 when the bot plays the Central Powers, toward 0 when it plays the Allies. For an easier game, move it toward you instead. In bot-versus-bot tests, each VP of handicap shifted the result by about five or six percentage points. The Allied bot is the stronger of the two, so a player facing the Central Powers bot may want to start with 1 or 2 VP in the bot's favour. Keep the bot's hand face down beside the board and look at it when the procedure tells you to. The bot plays to fixed rules, so seeing its cards gives you little, but the honest habit is to look only when asked.
+**Difficulty (optional).** For a harder game, start the VP marker 1 or 2 spaces in the bot's favour: toward 20 when the bot plays the Central Powers, toward 0 when it plays the Allies. For an easier game, move it toward you instead. In bot-versus-bot tests, each VP of handicap shifted the result by about six percentage points. The Allied bot is clearly the stronger of the two. A player facing the Central Powers bot may want to start with 1 to 3 VP in the bot's favour, raising it if the bot still loses. Keep the bot's hand face down beside the board and look at it when the procedure tells you to. The bot plays to fixed rules, so seeing its cards gives you little, but the honest habit is to look only when asked.
 
 ---
 
@@ -79,7 +79,7 @@ Draw one Staff card. When the deck runs out, shuffle the discards to form a new 
    * Otherwise play the card with the **lowest OPS value that is enough** for the planned attacks (if none are planned, enough for the first planned move), avoiding cards of event priority 6 or more unless no other card is enough. Ties: lower event priority, then the lower card number. For this choice, and for RP and SR, a combat card counts as priority 0.
    * If no card is enough, play the one with the highest OPS value (ties: lower priority) and plan again within it.
 3. **Spend the OPS.** Activate the planned attack spaces. Then use any OPS left for Move activations, going down the Move list (§6) and skipping any that cost too much. Each space is activated only once.
-4. **Resolve** movement and then combat, as the rules require. Make the planned attacks in order. Before each one, work out its Edge again with the units now able to attack, and keep the bonuses from planning. If the units now able to attack would no longer satisfy the MO, drop the MO bonus: it is now an ordinary attack. Skip it if it is no longer possible, or if this new Score has fallen more than 0.5 below the Stance. Never skip an attack that still satisfies the MO. Then units in spaces activated for combat that have not attacked may attack the target with the best Edge (no bonuses), if that Edge meets the Stance, one attack at a time.
+4. **Resolve** movement and then combat, as the rules require. Make the planned attacks in order. Before each one, work out its Edge again with the attacking group (§5.2) of the units now able to attack, and keep the bonuses from planning. If the units now able to attack would no longer satisfy the MO, drop the MO bonus: it is now an ordinary attack. Skip it if it is no longer possible, or if this new Score has fallen more than 0.5 below the Stance. Never skip an attack that still satisfies the MO. Then units in spaces activated for combat that have not attacked may attack the target with the best Edge (no bonuses), if that Edge meets the Stance, one attack at a time.
 
 ---
 
@@ -93,7 +93,9 @@ A **target** is an enemy-occupied space, or an enemy-controlled fort that is not
 
 For each target, the **attackers** are the bot units able to attack it, from one or more adjacent spaces.
 
-Make a **shortlist** across the whole map: the **three** targets with the largest **CF difference**, counting the CF of every bot unit able to attack the target (whatever the OPS) minus the defending CF and any undestroyed fort's value. Add any target that is the Objective of its own front, and any target where an attack by all those units would satisfy the bot's unmet MO. Rank the shortlist by Score (§5.3) worked out the same way.
+**Attacking together.** Units in several spaces can join one attack only where the rules allow it. In particular, when units of different nationalities attack from more than one space, one attacking space must hold units of every nationality taking part (12.1.11.1). Build the attacking group space by space, strongest space first, and skip a space whose units could not legally join the units already taken. The Score of a target (§5.3) always uses this group.
+
+Make a **shortlist** across the whole map: the **three** targets with the largest **CF difference**, counting the CF of every bot unit able to attack the target (whatever the OPS) minus the defending CF and any undestroyed fort's value. Add any target that is the Objective of its own front, and any target where an attack by its attacking group would satisfy the bot's unmet MO. Rank the shortlist by Score (§5.3), using each target's attacking group.
 
 ### 5.3 Edge and Score
 
@@ -120,7 +122,7 @@ Read each column's **expected hits** from the Edge table (§10.4), using its one
 
 ### 5.4 Decision
 
-Consider the shortlisted targets from the highest Score down. For each, take its attacking spaces strongest first, skipping any whose activation cost no longer fits the OPS still unspent, and work out the Score again with only those units. The MO bonus counts only if those units would satisfy the MO. Attack if the Score meets the Staff card's Stance (a Score equal to the threshold meets it):
+Consider the shortlisted targets from the highest Score down. For each, take its attacking spaces strongest first, skipping any whose activation cost no longer fits the OPS still unspent or whose units could not legally join those already taken (§5.2), and work out the Score again with only those units. The MO bonus counts only if those units would satisfy the MO. Attack if the Score meets the Staff card's Stance (a Score equal to the threshold meets it):
 
 | Stance | Central Powers bot: attack if the Score is at least | Allied bot: attack if the Score is at least |
 |---|---|---|
@@ -148,7 +150,7 @@ The **Move list** holds every move below that the bot could make, ranked by **Mo
 
 Once a space is activated, ignore its other entries on the list.
 
-**How a stack moves.** Move the strongest units of the stack, up to three. At each step, enter the adjacent space nearest the destination (ties: the Tie) that the stack may legally enter and end its move in, that holds no enemy unit, that would not overstack, and that is not an enemy fort the stack cannot besiege. Stop if no such space is nearer the destination than the stack is, or if the next space would be out of supply.
+**How a stack moves.** Move the strongest units of the stack, up to three, but no more than the first step can take without overstacking (the Guard rule still applies). If no unit can take a step, drop the move. At each step, enter the adjacent space nearest the destination (ties: the Tie) that the stack may legally enter and end its move in, that holds no enemy unit, that would not overstack, and that is not an enemy fort the stack cannot besiege. Stop if no such space is nearer the destination than the stack is, or if the next space would be out of supply.
 
 **Guard rule.** When a stack of two or more units leaves a bot-controlled space that is in contact, it leaves its weakest unit behind, unless it is capturing a VP space. A lone unit may move.
 
@@ -213,7 +215,19 @@ When the bot chooses a card for OPS, SR or RP, a combat card counts as priority 
 | **Draw phase** | Before drawing, if the bot holds three or more combat cards, discard the one with the lowest keep value (ties: lower card number); repeat until it holds two. Never discard other cards. |
 | **Attacks granted by an event** (Guns of August and the like) | Attack the target with the best Edge (no bonuses) that meets the Stance, then the next, as in §4 step 4. If none meets the Stance, make no attack. |
 | **French Mutiny** | While French Mutiny replaces the Allied MO, the Allied bot treats its MO as met (no MO bonus, no MO steps). Its French units still attack normally; pay any VP the rules charge. |
-| **Other choices** (attrition, sieges, where to place event trenches or entering neutrals, which army entrenches) | Follow the rules; where the bot must choose, use front order, then the Tie. When an army entrenches, use the strongest. |
+| **Other choices** (attrition, sieges, where to place an event trench, which army entrenches) | Follow the rules; where the bot must choose, use front order, then the Tie. When an army entrenches, use the strongest. |
+
+**Event choices.** When an event the bot played, or an event affecting the bot, asks it to choose:
+
+| Event | The bot's choice |
+|---|---|
+| **Landwehr** (CP) | Use the whole effect. Flip reduced German units in the Replacement Phase order: armies in contact, other armies, corps in contact, other corps; ties: front order, then the Tie. |
+| **War in Africa** (bot is the Allies) | Remove a British corps rather than give the VP: one in the Reserve Box first, then one out of contact, then any. Among equals, take the one whose space is latest in front order. Give the VP only if no corps can be removed. |
+| **Salonika** (Allied bot) | Send corps to Salonika up to the limit: from the Reserve Box first, then from spaces out of contact (latest in front order first). Never send a corps that is in contact. |
+| **Entering neutral units** | Place each unit in an empty space of its nation: next to enemy units first, then a VP space, then any; ties: the Tie. |
+| **Withdrawal** (bot defending) | Negate the loss that eliminated a unit first, otherwise the loss of the strongest unit. |
+| **Trench-negating combat cards** | Play them when the rules offer them, as for any combat card when attacking. |
+| **Kerensky Offensive** | Use the +2 on the first Russian attack that can take it. |
 
 ---
 

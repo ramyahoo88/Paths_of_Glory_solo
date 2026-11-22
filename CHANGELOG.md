@@ -1,5 +1,30 @@
 # Changelog
 
+## v0.7.3 — 22 Nov 2026
+
+Corrective patch for the comprehensive v0.7.2 audit (`audits/general-staff-v0.7.2-comprehensive/`). Response: [`audits/general-staff-v0.7.2-comprehensive/Response.md`](audits/general-staff-v0.7.2-comprehensive/Response.md).
+
+* **Staff cards print whole (GS-09).** Six cards per Letter page, each face page followed by a page of backs. `print/check_print.py` checks that every face's top, Tie and card number are on one page.
+* **Companion (GS-10 to GS-13).**
+  * A rounds 5–6 MO attack below the Stance is shown as mandatory. An empty fort ignores leftover unit CF, and the unit-only fields are disabled.
+  * Undo before a reshuffle restores the exact pre-draw state.
+  * Saved sessions are validated. Damaged data is set aside with a visible notice, a damaged Undo step is skipped, and a failed save is reported.
+  * New: a **New deck** button and a turn/round/MO tracker that shows which action-round steps apply.
+  * `app/test_companion.cjs` covers all of this.
+* **Legal attack groups (GS-14).** Attacking spaces are taken strongest first, skipping a space whose units could not legally join those already taken (the multinational rule and the like). The Score always uses that group. Before an attack is committed, the selected units are checked again.
+* **Event choices (GS-06).** Named rules for Landwehr (use the whole effect), War in Africa (remove a British corps rather than give the VP), Salonika, entering neutral units, Withdrawal, trench-negating combat cards and Kerensky Offensive. They are in the rules (§9, *Event choices*) and the simulator.
+* **Movement (GS-07).**
+  * A stack moves no more units than its first step can take. A move with no legal first step is dropped at planning.
+  * An abandoned move never resumes through the generic fallback.
+  * An event-granted operation keeps the plan made for it. Before, its moves were lost and units moved by the generic fallback.
+  * SR picks only units that have room at a destination, and movement respects the Brest-Litovsk stacking rule.
+* **Event trench (GS-08).** Front order, then the Tie, as printed.
+* **Run health** now separates choices with no bot rule from forced acknowledgements, and counts abandoned moves and called-off attacks.
+* Testing. Following the printed procedure everywhere made both bots much stronger against the v0.7 reference bots: Allies 66–68% → **90–95%**, CP 32–45% → **49–56%** (paired, two seed sets). The biggest single gain is the event-granted Operation fix; each change was isolated in the report.
+  * Strict self-play is now **Allies 84% / CP 16%**. About five VP of handicap evens a bot-versus-bot game.
+  * Run health: 1 rule-violation reset in 740 games (v0.7.2: 67), no unfinished games or exceptions, no choice-bearing state without a bot rule.
+  * Removing a British corps for War in Africa beat giving the VP by about two points on both seed sets.
+
 ## v0.7.2 — 22 Nov 2026
 
 Fixes for the five findings of the independent v0.7.1 review (`audits/general-staff-v0.7.1/`). There is no new strategy. Response: [`audits/general-staff-v0.7.1/Response.md`](audits/general-staff-v0.7.1/Response.md).

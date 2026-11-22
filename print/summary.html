@@ -15,7 +15,7 @@
 <li>Targets: enemy-occupied spaces and unbesieged enemy forts the bot can legally attack.</li>
 <li>Shortlist: the 3 largest CF differences (CF of all bot units able to attack &minus; defending CF &minus; fort), plus Objectives and MO targets.</li>
 <li>Edge = bot's expected hits &minus; defender's (Edge table values as printed, after shifts; a 0-CF defender still fires). Score = Edge + bonuses (sheet 2). Rank by Score.</li>
-<li>From the top: take attacking spaces strongest first, skipping any the remaining OPS cannot pay; rescore (MO bonus only if the chosen units satisfy the MO); attack if Score &ge; Stance (CP: Assault 0, Press +0.75, Hold +1.5; Allies +1 more). From round 5 an MO attack is made at any Score.</li>
+<li>From the top: take attacking spaces strongest first, skipping any the remaining OPS cannot pay or whose units cannot legally join (mixed nationalities from 2+ spaces need one space holding all of them); rescore (MO bonus only if the chosen units satisfy the MO); attack if Score &ge; Stance (CP: Assault 0, Press +0.75, Hold +1.5; Allies +1 more). From round 5 an MO attack is made at any Score.</li>
 <li>Up to 3 attacks, each space once; leftover OPS go down the Move list.</li>
 <li>Resolving: recompute each Edge, keep the bonuses (drop the MO bonus if the MO is no longer met); skip if &gt;0.5 below the Stance (never an attack that still meets the MO). Then unused attackers may hit the best Edge &ge; Stance.</li>
 </ol>
@@ -28,7 +28,7 @@
 <tr><td><b>Siege</b> an adjacent empty enemy fort (army, or corps &ge; fort)</td><td>3 VP / 2</td></tr>
 <tr><td><b>Forward</b>: rear stack toward the nearest contact space with &lt;3 units (distance + &frac12; its distance to the Objective)</td><td>army 1.5 (Allies 2.5) / 1</td></tr>
 <tr><td><b>Entrench</b> an army in contact (after an Entrench event)</td><td>1.5 Hold / 0.5</td></tr></table>
-<p class="small"><b>Guard</b>: a stack of 2+ leaving a bot space in contact leaves its weakest unit (except to capture a VP space). Each step: the legal adjacent space nearest the destination (Tie); never overstack, never end out of supply or in a fort space you cannot besiege; stop if no step gets nearer.</p>
+<p class="small"><b>Guard</b>: a stack of 2+ leaving a bot space in contact leaves its weakest unit (except to capture a VP space). Move no more units than the first step can take. Each step: the legal adjacent space nearest the destination (Tie); never overstack, never end out of supply or in a fort space you cannot besiege; stop if no step gets nearer.</p>
 <h3>Logistics</h3>
 <p><b>RP</b> if missing steps &minus; RP held &ge; 3 (fallback 1.5): the card covering most missing steps (at least 2; fallback 1). <b>SR</b> if units worth &ge; 4 SR points (fallback 1) sit in the Reserve Box or &gt;3 spaces from the enemy: card whose SR value is closest (max 5); redeploy those units, armies first. Cards of priority 7+ are never used for RP or SR. Card ties: lower priority, lower number. No RP or SR right after the same play; no RP in the Influenza turn.</p>
 <h3>Combat and phases</h3>
@@ -40,6 +40,7 @@
 <li><b>Hold ground</b>: in a VP space or capital with a full-strength unit, take the extra step to cancel a retreat where allowed.</li>
 <li><b>Advance</b>: into a VP, fort or own-front Objective-list space, or with an Assault or Press card; strongest first, up to 3 in the space; leave one unit in an emptied space still in contact; one space only.</li>
 <li><b>Replacements</b>: armies in contact, other armies on the map, eliminated armies, then corps likewise. Rebuilt armies: earliest of West, East, Italy, Balkans, Near East.</li>
+<li><b>Event choices</b> (rules &sect;9): Landwehr flips in Replacement order; War in Africa removes a British corps (Reserve Box first); Salonika sends corps not in contact; entering neutrals go next to the enemy first; Kerensky +2 on the first Russian attack.</li>
 <li><b>Reinforcements</b>: no overstack &gt; earliest front in front order &gt; nearest an enemy unit &gt; Tie.</li>
 <li><b>Draw</b>: with 3+ combat cards, discard the lowest keep value until two remain.</li>
 </ul>
