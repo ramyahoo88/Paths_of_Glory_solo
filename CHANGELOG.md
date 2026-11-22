@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.7.4 — 22 Nov 2026
+
+Short corrective patch for the v0.7.3 re-audit (`audits/general-staff-v0.7.3/`). Response: [`audits/general-staff-v0.7.3/Response.md`](audits/general-staff-v0.7.3/Response.md).
+
+* **Salonika (GS-06 addendum).** The Allied bot plays Salonika as an event only if at least one corps may go: a British or French corps in the Reserve Box, or in an Allied port space out of contact. Without one, the card is kept for another use. The play condition is printed in §9 and on the event list. The handler keeps its contact filter. A safety path, never reached in testing, is counted in run health.
+* **Event Tie (GS-15).** War in Africa and Salonika take the latest front first, then the ordinary Tie within that front. Before, the reversed list also reversed the Tie.
+* `sim/tests/event_choices.js` checks both events with both Ties, the Reserve Box control, the contact-only Salonika position and the re-audit's reached campaign (seed 1080055).
+* Seed-level result files for v0.7.3 and v0.7.4 are now in `sim/results/`.
+* Testing: 600 fresh strict self-play games (seeds 1080000–1080599) finished with no exceptions and no choice left to the engine's default. Allies won 85% and the CP 15%. There were 2 rule-violation resets, both in one game.
+
 ## v0.7.3 — 22 Nov 2026
 
 Corrective patch for the comprehensive v0.7.2 audit (`audits/general-staff-v0.7.2-comprehensive/`). Response: [`audits/general-staff-v0.7.2-comprehensive/Response.md`](audits/general-staff-v0.7.2-comprehensive/Response.md).

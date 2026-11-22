@@ -61,7 +61,7 @@ for (let seed = start; seed < start + n; seed++) {
 function pick(s) {
   const o = {}
   for (const k of Object.keys(s)) if (k.startsWith('step:')) o[k] = s[k]
-  for (const k of ['rounds', 'events', 'ops', 'sr', 'rp', 'single', 'attacks', 'advances', 'evals', 'violations', 'undos', 'abandoned', 'holdMoves', 'calledOff', 'errors', 'edgeSum', 'idle']) if (s[k] !== undefined) o[k] = s[k]
+  for (const k of ['rounds', 'events', 'ops', 'sr', 'rp', 'single', 'attacks', 'advances', 'evals', 'violations', 'undos', 'abandoned', 'holdMoves', 'calledOff', 'salonikaForced', 'errors', 'edgeSum', 'idle']) if (s[k] !== undefined) o[k] = s[k]
   // fallback reasons: engine states with no bot handler (engine default taken), rejected bot proposals, rule-violation kinds
   o.fallback = Object.assign({}, s.fallback || {})
   o.steps = s.steps

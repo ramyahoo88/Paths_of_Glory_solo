@@ -22,6 +22,7 @@ const ADJUST = {
   44: (b, A, p) => (A.game.war.bu ? 5 : 2), // Greece
   27: (b, A, p) => 0, // Great Retreat: reactive, keep as OPS
   45: (b, A, p) => 7, 46: (b, A, p) => 5,
+  30: (b, A, p) => (b.salonikaCandidates && !b.salonikaCandidates(A).length ? 0 : p), // Salonika: only with a corps the bot may send
   // CP
   71: (b, A, p) => A.game.turn >= 2 ? 6 : 0, // Entrench (CP)
   73: (b, A, p) => 3, // Race to the Sea
@@ -85,6 +86,7 @@ const NOTE = {
   16: '4 while the Allies are at Mobilization, otherwise 6.',
   44: '5 if Bulgaria is at war, otherwise 2.', 27: 'Never as an event.',
   71: '0 on turn 1; 6 from turn 2 while no Entrench event has been played.',
+  30: 'Not as an event unless a BR or FR corps can go: in the Reserve Box, or in an Allied port space out of contact.',
   98: '3 once Independent Air Force has been played.', 112: '8 if the Allied MO this turn is France.', 120: 'Never as an event.',
 }
 // Printed priority (situational cards show their usual value; the note gives the rule).

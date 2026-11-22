@@ -1,10 +1,11 @@
 # General Staff — simulation report
 
-*Covers General Staff **v0.7**, with checks of **v0.7.1**, **v0.7.2** and **v0.7.3** (rules: [`bot/General_Staff_Rules.md`](../bot/General_Staff_Rules.md)). Written 22 November 2026.*
+*Covers General Staff **v0.7**, with checks of **v0.7.1** to **v0.7.4** (rules: [`bot/General_Staff_Rules.md`](../bot/General_Staff_Rules.md)). Written 22 November 2026.*
 
 ## Summary
 
-* **v0.7.3 (current).** v0.7.3 fixes the nine findings of a comprehensive audit. The simulator now follows the printed procedure in every choice it meets, including event choices and event-granted Operations. Both bots are much stronger against the v0.7 reference: Allies 90–95%, CP 49–56%. Strict self-play is **84% Allies / 16% CP**, with one rule-violation reset in 740 games (see *v0.7.3: comprehensive audit fixes*).
+* **v0.7.4 (current).** v0.7.4 corrects the two issues left by the v0.7.3 re-audit: a Salonika corps in contact and the event Tie. 600 fresh strict self-play games: **85% Allies / 15% CP**, no exceptions, no choice left to the engine's default (see *v0.7.4: re-audit corrections*).
+* **v0.7.3.** v0.7.3 fixes the nine findings of a comprehensive audit. The simulator now follows the printed procedure in every choice it meets, including event choices and event-granted Operations. Both bots are much stronger against the v0.7 reference: Allies 90–95%, CP 49–56%. Strict self-play is **84% Allies / 16% CP**, with one rule-violation reset in 740 games (see *v0.7.3: comprehensive audit fixes*).
 * **v0.7.2.** v0.7.2 fixes the five findings of an independent review: MO credit, a Companion error, one shared Edge-table precision, evaluation honesty and engine setup. Strict self-play over 600 games is **67% Allies / 33% CP**, with no exceptions and no unfinished games (see *v0.7.2: review fixes*). v0.7.1 had made the Allied bot about seven points stronger by following the printed Capture tie-break. The rest of this summary describes v0.7.
 * In **200 self-play campaigns** (bot against bot), the Allied bot won **62%** and the Central Powers bot **38%**. Mean VP stayed between 8 and 12 all war.
 * Against a **random** player and against a **naive** one-attack, no-events bot, General Staff won **every** game on both sides: 260 of 260.
@@ -30,6 +31,27 @@
 * **Naive**: the same machinery with the main features off. It plays only forced events and makes one attack per action round. It does not advance, move, use SR or fill crisis spaces, and it checks every target. This is roughly a first-draft "one order per round" bot.
 
 **Design comparisons.** A candidate bot played one side against a frozen reference bot on the other side, on the same seeds: 120 or 150 per side. At those sizes the standard error of a win rate near 50% is about ±4 points. Only differences of about 10 points or more were treated as real. When a change made no difference, the simpler procedure was kept.
+
+## v0.7.4: re-audit corrections
+
+The v0.7.3 re-audit ([`audits/general-staff-v0.7.3/`](../audits/general-staff-v0.7.3/)) closed eight of the nine findings and reported two remaining issues:
+
+* a Salonika transfer of a corps in contact, made through the generic fallback when the only offered corps was in contact;
+* War in Africa and Salonika ties reversed within a front.
+
+Both are fixed ([response](../audits/general-staff-v0.7.3/Response.md)). Fresh strict self-play, seeds 1080000–1080599:
+
+| Check | Result |
+|---|---|
+| Games / Allied wins / CP wins | 600 / 510 (85%) / 90 (15%) |
+| Unfinished games, harness errors, decision exceptions | 0 |
+| Choices left to the engine's default | 0 |
+| Salonika safety-path transfers | 0 |
+| Rule-violation resets | 2, in one game (an army too weak to besiege) |
+| Units moved one safe step after an abandoned move | 5 |
+| Mandated offensives missed per game | Allies 2.7, CP 1.2 |
+
+Seed-level files for this run and for the v0.7.3 tables are in [`results/`](results/).
 
 ## v0.7.3: comprehensive audit fixes
 
@@ -63,10 +85,10 @@ Where the gain comes from (seeds 7001–7300, Allied / CP bot, each change undon
 | Nothing (v0.7.3) | 95% | 56% |
 | Event-granted Operations keep their plan | 83% | 47% |
 | Named event choices (Landwehr, War in Africa, Salonika, neutral placement, etc.) | 88% | 49% |
-| Legal attack groups, step capacity and first-step check | 87% (39 decision errors) | 50% (72 decision errors) |
+| Legal attack groups, step capacity and first-step check (undone together) | 87% (39 decision errors) | 50% (72 decision errors) |
 | War in Africa: give the VP instead of a corps | 92% (and 89% vs 90% on seeds 6001–6300) | — |
 
-Each fix helps both sides. The Allied bot gains more, so self-play balance moved toward the Allies. The handicap needed for an even bot-versus-bot game is now about **five VP** for the CP bot (table below).
+Each fix helps both sides. One-at-a-time ablations interact, so these differences are not additive. The Allied bot gains more, so self-play balance moved toward the Allies. The handicap needed for an even bot-versus-bot game is now about **five VP** for the CP bot (table below).
 
 **Run health, strict mode** (740 v0.7.3 evaluation games):
 

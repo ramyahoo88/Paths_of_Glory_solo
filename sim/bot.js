@@ -1153,6 +1153,26 @@ class Bot {
     for (const n of ['Liege', 'Sedan', 'Namur', 'Brussels']) { const s = B.byName[n]; if (sp.includes(s)) return ['space', s] }
     return sp.length ? ['space', sp[0]] : null
   }
+  // spaces on the latest front in front order first; within a front, the Tie (spaces off the five fronts first: boxes)
+  byLatestFrontThenTie(A, spaces) {
+    const fo = this.frontsInOrder(A)
+    const fi = x => { const i = fo.indexOf(B.FRONT[x]); return i < 0 ? 99 : i }
+    return spaces.slice().sort((a, b) => fi(b) - fi(a) || this.tie(a, b))
+  }
+  // Salonika transfer candidates the engine allows (BR/FR corps, not BEF or minor British, in an Allied port or the
+  // Reserve Box, not at Salonika) that the bot may send: in the Reserve Box or out of contact (§9, Event choices)
+  salonikaCandidates(A) {
+    const SAL = B.S('Salonika'), out = []
+    if (A.is_fully_stacked(SAL, A.AP)) return out
+    for (let p = 1; p < data.pieces.length; p++) {
+      const at = A.game.location[p], pd = data.pieces[p]
+      if (!at || at === SAL || pd.type !== 'corps' || A.is_bef_unit(p)) continue
+      if (!(pd.nation === 'fr' || (pd.nation === 'br' && !A.is_minor_british_nation(p)))) continue
+      if (!(A.is_port(at, A.AP) || at === A.AP_RESERVE_BOX)) continue
+      if (at === A.AP_RESERVE_BOX || !this.adjEnemy(A, at)) out.push(p)
+    }
+    return out
+  }
   // spaces in front order (the Staff card's front first), then the Tie; spaces off the five fronts last
   byFrontThenTie(A, spaces) {
     const fo = this.frontsInOrder(A)
@@ -1183,17 +1203,27 @@ class Bot {
     const ps = acts.piece || []
     if (!ps.length || this.opts.warInAfrica === 'vp') return acts.pass ? ['pass'] : acts.done ? ['done'] : null
     const rank = p => { const at = A.game.location[p]; return at === A.AP_RESERVE_BOX ? 0 : this.adjEnemy(A, at) ? 2 : 1 }
-    const order = this.byFrontThenTie(A, ps.map(p => A.game.location[p])).reverse() // otherwise the space latest in front order
-    return ['piece', ps.slice().sort((x, y) => rank(x) - rank(y) || order.indexOf(A.game.location[x]) - order.indexOf(A.game.location[y]))[0]]
+    const order = this.byLatestFrontThenTie(A, ps.map(p => A.game.location[p])) // latest front first, the Tie within a front
+    return ['piece', ps.slice().sort((x, y) => rank(x) - rank(y) || order.indexOf(A.game.location[x]) - order.indexOf(A.game.location[y]) || x - y)[0]]
   }
   s_war_in_africa_confirm(A, g, acts) { return acts.done ? ['done'] : null }
   // Salonika (bot is the Allies): send corps, up to the limit: Reserve Box first, then corps out of contact; never a corps in contact
   s_salonika(A, g, acts) {
     if (this.opts.eventChoices === false) return null
     const ps = (acts.piece || []).filter(p => A.game.location[p] === A.AP_RESERVE_BOX || !this.adjEnemy(A, A.game.location[p]))
-    if (!ps.length) return acts.done ? ['done'] : null
-    const order = this.byFrontThenTie(A, ps.map(p => A.game.location[p])).reverse()
-    return ['piece', ps.slice().sort((x, y) => (A.game.location[x] === A.AP_RESERVE_BOX ? 0 : 1) - (A.game.location[y] === A.AP_RESERVE_BOX ? 0 : 1) || order.indexOf(A.game.location[x]) - order.indexOf(A.game.location[y]))[0]]
+    if (!ps.length) {
+      if (acts.done) return ['done']
+      // not reachable when the play condition was checked (EP: Salonika needs a corps that may go); safety only:
+      // send the corps whose space keeps the most other Allied units, so no space is emptied
+      const any = acts.piece || []
+      if (!any.length) return null
+      this.stats.salonikaForced = (this.stats.salonikaForced || 0) + 1
+      const left = p => this.piecesAt(A, A.game.location[p], 'ap').length
+      return ['piece', any.slice().sort((x, y) => left(y) - left(x) || this.tie(A.game.location[x], A.game.location[y]) || x - y)[0]]
+    }
+    const order = this.byLatestFrontThenTie(A, ps.map(p => A.game.location[p]))
+    const box = p => A.game.location[p] === A.AP_RESERVE_BOX ? 0 : 1
+    return ['piece', ps.slice().sort((x, y) => box(x) - box(y) || order.indexOf(A.game.location[x]) - order.indexOf(A.game.location[y]) || x - y)[0]]
   }
   // Entering neutral units: each goes to an empty space of its nation next to enemy units first, then a VP space, then any; ties: the Tie
   s_place_new_neutral_units(A, g, acts) {

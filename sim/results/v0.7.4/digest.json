@@ -1,0 +1,31 @@
+{
+ "Self-play (GS vs GS)": {
+  "n": 600,
+  "ap": 510,
+  "cp": 90,
+  "errors": 0,
+  "kinds": {
+   "AP Automatic Victory": 226,
+   "AP Turn Limit": 194,
+   "AP Armistice Declared": 90,
+   "CP Automatic Victory": 61,
+   "CP Turn Limit": 20,
+   "CP Armistice Declared": 9
+  },
+  "meanVP": 4.786666666666667,
+  "meanTurn": 17.221666666666668
+ },
+ "health": {
+  "games": 600,
+  "incomplete": 0,
+  "exceptions": 0,
+  "violations": {
+   "Insufficient strength to besiege": 2
+  },
+  "undos": 0,
+  "holdMoves": 5,
+  "calledOff": 0,
+  "fallback": {},
+  "forced": {}
+ }
+}

@@ -15,7 +15,8 @@ The bot plays by the same rules you do. It holds a hand of real strategy cards a
 | **Worked example**: narrated bot decisions for the first two turns of a game | [Sample turns](bot/Sample_Turns.md) |
 | **Simulation report** | [REPORT.md](sim/REPORT.md) |
 | **Changes** | [CHANGELOG.md](CHANGELOG.md) |
-| **Independent reviews** and responses: v0.7.1 review, v0.7.2 re-audit, v0.7.2 comprehensive audit | [audits/](audits/) |
+| **Independent reviews** and responses: v0.7.1 review, v0.7.2 re-audit, v0.7.2 comprehensive audit, v0.7.3 re-audit | [audits/](audits/) |
+| **Seed-level results** behind the report's tables | [sim/results/](sim/results/) |
 
 Print the cards at 100% (actual size) on US Letter: six cards per page, each face page followed by a page of backs. Print double-sided (flip on long edge) for backed cards, or print only the odd pages for faces alone. `python3 print/check_print.py` checks that no card is split across pages. The reference sheets are seven pages: procedure, tables, a record sheet, and the event lists (which can stay in a sleeve).
 
@@ -23,7 +24,7 @@ Print the cards at 100% (actual size) on US Letter: six cards per page, each fac
 
 General Staff was developed and tested in about **40,000 simulated full campaigns** on the open-source **Rally the Troops** rules engine. The engine is used with GMT's permission on that site and is not included here. The final version:
 
-* plays both sides strongly, the Allies especially: against the earlier v0.7 bots, the current version (v0.7.3) wins **90–95%** as the Allies and **49–56%** as the Central Powers. In 600 strict self-play games the Allied bot won **84%** and the Central Powers bot **16%**, with no exceptions or unfinished games;
+* plays both sides strongly, the Allies especially: against the earlier v0.7 bots, v0.7.3 won **90–95%** as the Allies and **49–56%** as the Central Powers. In 600 fresh strict self-play games of the current version (v0.7.4), the Allied bot won **85%** and the Central Powers bot **15%**, with no exceptions, no unfinished games and no choice left to the engine's default;
 * beat a random player and a naive one-attack, no-events bot in every test game (**820 of 820** across v0.7 to v0.7.3);
 * made only legal moves, and plays a recognisable war: Russia usually collapses in 1917 and the USA enters in most games;
 * has an optional difficulty handicap (starting VP), worth about five or six points of win rate per VP.
@@ -40,6 +41,7 @@ node sample.js 7 2                   # narrated bot decisions, seed 7, turns 1-2
 STRICT=1 node final_eval.js self 100 5001 > /tmp/ev/self_a.json   # strict evaluation runs
 python3 summarize.py /tmp/ev                # results and run-health table
 node tests/multinational.js          # attack-group regression (GS-14)
+node tests/event_choices.js          # event-choice regressions (Salonika, War in Africa, Ties)
 node ../print/build.js               # rebuild the PDFs (needs Google Chrome and pandoc)
 python3 ../print/check_print.py      # every Staff card whole on one page
 node ../app/build_app.js             # rebuild the companion page

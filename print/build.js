@@ -8,7 +8,7 @@ const B = require(path.join(root, 'sim/board.js'))
 const POLICY = require(path.join(root, 'research/event_policy.json'))
 const EP = require(path.join(root, 'sim/events.js'))
 const out = path.join(root, 'print/out'); fs.mkdirSync(out, { recursive: true })
-const VERSION = process.env.GS_VERSION || '0.7.3'
+const VERSION = process.env.GS_VERSION || '0.7.4'
 
 const STANCE = { A: ['Assault', 'CP 0 · Allies +1'], P: ['Press', 'CP +0.75 · Allies +1.75'], H: ['Hold', 'CP +1.5 · Allies +2.5'] }
 const PLAN = { O: ['Ops', 'Attack · Event · Logistics'], E: ['Event', 'Event · Attack · Logistics'], L: ['Logistics', 'Logistics · Attack · Event'] }

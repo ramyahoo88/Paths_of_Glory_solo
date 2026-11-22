@@ -1,6 +1,6 @@
 # General Staff — a card-driven solo opponent for *Paths of Glory*
 
-**Version 0.7.3 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
+**Version 0.7.4 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
 
 General Staff can command **either side**; you play the other side normally. The bot follows the same rules you do. It holds a hand of real strategy cards and takes six action rounds a turn. Each round it plays a card as an Event, for Operations (OPS), for Strategic Redeployment (SR) or for Replacement Points (RP), or it takes the 1-OP Automatic Operation. It never breaks a rule, never looks at your hand and never rolls dice to make a decision. Its decisions come from a deck of **Staff cards** and the fixed priorities in this booklet. Dice are rolled only where the game rules call for them (combat, mandated offensives, entrenching, sieges and so on).
 
@@ -222,8 +222,8 @@ When the bot chooses a card for OPS, SR or RP, a combat card counts as priority 
 | Event | The bot's choice |
 |---|---|
 | **Landwehr** (CP) | Use the whole effect. Flip reduced German units in the Replacement Phase order: armies in contact, other armies, corps in contact, other corps; ties: front order, then the Tie. |
-| **War in Africa** (bot is the Allies) | Remove a British corps rather than give the VP: one in the Reserve Box first, then one out of contact, then any. Among equals, take the one whose space is latest in front order. Give the VP only if no corps can be removed. |
-| **Salonika** (Allied bot) | Send corps to Salonika up to the limit: from the Reserve Box first, then from spaces out of contact (latest in front order first). Never send a corps that is in contact. |
+| **War in Africa** (bot is the Allies) | Remove a British corps rather than give the VP: one in the Reserve Box first, then one out of contact, then any. Among equals, take the one on the latest front in front order; on the same front, use the Tie. Give the VP only if no corps can be removed. |
+| **Salonika** (Allied bot) | Play it as an event only if at least one corps may go: a British or French corps (not the BEF or a minor British corps) in the Reserve Box, or in an Allied port space out of contact. Then send corps up to the limit: from the Reserve Box first, then from spaces out of contact (latest front in front order first; on the same front, the Tie). Never send a corps that is in contact. |
 | **Entering neutral units** | Place each unit in an empty space of its nation: next to enemy units first, then a VP space, then any; ties: the Tie. |
 | **Withdrawal** (bot defending) | Negate the loss that eliminated a unit first, otherwise the loss of the strongest unit. |
 | **Trench-negating combat cards** | Play them when the rules offer them, as for any combat card when attacking. |
