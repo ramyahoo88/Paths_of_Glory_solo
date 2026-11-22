@@ -1,0 +1,3 @@
+bfc27a3ca34e6bd4e7e05fed6017be89fa47b4248d27c3c670d6ceea3e18e341  General_Staff_v0.7.5_Verification.md
+c8012c43575c9cf5b8b402a95865c1504f4801c0c1843292b5e5aa2bbc2335cd  General_Staff_v0.7.5_Verification.pdf
+7453a951a51ffb297281ecd6514d897fae346ea38ca261a73a45211c486fd1cf  General_Staff_v0.7.5_Evidence.zip
