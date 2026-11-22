@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An offline bot for playing the 1914 Introductory Scenario on the physical Paths of Glory board.">
+  <title>Paths of Glory · 1914 Tabletop Pilot</title>
+  <style>:root {
+  color-scheme: light;
+  --ink: #1f2b27;
+  --muted: #54635d;
+  --paper: #f4f1e9;
+  --white: #fffcf5;
+  --green: #163c35;
+  --green-hover: #22554b;
+  --line: #d9d9cd;
+  --accent: #8e4d32;
+  --tint: #e9f0e8;
+  font-family: "Source Sans 3", system-ui, sans-serif;
+  font-size: 16px;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); }
+button { font: inherit; cursor: pointer; min-height: 46px; }
+button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid #a05129; outline-offset: 3px; }
+p { margin: .5rem 0 0; line-height: 1.6; }
+h1, h2, h3 { margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(1.85rem, 4.5vw, 2.9rem); }
+h2 { font-size: 1.13rem; }
+h3 { font-size: 1rem; }
+.page { width: min(1110px, calc(100% - 40px)); margin-inline: auto; }
+.masthead { background: var(--green); color: var(--white); border-bottom: 4px solid #b56c49; }
+.masthead-row { display: flex; flex-wrap: wrap; gap: 1.35rem; justify-content: space-between; align-items: center; padding: 1.35rem 0 1.45rem; }
+.scenario { margin: 0 0 .28rem; color: #d8e3db; font-size: .93rem; }
+nav, .actions, .choices { display: flex; flex-wrap: wrap; gap: .65rem; }
+nav button, .actions button, .choices button { border: 1px solid transparent; padding: .62rem .9rem; border-radius: .42rem; font-weight: 650; }
+nav .secondary { color: var(--white); background: #28574e; border-color: #709084; }
+nav .secondary:hover { background: #34665c; }
+nav .quiet { background: transparent; color: var(--white); }
+nav .quiet:hover { background: #28574e; }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(250px, 330px); gap: 1.25rem; margin-block: 1.5rem; align-items: start; }
+.workspace, .reference { border: 1px solid var(--line); background: var(--white); border-radius: .65rem; padding: 1.35rem; }
+.workspace { min-height: 270px; padding: clamp(1.15rem, 3vw, 2.1rem); }
+.reference + .reference { margin-top: .8rem; }
+.reference p, .reference dd, .reference li { font-size: .94rem; }
+.workspace h2 { font-size: clamp(1.48rem, 3vw, 2.1rem); }
+.workspace h2[tabindex="-1"]:focus { outline: none; }
+.kicker { color: var(--accent); font-weight: 650; font-size: .89rem; margin: 0 0 .38rem; }
+.meta { color: var(--muted); }
+.actions { margin-top: 1.1rem; }
+.actions .primary, .choices .primary { background: var(--green); color: white; }
+.actions .primary:hover, .choices .primary:hover { background: var(--green-hover); }
+.actions .secondary, .choices .secondary { border-color: #a8b5a9; color: var(--green); background: #f5f8f2; }
+.actions .secondary:hover, .choices .secondary:hover { background: #e3eee2; }
+.actions .quiet { color: var(--ink); border-color: var(--line); background: transparent; }
+.actions .quiet:hover { background: var(--paper); }
+.callout { background: var(--tint); border-left: 3px solid #54765f; padding: .68rem .8rem; margin: .95rem 0 0; }
+.callout p { margin: 0; }
+.callout p + p { margin-top: .45rem; }
+.orders { list-style: none; padding: 0; margin: 1rem 0 0; display: flex; flex-wrap: wrap; gap: .38rem; align-items: center; }
+.orders li { background: #f0eee4; border: 1px solid #dad8ca; border-radius: .36rem; padding: .45rem .58rem; font-weight: 630; }
+.orders li + li::before { content: "→ "; color: var(--muted); font-weight: 500; }
+.order-modes { border-top: 1px solid var(--line); margin-top: 1rem; padding-top: .85rem; }
+.order-modes .choices { margin-top: .45rem; }
+.order-modes + .order-modes { margin-top: .8rem; }
+dl { margin: .75rem 0 0; }
+dt { font-weight: 650; margin-top: .7rem; }
+dd { margin: .2rem 0 0; line-height: 1.5; }
+details { border-top: 1px solid var(--line); margin-top: .85rem; padding-top: .75rem; }
+summary { cursor: pointer; font-weight: 650; min-height: 29px; }
+.rule-link { display: inline-block; color: var(--green); margin-top: .85rem; font-size: .9rem; }
+.status { margin-top: .8rem; color: var(--accent); font-weight: 620; }
+.history-list { padding-left: 1.15rem; margin: .6rem 0 0; }
+.history-list li { margin-bottom: .48rem; }
+footer { margin-bottom: 1.4rem; color: var(--muted); font-size: .85rem; }
+[hidden] { display: none !important; }
+@media (max-width: 755px) {
+  .page { width: calc(100% - 24px); }
+  .layout { grid-template-columns: 1fr; gap: .85rem; margin-block: .85rem; }
+  .masthead-row { gap: .85rem; padding-block: .9rem; }
+  .order-modes .choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .reference { padding: 1rem; }
+}
+@media print {
+  body, .masthead, .workspace, .reference { background: white; color: black; }
+  .layout { display: block; }
+  nav, button, footer { display: none !important; }
+}
+.settings { border: 0; padding: 0; margin: 1.1rem 0 0; }
+.settings legend { font-weight: 650; margin-bottom: .3rem; }
+.settings label { display: inline-flex; gap: .4rem; align-items: center; margin-right: 1rem; min-height: 38px; }
+.settings input { accent-color: var(--green); }
+</style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="page masthead-row">
+      <div>
+        <p class="scenario">Paths of Glory</p>
+        <h1>1914 Tabletop Pilot</h1>
+      </div>
+      <nav aria-label="Pilot options">
+        <button class="secondary" type="button" data-action="drill">Try the Cluj drill</button>
+        <button class="quiet" type="button" data-action="setup">New game</button>
+      </nav>
+    </div>
+  </header>
+  <main class="page layout">
+    <section class="workspace" id="workspace" aria-label="Bot orders">
+      <noscript>Enable JavaScript to run the tabletop companion.</noscript>
+    </section>
+    <aside aria-label="Bot reference">
+      <section class="reference" id="mission" hidden></section>
+      <section class="reference">
+        <h2>At the table</h2>
+        <p>Use the printed Introductory Scenario and its standard Mobilization decks. Set the bot’s cards aside as a reference. The companion keeps its hand.</p>
+        <details>
+          <summary>Choosing a group</summary>
+          <p>Use supplied, eligible units of one nationality. Among legal groups, use the most armies, then the most units, then the first group by printed unit designations. For a cover order, use only corps. During a mandate order, use the named nationality.</p>
+          <p>Use the activation cost of the entire space under the printed rules. On a march, verify supply at the destination and leave a unit at a guarded origin if an enemy combat unit is adjacent.</p>
+        </details>
+        <details>
+          <summary>Bot combat decisions</summary>
+          <dl>
+            <dt>Flank and combat cards</dt><dd>Use simultaneous fire. Decline optional combat cards.</dd>
+            <dt>Losses</dt><dd>Of legal allocations, preserve the most armies on the map, then the most army steps, then the most corps. Break ties by the printed designations of units taking losses.</dd>
+            <dt>Retreat</dt><dd>Retreat armies before corps, using printed unit order within each group. Follow the printed retreat priorities. Among equally legal routes, prefer a supplied destination, then alphabetize by destination and by route. Decline the option to take an extra step loss to hold.</dd>
+            <dt>Advance</dt><dd>Advance one eligible army, or one corps if there is no eligible army, into the battle space if supplied there. Break ties by unit designation. Leave a defender at a guarded origin next to an enemy unit. Skip the optional second space.</dd>
+          </dl>
+        </details>
+        <details>
+          <summary>Replacements and turn end</summary>
+          <p>Apply the printed rules for attrition, sieges, War Status and replacements. Spend the bot’s points by restoring armies, rebuilding armies, restoring corps, then rebuilding corps. Break ties by unit designation, then by eligible entry space alphabetically.</p>
+          <p>Roll each side’s mandated offensive on the board. Enter the bot’s result when the next turn starts. If the bot satisfies its mandate during an ordinary action, mark it met before the next action.</p>
+        </details>
+        <a class="rule-link" href="https://gmtwebsiteassets.s3.us-west-2.amazonaws.com/nnpg/PoG-DeluxeRules2022Final.pdf" target="_blank" rel="noopener">GMT living rules</a>
+      </section>
+      <section class="reference" id="history" hidden></section>
+    </aside>
+  </main>
+  <footer class="page">Unofficial playtest companion · v0.2</footer>
+  <script>const CARDS = {"A1":{"id":"A1","name":"British Reinforcements (BR 2)","side":"ap","ops":4,"rpTotal":8,"num":1,"reinf":true,"star":true},"A2":{"id":"A2","name":"Blockade","side":"ap","ops":4,"rpTotal":8,"num":2,"reinf":false,"star":true},"A3":{"id":"A3","name":"Russian Reinforcements (RU 11)","side":"ap","ops":3,"rpTotal":4,"num":3,"reinf":true,"star":true},"A4":{"id":"A4","name":"Pleve","side":"ap","ops":2,"rpTotal":3,"num":4,"reinf":false,"star":true},"A5":{"id":"A5","name":"Putnik","side":"ap","ops":2,"rpTotal":3,"num":5,"reinf":false,"star":false},"A6":{"id":"A6","name":"Withdrawal","side":"ap","ops":2,"rpTotal":3,"num":6,"reinf":false,"star":true},"A7":{"id":"A7","name":"Severe Weather","side":"ap","ops":2,"rpTotal":3,"num":7,"reinf":false,"star":false},"A8":{"id":"A8","name":"Russian Reinforcements (2 corps)","side":"ap","ops":2,"rpTotal":3,"num":8,"reinf":true,"star":true},"A9":{"id":"A9","name":"Moltke","side":"ap","ops":3,"rpTotal":4,"num":9,"reinf":false,"star":true},"A10":{"id":"A10","name":"French Reinforcements (FR 10)","side":"ap","ops":3,"rpTotal":4,"num":10,"reinf":true,"star":true},"A11":{"id":"A11","name":"Russian Reinforcements (RU 9, RU 10)","side":"ap","ops":3,"rpTotal":4,"num":11,"reinf":true,"star":true},"A12":{"id":"A12","name":"Entrench","side":"ap","ops":3,"rpTotal":4,"num":12,"reinf":false,"star":true},"A13":{"id":"A13","name":"Rape of Belgium","side":"ap","ops":4,"rpTotal":8,"num":13,"reinf":false,"star":true},"A14":{"id":"A14","name":"British Reinforcements (BR 1)","side":"ap","ops":4,"rpTotal":8,"num":14,"reinf":true,"star":true},"C1":{"id":"C1","name":"Guns of August","side":"cp","ops":3,"rpTotal":3,"num":1,"reinf":false,"star":true},"C2":{"id":"C2","name":"Wireless Intercepts","side":"cp","ops":2,"rpTotal":1,"num":2,"reinf":false,"star":true},"C3":{"id":"C3","name":"Von Francois","side":"cp","ops":2,"rpTotal":1,"num":3,"reinf":false,"star":false},"C4":{"id":"C4","name":"Severe Weather","side":"cp","ops":2,"rpTotal":1,"num":4,"reinf":false,"star":false},"C5":{"id":"C5","name":"Landwehr","side":"cp","ops":2,"rpTotal":1,"num":5,"reinf":false,"star":true},"C6":{"id":"C6","name":"Entrench","side":"cp","ops":3,"rpTotal":3,"num":6,"reinf":false,"star":true},"C7":{"id":"C7","name":"German Reinforcements (GE 9)","side":"cp","ops":3,"rpTotal":3,"num":7,"reinf":true,"star":true},"C8":{"id":"C8","name":"Race to the Sea","side":"cp","ops":3,"rpTotal":3,"num":8,"reinf":false,"star":true},"C9":{"id":"C9","name":"Reichstag Truce","side":"cp","ops":4,"rpTotal":5,"num":9,"reinf":false,"star":true},"C10":{"id":"C10","name":"SUD Army","side":"cp","ops":3,"rpTotal":3,"num":10,"reinf":false,"star":true},"C11":{"id":"C11","name":"Oberost","side":"cp","ops":2,"rpTotal":1,"num":11,"reinf":false,"star":true},"C12":{"id":"C12","name":"German Reinforcements (GE 10)","side":"cp","ops":4,"rpTotal":5,"num":12,"reinf":true,"star":true},"C13":{"id":"C13","name":"Falkenhayn","side":"cp","ops":4,"rpTotal":5,"num":13,"reinf":false,"star":true},"C14":{"id":"C14","name":"Austria-Hungary Reinforcements (AH 7)","side":"cp","ops":4,"rpTotal":5,"num":14,"reinf":true,"star":true}};
+const LAUNCH_LINKS = {"Liege":[{"name":"Sedan","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Brussels","side":"ap","vp":true,"supply":false,"fort":0},{"name":"Koblenz","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Aachen","side":"cp","vp":false,"supply":false,"fort":0}],"Sedan":[{"name":"Cambrai","side":"ap","vp":true,"supply":false,"fort":0},{"name":"Chateau Thierry","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Brussels","side":"ap","vp":true,"supply":false,"fort":0},{"name":"Liege","side":"ap","vp":false,"supply":false,"fort":3},{"name":"Koblenz","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Metz","side":"cp","vp":true,"supply":false,"fort":3},{"name":"Verdun","side":"ap","vp":true,"supply":false,"fort":3}],"Brussels":[{"name":"Ostend","side":"ap","vp":true,"supply":false,"fort":0},{"name":"Cambrai","side":"ap","vp":true,"supply":false,"fort":0},{"name":"Sedan","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Antwerp","side":"ap","vp":true,"supply":false,"fort":1},{"name":"Liege","side":"ap","vp":false,"supply":false,"fort":3}],"Cambrai":[{"name":"Amiens","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Calais","side":"ap","vp":true,"supply":false,"fort":0},{"name":"Chateau Thierry","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Sedan","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Brussels","side":"ap","vp":true,"supply":false,"fort":0}],"Metz":[{"name":"Sedan","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Verdun","side":"ap","vp":true,"supply":false,"fort":3},{"name":"Nancy","side":"ap","vp":true,"supply":false,"fort":2},{"name":"Strasbourg","side":"cp","vp":true,"supply":false,"fort":3},{"name":"Koblenz","side":"cp","vp":false,"supply":false,"fort":0}],"Koblenz":[{"name":"Sedan","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Liege","side":"ap","vp":false,"supply":false,"fort":3},{"name":"Metz","side":"cp","vp":true,"supply":false,"fort":3},{"name":"Aachen","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Frankfurt","side":"cp","vp":true,"supply":false,"fort":0}],"Lemberg":[{"name":"Lutsk","side":"ap","vp":false,"supply":false,"fort":1},{"name":"Przemysl","side":"cp","vp":false,"supply":false,"fort":3},{"name":"Stanislau","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Tarnopol","side":"cp","vp":false,"supply":false,"fort":0}],"Stanislau":[{"name":"Przemysl","side":"cp","vp":false,"supply":false,"fort":3},{"name":"Lemberg","side":"cp","vp":true,"supply":false,"fort":0},{"name":"Uzhgorod","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Tarnopol","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Munkacs","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Czernowitz","side":"cp","vp":true,"supply":false,"fort":0}],"Przemysl":[{"name":"Tarnow","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Lublin","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Lemberg","side":"cp","vp":true,"supply":false,"fort":0},{"name":"Uzhgorod","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Stanislau","side":"cp","vp":false,"supply":false,"fort":0}],"Lodz":[{"name":"Breslau","side":"cp","vp":true,"supply":true,"fort":2},{"name":"Posen","side":"cp","vp":true,"supply":false,"fort":2},{"name":"Thorn","side":"cp","vp":false,"supply":false,"fort":2},{"name":"Plock","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Czestochowa","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Warsaw","side":"ap","vp":true,"supply":false,"fort":2}],"Tarnow":[{"name":"Cracow","side":"cp","vp":true,"supply":false,"fort":2},{"name":"Gorlice","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Ivangorod","side":"ap","vp":false,"supply":false,"fort":1},{"name":"Przemysl","side":"cp","vp":false,"supply":false,"fort":3}],"Cracow":[{"name":"Oppeln","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Czestochowa","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Martin","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Tarnow","side":"cp","vp":false,"supply":false,"fort":0}],"Insterberg":[{"name":"Konigsberg","side":"cp","vp":true,"supply":false,"fort":3},{"name":"Tannenberg","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Memel","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Kovno","side":"ap","vp":false,"supply":false,"fort":1},{"name":"Grodno","side":"ap","vp":false,"supply":false,"fort":1}],"Chateau Thierry":[{"name":"Paris","side":"ap","vp":true,"supply":false,"fort":1},{"name":"Cambrai","side":"ap","vp":true,"supply":false,"fort":0},{"name":"Melun","side":"ap","vp":true,"supply":false,"fort":0},{"name":"Bar le Duc","side":"ap","vp":true,"supply":false,"fort":0},{"name":"Sedan","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Verdun","side":"ap","vp":true,"supply":false,"fort":3}],"Verdun":[{"name":"Chateau Thierry","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Bar le Duc","side":"ap","vp":true,"supply":false,"fort":0},{"name":"Sedan","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Nancy","side":"ap","vp":true,"supply":false,"fort":2},{"name":"Metz","side":"cp","vp":true,"supply":false,"fort":3}],"Nancy":[{"name":"Bar le Duc","side":"ap","vp":true,"supply":false,"fort":0},{"name":"Verdun","side":"ap","vp":true,"supply":false,"fort":3},{"name":"Belfort","side":"ap","vp":false,"supply":false,"fort":2},{"name":"Strasbourg","side":"cp","vp":true,"supply":false,"fort":3},{"name":"Metz","side":"cp","vp":true,"supply":false,"fort":3}],"Bar le Duc":[{"name":"Chateau Thierry","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Melun","side":"ap","vp":true,"supply":false,"fort":0},{"name":"Dijon","side":"ap","vp":true,"supply":false,"fort":0},{"name":"Verdun","side":"ap","vp":true,"supply":false,"fort":3},{"name":"Nancy","side":"ap","vp":true,"supply":false,"fort":2}],"Tarnopol":[{"name":"Dubno","side":"ap","vp":false,"supply":false,"fort":1},{"name":"Lemberg","side":"cp","vp":true,"supply":false,"fort":0},{"name":"Stanislau","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Czernowitz","side":"cp","vp":true,"supply":false,"fort":0},{"name":"Kamenets-Podolski","side":"ap","vp":false,"supply":false,"fort":0}],"Lutsk":[{"name":"Lublin","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Kovel","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Rovno","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Dubno","side":"ap","vp":false,"supply":false,"fort":1},{"name":"Lemberg","side":"cp","vp":true,"supply":false,"fort":0}],"Lublin":[{"name":"Ivangorod","side":"ap","vp":false,"supply":false,"fort":1},{"name":"Brest Litovsk","side":"ap","vp":false,"supply":false,"fort":1},{"name":"Kovel","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Lutsk","side":"ap","vp":false,"supply":false,"fort":1},{"name":"Przemysl","side":"cp","vp":false,"supply":false,"fort":3}],"Czernowitz":[{"name":"Stanislau","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Tarnopol","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Munkacs","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Kamenets-Podolski","side":"ap","vp":false,"supply":false,"fort":0}],"Dubno":[{"name":"Zhitomir","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Rovno","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Lutsk","side":"ap","vp":false,"supply":false,"fort":1},{"name":"Tarnopol","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Kamenets-Podolski","side":"ap","vp":false,"supply":false,"fort":0}],"Ivangorod":[{"name":"Czestochowa","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Tarnow","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Warsaw","side":"ap","vp":true,"supply":false,"fort":2},{"name":"Lublin","side":"ap","vp":false,"supply":false,"fort":0}],"Kamenets-Podolski":[{"name":"Dubno","side":"ap","vp":false,"supply":false,"fort":1},{"name":"Tarnopol","side":"cp","vp":false,"supply":false,"fort":0},{"name":"Czernowitz","side":"cp","vp":true,"supply":false,"fort":0},{"name":"Vinnitsa","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Zhmerinka","side":"ap","vp":false,"supply":false,"fort":0}],"Paris":[{"name":"Rouen","side":"ap","vp":true,"supply":false,"fort":0},{"name":"Orleans","side":"ap","vp":true,"supply":false,"fort":0},{"name":"Amiens","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Chateau Thierry","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Melun","side":"ap","vp":true,"supply":false,"fort":0}],"Warsaw":[{"name":"Plock","side":"ap","vp":false,"supply":false,"fort":0},{"name":"Lodz","side":"ap","vp":true,"supply":false,"fort":0},{"name":"Ivangorod","side":"ap","vp":false,"supply":false,"fort":1},{"name":"Lomza","side":"ap","vp":false,"supply":false,"fort":1},{"name":"Brest Litovsk","side":"ap","vp":false,"supply":false,"fort":1}]};
+"use strict";
+
+const TABLETOP = (() => {
+  const sides = { cp: "Central Powers", ap: "Allies" };
+  const nations = { ge: "German", ah: "Austro-Hungarian", fr: "French", br: "British", ru: "Russian" };
+  const turns = ["August 1914", "September 1914", "Fall 1914"];
+  const junctions = new Set([
+    "Stanislau", "Lemberg", "Lodz", "Przemysl", "Cracow", "Breslau", "Posen",
+    "Czernowitz", "Lublin", "Warsaw", "Lutsk", "Liege", "Sedan", "Cambrai",
+    "Chateau Thierry", "Metz", "Nancy", "Verdun", "Szeged", "Budapest", "Belgrade"
+  ]);
+
+  const lanes = {
+    belgium: {
+      front: "Western Front", goal: "Break into Belgium and northern France",
+      orders: [
+        ["Liege", "Brussels"], ["Metz", "Sedan"], ["Koblenz", "Sedan"],
+        ["Sedan", "Cambrai"], ["Brussels", "Antwerp"], ["Liege", "Sedan"],
+        ["Sedan", "Chateau Thierry"], ["Strasbourg", "Nancy"], ["Aachen", "Liege"],
+        ["Cambrai", "Chateau Thierry"], ["Metz", "Verdun"], ["Brussels", "Ostend"]
+      ]
+    },
+    poland: {
+      front: "Eastern Front", goal: "Pressure Poland and cover Galicia",
+      orders: [
+        ["Przemysl", "Lublin"], ["Tarnow", "Ivangorod"], ["Lemberg", "Lutsk"],
+        ["Breslau", "Lodz"], ["Posen", "Lodz"], ["Stanislau", "Czernowitz"],
+        ["Lodz", "Warsaw"], ["Lublin", "Ivangorod"], ["Przemysl", "Lemberg"],
+        ["Insterberg", "Kovno"], ["Tarnow", "Cracow"], ["Czernowitz", "Tarnopol"]
+      ]
+    },
+    france: {
+      front: "Western Front", goal: "Secure victory spaces in northern France",
+      orders: [
+        ["Sedan", "Cambrai"], ["Chateau Thierry", "Melun"], ["Metz", "Verdun"],
+        ["Liege", "Brussels"], ["Brussels", "Cambrai"], ["Nancy", "Bar le Duc"],
+        ["Bar le Duc", "Dijon"], ["Chateau Thierry", "Paris"], ["Sedan", "Chateau Thierry"],
+        ["Brussels", "Antwerp"], ["Strasbourg", "Nancy"], ["Koblenz", "Sedan"]
+      ]
+    },
+    galicia: {
+      front: "Eastern Front", goal: "Take the Galician junctions",
+      orders: [
+        ["Kamenets-Podolski", "Czernowitz"], ["Dubno", "Tarnopol"], ["Lublin", "Przemysl"],
+        ["Lutsk", "Lemberg"], ["Tarnopol", "Lemberg"], ["Ivangorod", "Tarnow"],
+        ["Czernowitz", "Stanislau"], ["Lemberg", "Stanislau"], ["Warsaw", "Lodz"],
+        ["Stanislau", "Munkacs"], ["Czernowitz", "Munkacs"], ["Munkacs", "Cluj"]
+      ]
+    },
+    counter: {
+      front: "Western Front", goal: "Hold France and retake Sedan or Brussels",
+      orders: [
+        ["Verdun", "Sedan"], ["Cambrai", "Sedan"], ["Chateau Thierry", "Sedan"],
+        ["Bar le Duc", "Chateau Thierry"], ["Brussels", "Liege"], ["Nancy", "Metz"],
+        ["Belfort", "Mulhouse"], ["Sedan", "Brussels"], ["Antwerp", "Brussels"],
+        ["Paris", "Chateau Thierry"], ["Chateau Thierry", "Bar le Duc"], ["Nancy", "Strasbourg"]
+      ]
+    },
+    carpathians: {
+      front: "Eastern Front", goal: "Press from Galicia into Hungary",
+      orders: [
+        ["Lemberg", "Stanislau"], ["Czernowitz", "Stanislau"], ["Stanislau", "Munkacs"],
+        ["Munkacs", "Cluj"], ["Cluj", "Debrecen"], ["Warsaw", "Lodz"],
+        ["Kamenets-Podolski", "Czernowitz"], ["Lublin", "Przemysl"], ["Lutsk", "Lemberg"],
+        ["Ivangorod", "Tarnow"], ["Czestochowa", "Cracow"], ["Tarnopol", "Lemberg"]
+      ]
+    }
+  };
+  const campaign = { cp: ["belgium", "poland", "france"], ap: ["galicia", "counter", "carpathians"] };
+  const launchSites = {
+    belgium: ["Liege", "Sedan", "Brussels", "Cambrai", "Metz", "Koblenz"],
+    poland: ["Lemberg", "Stanislau", "Przemysl", "Lodz", "Tarnow", "Cracow", "Insterberg"],
+    france: ["Cambrai", "Chateau Thierry", "Sedan", "Verdun", "Brussels", "Metz", "Nancy", "Bar le Duc"],
+    galicia: ["Lemberg", "Tarnopol", "Lutsk", "Lublin", "Czernowitz", "Dubno", "Ivangorod", "Kamenets-Podolski"],
+    counter: ["Sedan", "Chateau Thierry", "Cambrai", "Verdun", "Nancy", "Bar le Duc", "Brussels", "Paris"],
+    carpathians: ["Lemberg", "Stanislau", "Tarnopol", "Czernowitz", "Kamenets-Podolski", "Lublin", "Dubno", "Warsaw", "Ivangorod"]
+  };
+  const offensives = {
+    ge: [["Metz", "Verdun"], ["Sedan", "Cambrai"], ["Liege", "Brussels"], ["Strasbourg", "Nancy"], ["Koblenz", "Sedan"]],
+    ah: [["Novi Sad", "Belgrade"], ["Przemysl", "Lublin"], ["Sarajevo", "Valjevo"], ["Tarnow", "Ivangorod"], ["Stanislau", "Czernowitz"]],
+    fr: [["Verdun", "Sedan"], ["Nancy", "Metz"], ["Cambrai", "Sedan"], ["Belfort", "Mulhouse"], ["Chateau Thierry", "Sedan"]],
+    br: [["Brussels", "Liege"], ["Cambrai", "Sedan"], ["Calais", "Cambrai"], ["Antwerp", "Brussels"], ["Sedan", "Brussels"]],
+    ru: [["Lutsk", "Lemberg"], ["Dubno", "Tarnopol"], ["Lublin", "Przemysl"], ["Kovno", "Insterberg"], ["Czernowitz", "Stanislau"]]
+  };
+  const cover = {
+    cp: [["Villach", "Budapest", ["Graz", "Vienna", "Budapest"]], ["Oppeln", "Breslau"], ["Cracow", "Tarnow"]],
+    ap: [["Bar le Duc", "Chateau Thierry"], ["Paris", "Amiens"], ["Kamenets-Podolski", "Czernowitz"]]
+  };
+
+  function makeOrder([from, to, path = [to]], kind = "pressure", mandate = null) {
+    return { from, to, path, kind, mandate, guard: junctions.has(from) };
+  }
+
+  const drill = [
+    makeOrder(["Stanislau", "Cluj", ["Munkacs", "Cluj"]], "cover"),
+    makeOrder(cover.cp[0], "cover")
+  ];
+
+  function mission(side, turn) {
+    return lanes[campaign[side][turn - 1]];
+  }
+
+  function ordersFor(side, turn, round, mandate, tried, limit = 3, alternateFront = false) {
+    const main = mission(side, turn).orders;
+    const offset = ((round - 1) * 2) % main.length;
+    const sorted = [...main.slice(offset), ...main.slice(0, offset)];
+    const urgent = mandate && round >= 4 ? offensives[mandate] : [];
+    const moOffset = ((round - 4) * 2) % (urgent.length || 1);
+    const mo = urgent.length ? [...urgent.slice(moOffset), ...urgent.slice(0, moOffset)] : [];
+    const support = round === 6 ? cover[side].filter(entry => !tried.includes(entry.join("/"))) : [];
+    const primary = [
+      ...mo.slice(0, 2).map(order => makeOrder(order, "mandate", mandate)),
+      ...support.slice(0, urgent.length ? 0 : 1).map(order => makeOrder(order, "cover")),
+      ...sorted.map(order => makeOrder(order))
+    ];
+    if (!alternateFront || limit <= 3) return primary.slice(0, limit);
+    const reserve = mission(side, turn === 2 ? 3 : 2);
+    const alternate = [...reserve.orders.slice(offset), ...reserve.orders.slice(0, offset)];
+    return [...primary.slice(0, 3), ...alternate.slice(0, limit - 3).map(order => ({
+      ...makeOrder(order), reserveFront: reserve.front, reserveGoal: reserve.goal
+    }))];
+  }
+
+  function launchList(side, turn, round, excluded = [], limit = 3) {
+    const main = campaign[side][turn - 1];
+    const reserve = campaign[side][turn === 2 ? 2 : 1];
+    const at = (key, index) => launchSites[key][index % launchSites[key].length];
+    const offset = (round - 1) * 2;
+    return [at(main, offset), at(main, offset + 1), at(reserve, round - 1)]
+      .filter(name => !excluded.includes(name)).slice(0, limit);
+  }
+
+  function launchOrders(side, turn, from, links) {
+    const main = campaign[side][turn - 1];
+    const key = launchSites[main].includes(from) ? main : campaign[side][turn === 2 ? 2 : 1];
+    const lane = lanes[key];
+    const namedTargets = new Set(lane.orders.map(([, target]) => target));
+    const score = target => Number(target.vp) * 4 + Number(target.supply) * 2 +
+      Number(target.side !== side) * 2 + Number(namedTargets.has(target.name)) * 2 +
+      Number(junctions.has(target.name)) - Number(target.fort > 1) * 2;
+    return [...links[from]].sort((a, b) => score(b) - score(a) || a.name.localeCompare(b.name, "en"))
+      .map(target => ({
+        ...makeOrder([from, target.name]), launch: true,
+        ...(key !== main ? { reserveFront: lane.front, reserveGoal: lane.goal } : {})
+      }));
+  }
+
+  function afterLaunch(pinned, checked, side, turn, from, links, remaining) {
+    const seen = new Set(checked.filter(order => order.kind === "pressure").map(order => order.from + "/" + order.to));
+    const nearby = from ? launchOrders(side, turn, from, links) : [];
+    const options = [...nearby, ...pinned];
+    return options.filter(order => {
+      const key = order.from + "/" + order.to;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    }).slice(0, remaining);
+  }
+
+  function chooseOps(hand, cost, cards) {
+    if (cost === 1) return { mode: "ops", card: null };
+    const card = hand.map(id => cards[id]).filter(c => c.ops >= cost)
+      .sort((a, b) => a.ops - b.ops || Number(a.reinf) - Number(b.reinf) || a.num - b.num)[0];
+    return card ? { mode: "ops", card: card.id } : null;
+  }
+
+  function chooseRp(hand, cards) {
+    const card = hand.map(id => cards[id]).sort((a, b) => b.rpTotal - a.rpTotal || a.num - b.num)[0];
+    return card ? { mode: "rp", card: card.id } : null;
+  }
+
+  function fallback(hand, cards, turn, last, depleted) {
+    if (depleted && turn < 3 && last !== "rp") {
+      const rp = chooseRp(hand, cards);
+      if (rp) return rp;
+    }
+    return { mode: "ops", card: null, hold: true };
+  }
+
+  function random(state) {
+    state.rng = (state.rng + 0x6d2b79f5) >>> 0;
+    let x = state.rng;
+    x = Math.imul(x ^ (x >>> 15), x | 1);
+    x ^= x + Math.imul(x ^ (x >>> 7), x | 61);
+    return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
+  }
+
+  function shuffle(state, list) {
+    for (let i = list.length - 1; i > 0; i--) {
+      const j = Math.floor(random(state) * (i + 1));
+      [list[i], list[j]] = [list[j], list[i]];
+    }
+    return list;
+  }
+
+  function fill(state) {
+    while (state.hand.length < 7) {
+      if (!state.deck.length) state.deck = shuffle(state, state.discard.splice(0));
+      if (!state.deck.length) break;
+      state.hand.push(state.deck.pop());
+    }
+  }
+
+  function start(side, seed, cards) {
+    const state = {
+      side, rng: seed >>> 0, turn: 1, round: 1, mandate: "", phase: "mandate", probe: 0,
+      hand: side === "cp" ? ["C1"] : [], deck: [], discard: [], removed: [],
+      last: null, pending: null, log: [], coverUsed: []
+    };
+    state.deck = shuffle(state, Object.values(cards).filter(c => c.side === side && !state.hand.includes(c.id)).map(c => c.id));
+    fill(state);
+    return state;
+  }
+
+  function complete(state, play, cards) {
+    if (play.card) {
+      if (!state.hand.includes(play.card)) throw Error("Card is unavailable.");
+      state.hand = state.hand.filter(id => id !== play.card);
+      state[play.mode === "event" && cards[play.card].star ? "removed" : "discard"].push(play.card);
+    }
+    state.last = play.mode;
+    if (play.order?.kind === "cover") {
+      const o = play.order;
+      state.coverUsed.push([o.from, o.to, ...(o.path.length > 1 ? [o.path] : [])].join("/"));
+    }
+  }
+
+  return {
+    sides, nations, turns, mission, ordersFor, chooseOps, fallback, start, fill, complete, drill, junctions,
+    launchNames: [...new Set(Object.values(launchSites).flat())], launchList, afterLaunch
+  };
+})();
+
+"use strict";
+
+const workspace = document.getElementById("workspace");
+const missionBox = document.getElementById("mission");
+const historyBox = document.getElementById("history");
+const storageKey = "paths-of-glory-tabletop-1914-v01";
+const phaseNames = ["mandate", "board", "probe", "launch", "rp", "order", "turn-end", "finished"];
+const firstOrders = 3;
+const esc = value => String(value).replace(/[&<>"']/g, ch => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+})[ch]);
+
+function readSession() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(storageKey));
+    if (!stored || !Object.hasOwn(TABLETOP.sides, stored.side) || !phaseNames.includes(stored.phase)) return null;
+    if (![1, 2, 3].includes(stored.turn) || ![1, 2, 3, 4, 5, 6].includes(stored.round)) return null;
+    if (![3, 6].includes(stored.limit) || !Number.isInteger(stored.probe) || stored.probe < 0 || stored.probe > stored.limit) return null;
+    if (!Number.isInteger(stored.rng) || typeof stored.mandate !== "string") return null;
+    const ids = [stored.hand, stored.deck, stored.discard, stored.removed].flat();
+    if (ids.length !== 14 || new Set(ids).size !== 14 || !ids.every(id => CARDS[id]?.side === stored.side)) return null;
+    if (!Array.isArray(stored.log) || !Array.isArray(stored.coverUsed) || !Number.isInteger(stored.totalChecks)) return null;
+    const search = stored.search;
+    if (search && (!Number.isInteger(search.lookups) || search.lookups < 0 || search.lookups > 2 ||
+        typeof search.follow !== "boolean" || search.from && !Object.hasOwn(LAUNCH_LINKS, search.from))) return null;
+    if (stored.phase === "launch" && (!search || stored.side !== "cp" || stored.turn !== 3 || !stored.localInFall)) return null;
+    if (stored.phase === "order" && (!stored.pending ||
+        (stored.pending.card !== null && !stored.hand.includes(stored.pending.card)))) return null;
+    return { localInFall: false, search: null, totalSiteChecks: 0, ...stored };
+  } catch {
+    return null;
+  }
+}
+
+let state = readSession();
+let practice = false;
+let tableSession = null;
+let notice = "";
+
+function save() {
+  if (practice) return;
+  try {
+    if (state) localStorage.setItem(storageKey, JSON.stringify(state));
+    else localStorage.removeItem(storageKey);
+  } catch {
+    // The pilot also works when browser storage is disabled.
+  }
+}
+
+const button = (label, action, value = "", style = "secondary") =>
+  `<button type="button" class="${style}" data-action="${action}" data-value="${esc(value)}">${esc(label)}</button>`;
+const controls = (...buttons) => `<div class="actions">${buttons.join("")}</div>`;
+const heading = (title, description = "") =>
+  `<h2 tabindex="-1">${esc(title)}</h2>${description ? `<p>${esc(description)}</p>` : ""}`;
+const stamp = () => `${TABLETOP.turns[state.turn - 1]} · Action ${state.round}`;
+const routes = order => `<ol class="orders" aria-label="Route">${[order.from, ...order.path]
+  .map(place => `<li>${esc(place)}</li>`).join("")}</ol>`;
+
+function fixedOrders() {
+  return TABLETOP.ordersFor(state.side, state.turn, state.round, state.mandate, state.coverUsed, state.limit, state.limit === 6);
+}
+
+function candidates() {
+  if (practice) return TABLETOP.drill;
+  const fixed = fixedOrders();
+  if (!state.search) return fixed;
+  const initial = fixed.slice(0, firstOrders);
+  if (!state.search.follow) return initial;
+  return TABLETOP.afterLaunch(fixed.slice(firstOrders), initial, state.side, state.turn,
+    state.search.from, LAUNCH_LINKS, state.limit - firstOrders - state.search.lookups);
+}
+
+function launchPlaces() {
+  const excluded = fixedOrders().slice(0, firstOrders).map(order => order.from);
+  return TABLETOP.launchList(state.side, state.turn, state.round, excluded, state.limit - firstOrders - 1);
+}
+
+function setLaunch(from, lookups = 0) {
+  state.search = { from, lookups, follow: true };
+  state.totalSiteChecks += lookups;
+  state.probe = 0;
+  if (candidates().length) state.phase = "probe";
+  else showFallback();
+}
+
+function nextProbe() {
+  state.probe++;
+  if (state.probe < candidates().length) return;
+  if (!state.search || state.search.follow) showFallback();
+  else if (state.search.from || !launchPlaces().length) setLaunch(state.search.from);
+  else state.phase = "launch";
+}
+
+function newGame(side, limit) {
+  state = {
+    ...TABLETOP.start(side, Date.now(), CARDS), limit, totalChecks: 0, checksAtStart: 0,
+    localInFall: side === "cp" && limit === 6, totalSiteChecks: 0, search: null
+  };
+  practice = false;
+  save();
+}
+
+function beginDrill() {
+  if (practice) return;
+  tableSession = state;
+  state = { ...TABLETOP.start("cp", 530433, CARDS), round: 6, limit: 3, phase: "probe", totalChecks: 0, checksAtStart: 0 };
+  practice = true;
+}
+
+function showOrder(play) {
+  state.pending = play;
+  state.phase = "order";
+}
+
+function showFallback() {
+  const replacements = state.turn < 3 && state.last !== "rp" && state.hand.length;
+  if (replacements) state.phase = "rp";
+  else showOrder(TABLETOP.fallback(state.hand, CARDS, state.turn, state.last, false));
+}
+
+function currentProbe() {
+  return candidates()[state.probe];
+}
+
+function startAction() {
+  state.probe = 0;
+  state.checksAtStart = state.totalChecks;
+  state.search = state.localInFall && state.turn === 3 ? { from: "", lookups: 0, follow: false } : null;
+  if (state.side === "cp" && state.turn === 1 && state.round === 1 && state.hand.includes("C1")) {
+    showOrder({ mode: "event", card: "C1" });
+  } else state.phase = "probe";
+}
+
+function recordOrder() {
+  const play = state.pending;
+  TABLETOP.complete(state, play, CARDS);
+  if (play.order?.kind === "mandate") state.mandate = "";
+  const description = play.order ? `${play.operation === "attack" ? "Attack" : "March"} ${play.order.from} → ${play.order.to}` :
+    play.hold ? "Automatic Operation · no activations" : play.mode === "rp" ? "Bank replacements" : "Guns of August";
+  state.log.push({ label: stamp(), description, checks: state.totalChecks - state.checksAtStart,
+    lookups: state.search?.lookups ?? 0 });
+  state.pending = null;
+  state.search = null;
+  if (practice) state.phase = "finished";
+  else if (state.round === 6) state.phase = "turn-end";
+  else {
+    state.round++;
+    state.phase = "board";
+  }
+}
+
+function renderSetup() {
+  return heading("Run the bot on your board",
+    "Set up the 1914 Introductory Scenario as usual. Choose which side the companion plays. It will manage the bot’s hand and ask you to check named orders on the physical board.") +
+    `<fieldset class="settings"><legend>Order search limit</legend>
+      <label><input name="limit" type="radio" value="6" checked> 6 · broader search</label>
+      <label><input name="limit" type="radio" value="3"> 3 · shorter</label>
+    </fieldset>` +
+    '<p class="meta">The six-check option searches two fronts. In Fall, the Central Powers can reuse a supplied stack and try nearby destinations.</p>' +
+    controls(button("Central Powers bot", "start", "cp", "primary"), button("Allied bot", "start", "ap")) +
+    '<p class="meta">You move the pieces, roll dice and apply the printed rules. Start with the Cluj drill to try an action without setting up.</p>';
+}
+
+function renderMandate() {
+  const possible = state.side === "cp" ? ["ge", "ah"] : ["fr", "br", "ru"];
+  const setup = state.turn === 1 && state.side === "cp" ?
+    '<div class="callout"><p>The Central Powers bot starts with Guns of August in its hand and will play it on its first action.</p></div>' : "";
+  return heading("Read the bot’s mandate", "Roll the mandated offensive on the physical board and select the nation shown on the bot’s marker.") + setup +
+    controls(...possible.map(n => button(TABLETOP.nations[n], "mandate", n)), button("None", "mandate"));
+}
+
+function renderBoard() {
+  const instruction = state.side === "ap" ?
+    "Resolve the Central Powers action for this round. When the Allied marker is next, start the bot action." :
+    state.round === 1 ? "When the first Central Powers action is due, start the bot action." :
+      "Resolve the Allied action from the previous round. Then start the next Central Powers action.";
+  return heading("Check the action marker", instruction) + controls(
+    button("Start bot action", "begin", "", "primary"),
+    state.mandate ? button("Mandate already met", "mandate-met", "", "quiet") : "");
+}
+
+function renderProbe() {
+  const order = currentProbe();
+  const { from, to, kind, guard, mandate } = order;
+  const introduction = kind === "mandate" ? `Check a legal ${TABLETOP.nations[mandate]} attack against an enemy combat unit that fulfills the mandate.` :
+    kind === "cover" ? `March a supplied corps group to ${to} if it is friendly-controlled and empty.` :
+      `Attack if ${to} has an enemy combat unit or an unbesieged enemy fort. Otherwise march only if ${to} is enemy-controlled.`;
+  const guardText = guard ? `<p><strong>Guard ${esc(from)}.</strong> If an enemy combat unit is adjacent, leave a friendly combat unit at ${esc(from)} when marching.</p>` : "";
+  const vignette = practice ? (state.probe === 0 ?
+    '<div class="callout"><p>August, action 6. Stanislau has one Austro-Hungarian corps. The Russian 8th Army is adjacent at Czernowitz. The route through Munkacs to empty Cluj is otherwise legal at 1 OPS.</p></div>' :
+    '<div class="callout"><p>A supplied Austro-Hungarian corps is at Villach. The route through Graz and Vienna to friendly, empty Budapest is legal and supplied. Villach costs 1 OPS to activate.</p></div>') : "";
+  const modes = kind === "cover" ? ["move"] : kind === "mandate" ? ["attack"] : ["move", "attack"];
+  const offers = modes.map(mode => {
+    const label = mode === "move" ? "Legal march" : "Legal attack";
+    return `<div class="order-modes"><h3>${label}</h3><div class="choices">
+      ${[1, 2, 3, 4].map(cost => button(`${cost} OPS`, "offer", `${mode}/${cost}`)).join("")}</div></div>`;
+  }).join("");
+  const reportStack = state.search && !state.search.follow && !state.search.from && Object.hasOwn(LAUNCH_LINKS, from);
+  const rejected = reportStack ? controls(
+    button("Blocked · supplied stack present", "skip", "present", "quiet"),
+    button("No supplied unit", "skip", "", "quiet")) : controls(button("Blocked or unsafe", "skip", "", "quiet"));
+  const title = order.launch ? "Check a nearby destination" :
+    kind === "cover" ? "Check a cover order" : kind === "mandate" ? "Check a mandated attack" : "Check an objective order";
+  return heading(title, introduction) +
+    routes(order) + vignette + (guardText ? `<div class="callout">${guardText}</div>` : "") +
+    '<p class="meta">Check the whole space’s activation cost. For a march, check supply at the destination. Use the unit order under “Choosing a group.”</p>' +
+    offers + rejected;
+}
+
+function renderLaunch() {
+  return heading("Find the first supplied stack",
+    "Check these spaces in the order shown. Select the first with at least one supplied Central Powers army or corps.") +
+    controls(...launchPlaces().map((name, index) => button(`${index + 1}. ${name}`, "launch", name)),
+      button("None of these spaces", "launch", "", "quiet"));
+}
+
+function renderOrder() {
+  const play = state.pending;
+  const card = CARDS[play.card];
+  const name = card ? `#${card.num} ${card.name}` : "Automatic Operation · 1 OPS";
+  let instruction;
+  if (play.mode === "event") {
+    instruction = "Play the event and apply the card. If legal, attack Sedan with GE 1, GE 2 and GE 3 together. Otherwise attack Brussels from Liege with GE 1 and GE 2 if legal. Use the bot’s combat decisions under “At the table.”";
+  } else if (play.mode === "rp") {
+    instruction = "Play the card for replacements and mark the RPs on the General Records Track. Spend them in the Replacement Phase using the priorities under “At the table.”";
+  } else if (play.hold) {
+    instruction = "Use the cardless 1-OPS action and spend zero OPS this round.";
+  } else if (play.operation === "attack") {
+    instruction = `Activate ${play.order.from} for combat. Attack ${play.order.to} with the group you checked. Follow the bot’s combat decisions.`;
+  } else {
+    instruction = `Activate ${play.order.from} for movement. March the group you checked along the named route.`;
+  }
+  return heading("Execute the bot order", instruction) +
+    `<div class="callout"><p><strong>${esc(name)}</strong> · ${play.mode === "event" ? "Event" : play.mode.toUpperCase()}</p></div>` +
+    (play.order ? routes(play.order) : "") + controls(
+      button(practice ? "Finish drill" : "Order resolved", "done", "", "primary"),
+      play.order ? button("Back to check", "back", "", "quiet") : "");
+}
+
+function renderTurnEnd() {
+  const after = state.side === "cp" ? "Resolve the last Allied action, then " : "";
+  const end = state.turn === 3;
+  return heading(end ? "Finish the scenario" : "Resolve turn end",
+    `${after}${after ? "follow" : "Follow"} the printed turn-end sequence. Spend the bot’s replacements using the priorities under “At the table.”`) +
+    (end ? '<p>Read the final VP marker. The Central Powers win at 14 or more, the Allies at 10 or fewer, and 11–13 is a draw.</p>' :
+      '<p>When the physical turn is complete, the bot will draw its next hand.</p>') +
+    controls(end ? button("Finish game", "finish", "", "primary") : button("Draw and start next turn", "next", "", "primary"),
+      end ? "" : button("Game ended", "finish", "", "quiet"));
+}
+
+function renderFinished() {
+  const siteChecks = state.totalSiteChecks ? ` and ${state.totalSiteChecks} stack checks` : "";
+  return practice ? heading("Stanislau stays guarded",
+    "The bot rejected the Cluj march and used a corps from Villach to cover Budapest. The guard check used the pieces next to Stanislau.") +
+    controls(button("Back to table", "leave-drill", "", "primary")) :
+    heading("Scenario complete", `The bot used ${state.totalChecks} order checks${siteChecks} across ${state.log.length} actions. Read the result from the physical board.`) +
+    controls(button("New game", "setup", "", "primary"), button("Try the Cluj drill", "drill"));
+}
+
+function render(focus = false) {
+  let body;
+  if (!state) body = renderSetup();
+  else {
+    const panels = {
+      mandate: renderMandate, board: renderBoard, probe: renderProbe, launch: renderLaunch, order: renderOrder,
+      rp: () => heading("Check for replacements", "Do you see a supplied reduced unit or a legally rebuildable unit that could use the bot’s replacements?") +
+        controls(button("Yes · bank replacements", "rp", "yes", "primary"), button("None eligible", "rp")),
+      "turn-end": renderTurnEnd, finished: renderFinished
+    };
+    const label = state.phase === "probe" ? ` · Check ${state.probe + 1} of ${candidates().length}` : "";
+    body = `<p class="kicker">${practice ? "Cluj drill" : TABLETOP.sides[state.side]} · ${stamp()}${label}</p>` + panels[state.phase]();
+  }
+  workspace.innerHTML = body + (notice ? `<p class="status" role="status">${esc(notice)}</p>` : "");
+  missionBox.hidden = !state;
+  if (state) {
+    const assignment = TABLETOP.mission(state.side, state.turn);
+    const order = state.phase === "probe" ? currentProbe() : state.pending?.order;
+    const goal = practice ? "Keep the supply junction guarded" : order?.reserveGoal ?? assignment.goal;
+    const front = practice ? "Eastern Front" : order?.reserveFront ? `Reserve · ${order.reserveFront}` : assignment.front;
+    missionBox.innerHTML = `<p class="kicker">${esc(front)}</p><h2>${esc(goal)}</h2>` +
+      (state.mandate ? `<p class="meta">Outstanding mandate · ${TABLETOP.nations[state.mandate] ?? ""}</p>` : "");
+  }
+  historyBox.hidden = !state?.log.length;
+  if (!historyBox.hidden) {
+    historyBox.innerHTML = '<h2>Recent bot orders</h2><ul class="history-list">' + state.log.slice(-5).reverse().map(entry => {
+      const stackChecks = entry.lookups ? ` + ${esc(entry.lookups)} stack` : "";
+      return `<li><strong>${esc(entry.description)}</strong><br><span class="meta">${esc(entry.label)} · ${esc(entry.checks)} order${stackChecks} checks</span></li>`;
+    }).join("") + "</ul>";
+  }
+  if (focus) workspace.querySelector("h2")?.focus({ preventScroll: true });
+}
+
+document.addEventListener("click", event => {
+  const target = event.target.closest("button[data-action]");
+  if (!target) return;
+  const { action, value } = target.dataset;
+  notice = "";
+  if (action === "setup") {
+    if (practice) state = tableSession;
+    if (state && state.phase !== "finished" && !window.confirm("Start over and discard the current tabletop session?")) {
+      practice = false;
+      render();
+      return;
+    }
+    state = null;
+    practice = false;
+  } else if (action === "drill") {
+    beginDrill();
+  } else if (action === "leave-drill") {
+    state = tableSession;
+    tableSession = null;
+    practice = false;
+  } else if (action === "start" && !state) {
+    newGame(value, Number(workspace.querySelector("input[name=limit]:checked").value));
+  } else if (state) {
+    if (action === "mandate" && state.phase === "mandate") {
+      state.mandate = value;
+      state.phase = "board";
+    } else if (action === "mandate-met" && state.phase === "board") state.mandate = "";
+    else if (action === "begin" && state.phase === "board") startAction();
+    else if (state.phase === "probe" && (action === "offer" || action === "skip")) {
+      if (practice && (state.probe === 0 && action === "offer" ||
+          state.probe === 1 && (action === "skip" || value !== "move/1"))) {
+        notice = state.probe === 0 ? "Leaving Stanislau empty would break the guard rule. Mark the order blocked." :
+          "The Villach corps has a legal march costing 1 OPS.";
+      } else {
+        state.totalChecks++;
+        const [operation, amount] = value.split("/");
+        const play = action === "offer" && TABLETOP.chooseOps(state.hand, Number(amount), CARDS);
+        if (play) showOrder({ ...play, operation, order: currentProbe() });
+        else {
+          const from = currentProbe().from;
+          if (state.search && !state.search.follow && !state.search.from &&
+              Object.hasOwn(LAUNCH_LINKS, from) && (value === "present" || action === "offer")) state.search.from = from;
+          notice = action === "offer" ? "The bot’s hand cannot cover that activation." : "";
+          if (practice) notice = "The corps holds Stanislau. Try the backup order.";
+          nextProbe();
+        }
+      }
+    } else if (action === "launch" && state.phase === "launch") {
+      const places = launchPlaces();
+      if (value === "" || places.includes(value)) setLaunch(value, value ? places.indexOf(value) + 1 : places.length);
+    } else if (action === "rp" && state.phase === "rp") {
+      showOrder(TABLETOP.fallback(state.hand, CARDS, state.turn, state.last, value === "yes"));
+    } else if (action === "back" && state.phase === "order" && state.pending.order) {
+      state.totalChecks--;
+      state.pending = null;
+      state.phase = "probe";
+    } else if (action === "done" && state.phase === "order") recordOrder();
+    else if (action === "next" && state.phase === "turn-end" && state.turn < 3) {
+      TABLETOP.fill(state);
+      state.turn++;
+      state.round = 1;
+      state.last = null;
+      state.mandate = "";
+      state.coverUsed = [];
+      state.phase = "mandate";
+    } else if (action === "finish" && state.phase === "turn-end") state.phase = "finished";
+  }
+  save();
+  render(true);
+});
+
+render();
+</script>
+</body>
+</html>

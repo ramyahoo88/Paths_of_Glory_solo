@@ -1,0 +1,91 @@
+{
+  "provenance": "Aggregates retained from this conversation. Original raw replay logs and harnesses were removed by workspace maintenance. These figures were not rerun for the handoff.",
+  "interpretation": "Availability of legal orders on existing digital-game positions. Full games played by the tabletop policy and physical usability remain untested.",
+  "tabletop_v01": {
+    "replays": 12,
+    "ordinary_positions": 420,
+    "three_fixed": {
+      "orders": 232,
+      "mean_order_checks": 2.34
+    },
+    "six_same_front": {
+      "orders": 287,
+      "mean_order_checks": 3.53
+    },
+    "three_each_front": {
+      "orders": 308,
+      "mean_order_checks": 3.48
+    },
+    "fall_two_front": {
+      "orders": 70,
+      "positions": 144
+    }
+  },
+  "cp_fall_v02": {
+    "development": {
+      "replays": 12,
+      "positions": 72,
+      "before_orders": 31,
+      "after_orders": 45,
+      "before_checks": 4.333333333333333,
+      "after_checks": 4.138888888888889
+    },
+    "first_fresh": {
+      "replays": 24,
+      "positions": 138,
+      "before_orders": 82,
+      "after_orders": 97,
+      "before_checks": 3.920289855072464,
+      "after_checks": 3.8260869565217392
+    },
+    "final_fresh": {
+      "replays": 16,
+      "positions": 90,
+      "before_orders": 54,
+      "after_orders": 61,
+      "before_checks": 3.7222222222222223,
+      "after_checks": 3.6555555555555554
+    },
+    "fresh_combined": {
+      "positions": 228,
+      "before_orders": 136,
+      "after_orders": 158,
+      "gained": 26,
+      "lost": 4,
+      "before_checks": 3.8421052631578947,
+      "after_checks": 3.758771929824561
+    },
+    "selection": "Central Powers Fall only, chosen using development and first fresh batch. Final fresh batch followed that choice.",
+    "checks_definition": "Order checks plus extra stack-location lookups. Other tabletop work and elapsed time were not measured."
+  },
+  "ap_local_search_rejected": {
+    "fresh_fall_positions": 228,
+    "before_orders": 140,
+    "after_orders": 117
+  },
+  "digital_v17": {
+    "earlier_160": {
+      "cp": 31,
+      "draw": 42,
+      "ap": 87
+    },
+    "fresh_96": {
+      "cp": 17,
+      "draw": 30,
+      "ap": 49,
+      "mean_cp_vp": 9.291666666666666
+    },
+    "garrison_96_rejected": {
+      "cp": 17,
+      "draw": 29,
+      "ap": 50,
+      "mean_cp_vp": 9.177083333333334
+    },
+    "garrison_retake_96_rejected": {
+      "cp": 15,
+      "draw": 28,
+      "ap": 53,
+      "mean_cp_vp": 9.010416666666666
+    }
+  }
+}

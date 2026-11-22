@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An offline bot for playing the 1914 Introductory Scenario on the physical Paths of Glory board.">
+  <title>Paths of Glory · 1914 Tabletop Pilot</title>
+  <style>/* @STYLE@ */</style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="page masthead-row">
+      <div>
+        <p class="scenario">Paths of Glory</p>
+        <h1>1914 Tabletop Pilot</h1>
+      </div>
+      <nav aria-label="Pilot options">
+        <button class="secondary" type="button" data-action="drill">Try the Cluj drill</button>
+        <button class="quiet" type="button" data-action="setup">New game</button>
+      </nav>
+    </div>
+  </header>
+  <main class="page layout">
+    <section class="workspace" id="workspace" aria-label="Bot orders">
+      <noscript>Enable JavaScript to run the tabletop companion.</noscript>
+    </section>
+    <aside aria-label="Bot reference">
+      <section class="reference" id="mission" hidden></section>
+      <section class="reference">
+        <h2>At the table</h2>
+        <p>Use the printed Introductory Scenario and its standard Mobilization decks. Set the bot’s cards aside as a reference. The companion keeps its hand.</p>
+        <details>
+          <summary>Choosing a group</summary>
+          <p>Use supplied, eligible units of one nationality. Among legal groups, use the most armies, then the most units, then the first group by printed unit designations. For a cover order, use only corps. During a mandate order, use the named nationality.</p>
+          <p>Use the activation cost of the entire space under the printed rules. On a march, verify supply at the destination and leave a unit at a guarded origin if an enemy combat unit is adjacent.</p>
+        </details>
+        <details>
+          <summary>Bot combat decisions</summary>
+          <dl>
+            <dt>Flank and combat cards</dt><dd>Use simultaneous fire. Decline optional combat cards.</dd>
+            <dt>Losses</dt><dd>Of legal allocations, preserve the most armies on the map, then the most army steps, then the most corps. Break ties by the printed designations of units taking losses.</dd>
+            <dt>Retreat</dt><dd>Retreat armies before corps, using printed unit order within each group. Follow the printed retreat priorities. Among equally legal routes, prefer a supplied destination, then alphabetize by destination and by route. Decline the option to take an extra step loss to hold.</dd>
+            <dt>Advance</dt><dd>Advance one eligible army, or one corps if there is no eligible army, into the battle space if supplied there. Break ties by unit designation. Leave a defender at a guarded origin next to an enemy unit. Skip the optional second space.</dd>
+          </dl>
+        </details>
+        <details>
+          <summary>Replacements and turn end</summary>
+          <p>Apply the printed rules for attrition, sieges, War Status and replacements. Spend the bot’s points by restoring armies, rebuilding armies, restoring corps, then rebuilding corps. Break ties by unit designation, then by eligible entry space alphabetically.</p>
+          <p>Roll each side’s mandated offensive on the board. Enter the bot’s result when the next turn starts. If the bot satisfies its mandate during an ordinary action, mark it met before the next action.</p>
+        </details>
+        <a class="rule-link" href="https://gmtwebsiteassets.s3.us-west-2.amazonaws.com/nnpg/PoG-DeluxeRules2022Final.pdf" target="_blank" rel="noopener">GMT living rules</a>
+      </section>
+      <section class="reference" id="history" hidden></section>
+    </aside>
+  </main>
+  <footer class="page">Unofficial playtest companion · v0.2</footer>
+  <script>/* @SCRIPTS@ */</script>
+</body>
+</html>

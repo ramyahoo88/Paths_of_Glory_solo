@@ -1,0 +1,4282 @@
+// Classic 1914 board, counter and card facts. See the in-app credits.
+const DATA = {
+  spaces: [
+    {"id":1,"name":"London","nation":"br","side":"ap","active":true,"front":"west","x":266,"y":565,"supply":true,"capital":true,"port":true},
+    {"id":2,"name":"Cherbourg","nation":"fr","side":"ap","active":true,"front":"west","x":179,"y":693,"port":true},
+    {"id":3,"name":"Caen","nation":"fr","side":"ap","active":true,"front":"west","x":234,"y":748},
+    {"id":4,"name":"Rennes","nation":"fr","side":"ap","active":true,"front":"west","x":191,"y":805},
+    {"id":5,"name":"Nantes","nation":"fr","side":"ap","active":true,"front":"west","x":186,"y":869,"port":true},
+    {"id":6,"name":"La Rochelle","nation":"fr","side":"ap","active":true,"front":"west","x":236,"y":944,"port":true},
+    {"id":7,"name":"Bordeaux","nation":"fr","side":"ap","active":true,"front":"west","x":262,"y":1029,"port":true},
+    {"id":8,"name":"Poitiers","nation":"fr","side":"ap","active":true,"front":"west","x":335,"y":935},
+    {"id":9,"name":"Tours","nation":"fr","side":"ap","active":true,"front":"west","x":336,"y":864},
+    {"id":10,"name":"Le Mans","nation":"fr","side":"ap","active":true,"front":"west","x":303,"y":803},
+    {"id":11,"name":"Le Havre","nation":"fr","side":"ap","active":true,"front":"west","x":299,"y":699,"port":true,"vp":1},
+    {"id":12,"name":"Rouen","nation":"fr","side":"ap","active":true,"front":"west","x":370,"y":736,"vp":1},
+    {"id":13,"name":"Orleans","nation":"fr","side":"ap","active":true,"front":"west","x":422,"y":832,"vp":1},
+    {"id":14,"name":"St. Amand","nation":"fr","side":"ap","active":true,"front":"west","x":448,"y":916},
+    {"id":15,"name":"Paris","nation":"fr","side":"ap","active":true,"front":"west","x":454,"y":759,"fort":1,"capital":true,"vp":1},
+    {"id":16,"name":"Amiens","nation":"fr","side":"ap","active":true,"front":"west","x":423,"y":681},
+    {"id":17,"name":"Calais","nation":"fr","side":"ap","active":true,"front":"west","x":400,"y":618,"terrain":"swamp","port":true,"vp":1},
+    {"id":18,"name":"Ostend","nation":"be","side":"ap","active":true,"front":"west","x":470,"y":576,"terrain":"swamp","port":true,"vp":1},
+    {"id":19,"name":"Cambrai","nation":"fr","side":"ap","active":true,"front":"west","x":498,"y":684,"vp":1},
+    {"id":20,"name":"Chateau Thierry","nation":"fr","side":"ap","active":true,"front":"west","x":548,"y":753},
+    {"id":21,"name":"Melun","nation":"fr","side":"ap","active":true,"front":"west","x":518,"y":824,"vp":1},
+    {"id":22,"name":"Nevers","nation":"fr","side":"ap","active":true,"front":"west","x":541,"y":907},
+    {"id":23,"name":"Lyon","nation":"fr","side":"ap","active":true,"front":"west","x":610,"y":989},
+    {"id":24,"name":"Avignon","nation":"fr","side":"ap","active":true,"front":"west","x":589,"y":1073},
+    {"id":25,"name":"Marseilles","nation":"fr","side":"ap","active":true,"front":"west","x":644,"y":1161,"port":true},
+    {"id":26,"name":"Nice","nation":"fr","side":"ap","active":true,"front":"west","x":740,"y":1147},
+    {"id":27,"name":"Grenoble","nation":"fr","side":"ap","active":true,"front":"west","x":695,"y":1022,"terrain":"mountain"},
+    {"id":28,"name":"Dijon","nation":"fr","side":"ap","active":true,"front":"west","x":646,"y":901,"vp":1},
+    {"id":29,"name":"Bar le Duc","nation":"fr","side":"ap","active":true,"front":"west","x":612,"y":816,"vp":1},
+    {"id":30,"name":"Sedan","nation":"fr","side":"ap","active":true,"front":"west","x":581,"y":684,"terrain":"forest"},
+    {"id":31,"name":"Brussels","nation":"be","side":"ap","active":true,"front":"west","x":546,"y":620,"vp":1},
+    {"id":32,"name":"Antwerp","nation":"be","side":"ap","active":true,"front":"west","x":584,"y":557,"fort":1,"vp":1},
+    {"id":33,"name":"Liege","nation":"be","side":"ap","active":true,"front":"west","x":643,"y":629,"fort":3},
+    {"id":34,"name":"Verdun","nation":"fr","side":"ap","active":true,"front":"west","x":641,"y":731,"fort":3,"vp":1},
+    {"id":35,"name":"Nancy","nation":"fr","side":"ap","active":true,"front":"west","x":686,"y":799,"fort":2,"vp":1},
+    {"id":36,"name":"Belfort","nation":"fr","side":"ap","active":true,"front":"west","x":725,"y":872,"terrain":"mountain","fort":2},
+    {"id":37,"name":"Turin","nation":"it","side":"ap","active":false,"front":"west","x":785,"y":1035},
+    {"id":38,"name":"Mulhouse","nation":"ge","side":"cp","active":true,"front":"west","x":808,"y":856,"terrain":"mountain"},
+    {"id":39,"name":"Strasbourg","nation":"ge","side":"cp","active":true,"front":"west","x":787,"y":782,"fort":3,"vp":1},
+    {"id":40,"name":"Metz","nation":"ge","side":"cp","active":true,"front":"west","x":738,"y":711,"terrain":"forest","fort":3,"vp":1},
+    {"id":41,"name":"Koblenz","nation":"ge","side":"cp","active":true,"front":"west","x":731,"y":642},
+    {"id":42,"name":"Aachen","nation":"ge","side":"cp","active":true,"front":"west","x":679,"y":572},
+    {"id":43,"name":"Essen","nation":"ge","side":"cp","active":true,"front":"west","x":762,"y":559,"supply":true,"vp":1},
+    {"id":44,"name":"Frankfurt","nation":"ge","side":"cp","active":true,"front":"west","x":821,"y":646,"vp":1},
+    {"id":45,"name":"Mannheim","nation":"ge","side":"cp","active":true,"front":"west","x":826,"y":721},
+    {"id":46,"name":"Stuttgart","nation":"ge","side":"cp","active":true,"front":"west","x":880,"y":777,"vp":1},
+    {"id":47,"name":"Wilhelmshaven","nation":"ge","side":"cp","active":true,"front":"west","x":793,"y":409,"port":true},
+    {"id":48,"name":"Bremen","nation":"ge","side":"cp","active":true,"front":"west","x":841,"y":480},
+    {"id":49,"name":"Kassel","nation":"ge","side":"cp","active":true,"front":"west","x":875,"y":568},
+    {"id":50,"name":"Kiel","nation":"ge","side":"cp","active":true,"front":"west","x":914,"y":378,"port":true},
+    {"id":51,"name":"Hamburg","nation":"ge","side":"cp","active":true,"front":"west","x":917,"y":448},
+    {"id":52,"name":"Hannover","nation":"ge","side":"cp","active":true,"front":"west","x":991,"y":530},
+    {"id":53,"name":"Erfurt","nation":"ge","side":"cp","active":true,"front":"west","x":983,"y":657},
+    {"id":54,"name":"Nuremberg","nation":"ge","side":"cp","active":true,"front":"west","x":988,"y":729},
+    {"id":55,"name":"Augsburg","nation":"ge","side":"cp","active":true,"front":"west","x":963,"y":791},
+    {"id":56,"name":"Innsbruck","nation":"ah","side":"cp","active":true,"front":"west","x":1019,"y":888,"terrain":"mountain"},
+    {"id":57,"name":"Trent","nation":"ah","side":"cp","active":true,"front":"west","x":951,"y":930,"terrain":"mountain","fort":3,"vp":1},
+    {"id":58,"name":"Milan","nation":"it","side":"ap","active":false,"front":"west","x":880,"y":1010,"vp":1},
+    {"id":59,"name":"Genoa","nation":"it","side":"ap","active":false,"front":"west","x":870,"y":1088,"port":true,"vp":1},
+    {"id":60,"name":"Verona","nation":"it","side":"ap","active":false,"front":"west","x":987,"y":1016},
+    {"id":61,"name":"Bologna","nation":"it","side":"ap","active":false,"front":"south","x":1013,"y":1077,"vp":1},
+    {"id":62,"name":"Florence","nation":"it","side":"ap","active":false,"front":"south","x":1011,"y":1140,"vp":1},
+    {"id":63,"name":"Viterbo","nation":"it","side":"ap","active":false,"front":"south","x":1066,"y":1210},
+    {"id":64,"name":"Rome","nation":"it","side":"ap","active":false,"front":"south","x":1102,"y":1274,"capital":true,"vp":1},
+    {"id":65,"name":"Naples","nation":"it","side":"ap","active":false,"front":"south","x":1216,"y":1353,"port":true,"vp":1},
+    {"id":66,"name":"Taranto","nation":"it","side":"ap","active":false,"front":"south","x":1401,"y":1385,"port":true},
+    {"id":67,"name":"Foggia","nation":"it","side":"ap","active":false,"front":"south","x":1311,"y":1325},
+    {"id":68,"name":"Pescara","nation":"it","side":"ap","active":false,"front":"south","x":1209,"y":1249},
+    {"id":69,"name":"Ancona","nation":"it","side":"ap","active":false,"front":"south","x":1168,"y":1181},
+    {"id":70,"name":"Ravenna","nation":"it","side":"ap","active":false,"front":"south","x":1099,"y":1120},
+    {"id":71,"name":"Venice","nation":"it","side":"ap","active":false,"front":"west","x":1072,"y":1029,"port":true,"vp":1},
+    {"id":72,"name":"Udine","nation":"it","side":"ap","active":false,"front":"west","x":1140,"y":1004},
+    {"id":73,"name":"Asiago","nation":"it","side":"ap","active":false,"front":"west","x":1051,"y":956},
+    {"id":74,"name":"Maggiore","nation":"it","side":"ap","active":false,"front":"west","x":1126,"y":945},
+    {"id":75,"name":"Spittal","nation":"ah","side":"cp","active":true,"front":"west","x":1110,"y":882,"terrain":"mountain"},
+    {"id":76,"name":"Munich","nation":"ge","side":"cp","active":true,"front":"west","x":1038,"y":819,"terrain":"mountain","vp":1},
+    {"id":77,"name":"Regensburg","nation":"ge","side":"cp","active":true,"front":"west","x":1066,"y":761},
+    {"id":78,"name":"Leipzig","nation":"ge","side":"cp","active":true,"front":"west","x":1068,"y":601},
+    {"id":79,"name":"Berlin","nation":"ge","side":"cp","active":true,"front":"west","x":1114,"y":511,"capital":true,"vp":1},
+    {"id":80,"name":"Rostock","nation":"ge","side":"cp","active":true,"front":"west","x":1037,"y":401,"port":true},
+    {"id":81,"name":"Stettin","nation":"ge","side":"cp","active":true,"front":"west","x":1199,"y":422,"port":true},
+    {"id":82,"name":"Cottbus","nation":"ge","side":"cp","active":true,"front":"west","x":1205,"y":561},
+    {"id":83,"name":"Dresden","nation":"ge","side":"cp","active":true,"front":"west","x":1146,"y":618},
+    {"id":84,"name":"Prague","nation":"ah","side":"cp","active":true,"front":"west","x":1194,"y":688},
+    {"id":85,"name":"Kolin","nation":"ah","side":"cp","active":true,"front":"west","x":1272,"y":727},
+    {"id":86,"name":"Linz","nation":"ah","side":"cp","active":true,"front":"west","x":1180,"y":831},
+    {"id":87,"name":"Villach","nation":"ah","side":"cp","active":true,"front":"west","x":1198,"y":928,"terrain":"mountain"},
+    {"id":88,"name":"Trieste","nation":"ah","side":"cp","active":true,"front":"west","x":1218,"y":1011,"terrain":"mountain","fort":3,"vp":1},
+    {"id":89,"name":"Graz","nation":"ah","side":"cp","active":true,"front":"west","x":1272,"y":909,"terrain":"mountain"},
+    {"id":90,"name":"Vienna","nation":"ah","side":"cp","active":true,"front":"west","x":1322,"y":834,"capital":true,"vp":1},
+    {"id":91,"name":"Brun","nation":"ah","side":"cp","active":true,"front":"west","x":1343,"y":764},
+    {"id":92,"name":"Olmutz","nation":"ah","side":"cp","active":true,"front":"east","x":1418,"y":715},
+    {"id":93,"name":"Oppeln","nation":"ge","side":"cp","active":true,"front":"east","x":1447,"y":653},
+    {"id":94,"name":"Breslau","nation":"ge","side":"cp","active":true,"front":"east","x":1353,"y":625,"fort":2,"supply":true,"vp":1},
+    {"id":95,"name":"Posen","nation":"ge","side":"cp","active":true,"front":"east","x":1345,"y":533,"fort":2,"vp":1},
+    {"id":96,"name":"Thorn","nation":"ge","side":"cp","active":true,"front":"east","x":1400,"y":466,"fort":2},
+    {"id":97,"name":"Kolberg","nation":"ge","side":"cp","active":true,"front":"west","x":1318,"y":398,"port":true},
+    {"id":98,"name":"Danzig","nation":"ge","side":"cp","active":true,"front":"east","x":1446,"y":392,"fort":2,"port":true,"vp":1},
+    {"id":99,"name":"Konigsberg","nation":"ge","side":"cp","active":true,"front":"east","x":1552,"y":366,"fort":3,"port":true,"vp":1},
+    {"id":100,"name":"Tannenberg","nation":"ge","side":"cp","active":true,"front":"east","x":1551,"y":446,"terrain":"forest"},
+    {"id":101,"name":"Plock","nation":"ru","side":"ap","active":true,"front":"east","x":1508,"y":507},
+    {"id":102,"name":"Lodz","nation":"ru","side":"ap","active":true,"front":"east","x":1500,"y":573,"vp":1},
+    {"id":103,"name":"Czestochowa","nation":"ru","side":"ap","active":true,"front":"east","x":1555,"y":645},
+    {"id":104,"name":"Cracow","nation":"ah","side":"cp","active":true,"front":"east","x":1535,"y":707,"fort":2,"vp":1},
+    {"id":105,"name":"Martin","nation":"ah","side":"cp","active":true,"front":"east","x":1463,"y":792},
+    {"id":106,"name":"Budapest","nation":"ah","side":"cp","active":true,"front":"east","x":1503,"y":886,"capital":true,"vp":1},
+    {"id":107,"name":"Pecs","nation":"ah","side":"cp","active":true,"front":"east","x":1454,"y":989},
+    {"id":108,"name":"Zagreb","nation":"ah","side":"cp","active":true,"front":"west","x":1308,"y":1001},
+    {"id":109,"name":"Banja Luka","nation":"ah","side":"cp","active":true,"front":"west","x":1390,"y":1077,"terrain":"mountain"},
+    {"id":110,"name":"Mostar","nation":"ah","side":"cp","active":true,"front":"south","x":1386,"y":1184,"terrain":"mountain"},
+    {"id":111,"name":"Cetinje","nation":"mn","side":"ap","active":true,"front":"south","x":1500,"y":1236,"terrain":"mountain","capital":true},
+    {"id":112,"name":"Tirana","nation":"al","side":"ap","active":true,"front":"south","x":1563,"y":1308,"terrain":"mountain"},
+    {"id":113,"name":"Valona","nation":"al","side":"ap","active":true,"front":"south","x":1562,"y":1394,"terrain":"mountain"},
+    {"id":114,"name":"Florina","nation":"gr","side":"ap","active":false,"front":"south","x":1680,"y":1418,"terrain":"mountain"},
+    {"id":115,"name":"Larisa","nation":"gr","side":"ap","active":false,"front":"south","x":1739,"y":1469,"terrain":"mountain"},
+    {"id":116,"name":"Athens","nation":"gr","side":"ap","active":false,"front":"south","x":1823,"y":1576,"capital":true,"port":true},
+    {"id":117,"name":"Salonika","nation":"gr","side":"ap","active":false,"front":"south","x":1752,"y":1394,"terrain":"mountain","port":true},
+    {"id":118,"name":"Monastir","nation":"sb","side":"ap","active":true,"front":"south","x":1678,"y":1343,"terrain":"mountain"},
+    {"id":119,"name":"Kavala","nation":"gr","side":"ap","active":false,"front":"south","x":1838,"y":1365,"terrain":"mountain"},
+    {"id":120,"name":"Strumitsa","nation":"bu","side":"cp","active":false,"front":"south","x":1797,"y":1295,"terrain":"mountain"},
+    {"id":121,"name":"Skopje","nation":"sb","side":"ap","active":true,"front":"south","x":1671,"y":1275,"terrain":"mountain"},
+    {"id":122,"name":"Nis","nation":"sb","side":"ap","active":true,"front":"south","x":1664,"y":1184},
+    {"id":123,"name":"Valjevo","nation":"sb","side":"ap","active":true,"front":"south","x":1575,"y":1171,"terrain":"mountain"},
+    {"id":124,"name":"Sarajevo","nation":"ah","side":"cp","active":true,"front":"south","x":1472,"y":1139,"terrain":"mountain"},
+    {"id":125,"name":"Belgrade","nation":"sb","side":"ap","active":true,"front":"south","x":1623,"y":1097,"fort":1,"supply":true,"capital":true,"vp":1},
+    {"id":126,"name":"Novi Sad","nation":"ah","side":"cp","active":true,"front":"east","x":1546,"y":1037},
+    {"id":127,"name":"Timisvar","nation":"ah","side":"cp","active":true,"front":"east","x":1648,"y":1017},
+    {"id":128,"name":"Szeged","nation":"ah","side":"cp","active":true,"front":"east","x":1565,"y":961},
+    {"id":129,"name":"Debrecen","nation":"ah","side":"cp","active":true,"front":"east","x":1665,"y":889,"vp":1},
+    {"id":130,"name":"Miskolcz","nation":"ah","side":"cp","active":true,"front":"east","x":1578,"y":828},
+    {"id":131,"name":"Gorlice","nation":"ah","side":"cp","active":true,"front":"east","x":1606,"y":770,"terrain":"mountain"},
+    {"id":132,"name":"Tarnow","nation":"ah","side":"cp","active":true,"front":"east","x":1630,"y":710},
+    {"id":133,"name":"Ivangorod","nation":"ru","side":"ap","active":true,"front":"east","x":1642,"y":638,"fort":1},
+    {"id":134,"name":"Warsaw","nation":"ru","side":"ap","active":true,"front":"east","x":1606,"y":547,"fort":2,"vp":1},
+    {"id":135,"name":"Lomza","nation":"ru","side":"ap","active":true,"front":"east","x":1670,"y":484,"fort":1},
+    {"id":136,"name":"Insterberg","nation":"ge","side":"cp","active":true,"front":"east","x":1643,"y":409,"terrain":"forest"},
+    {"id":137,"name":"Memel","nation":"ge","side":"cp","active":true,"front":"east","x":1608,"y":304,"port":true},
+    {"id":138,"name":"Libau","nation":"ru","side":"ap","active":true,"front":"east","x":1606,"y":235,"port":true},
+    {"id":139,"name":"Szawli","nation":"ru","side":"ap","active":true,"front":"east","x":1703,"y":275},
+    {"id":140,"name":"Riga","nation":"ru","side":"ap","active":true,"front":"east","x":1784,"y":220,"fort":3,"port":true,"vp":1},
+    {"id":141,"name":"Reval","nation":"ru","side":"ap","active":true,"front":"east","x":1908,"y":147},
+    {"id":142,"name":"Pskov","nation":"ru","side":"ap","active":true,"front":"east","x":2061,"y":169},
+    {"id":143,"name":"Petrograd","nation":"ru","side":"ap","active":true,"front":"east","x":2188,"y":155,"supply":true},
+    {"id":144,"name":"Velikiye Luki","nation":"ru","side":"ap","active":true,"front":"east","x":2181,"y":260},
+    {"id":145,"name":"Opochka","nation":"ru","side":"ap","active":true,"front":"east","x":2074,"y":258},
+    {"id":146,"name":"Dvinsk","nation":"ru","side":"ap","active":true,"front":"east","x":1944,"y":304},
+    {"id":147,"name":"Kovno","nation":"ru","side":"ap","active":true,"front":"east","x":1723,"y":362,"fort":1},
+    {"id":148,"name":"Vilna","nation":"ru","side":"ap","active":true,"front":"east","x":1820,"y":362,"vp":1},
+    {"id":149,"name":"Moldechno","nation":"ru","side":"ap","active":true,"front":"east","x":1923,"y":396},
+    {"id":150,"name":"Polotsk","nation":"ru","side":"ap","active":true,"front":"east","x":2058,"y":363},
+    {"id":151,"name":"Vitebsk","nation":"ru","side":"ap","active":true,"front":"east","x":2185,"y":345},
+    {"id":152,"name":"Moscow","nation":"ru","side":"ap","active":true,"front":"east","x":2395,"y":370,"supply":true},
+    {"id":153,"name":"Smolensk","nation":"ru","side":"ap","active":true,"front":"east","x":2303,"y":393},
+    {"id":154,"name":"Orsha","nation":"ru","side":"ap","active":true,"front":"east","x":2187,"y":402},
+    {"id":155,"name":"Roslavl","nation":"ru","side":"ap","active":true,"front":"east","x":2335,"y":491},
+    {"id":156,"name":"Mogilev","nation":"ru","side":"ap","active":true,"front":"east","x":2197,"y":458},
+    {"id":157,"name":"Minsk","nation":"ru","side":"ap","active":true,"front":"east","x":2027,"y":446,"vp":1},
+    {"id":158,"name":"Gomel","nation":"ru","side":"ap","active":true,"front":"east","x":2242,"y":556},
+    {"id":159,"name":"Slutsk","nation":"ru","side":"ap","active":true,"front":"east","x":2077,"y":518,"terrain":"forest"},
+    {"id":160,"name":"Baranovichi","nation":"ru","side":"ap","active":true,"front":"east","x":1915,"y":467,"terrain":"forest"},
+    {"id":161,"name":"Grodno","nation":"ru","side":"ap","active":true,"front":"east","x":1771,"y":436,"terrain":"forest","fort":1},
+    {"id":162,"name":"Bialystok","nation":"ru","side":"ap","active":true,"front":"east","x":1809,"y":504},
+    {"id":163,"name":"Brest Litovsk","nation":"ru","side":"ap","active":true,"front":"east","x":1745,"y":558,"fort":1},
+    {"id":164,"name":"Pinsk","nation":"ru","side":"ap","active":true,"front":"east","x":1888,"y":536,"terrain":"swamp"},
+    {"id":165,"name":"Lublin","nation":"ru","side":"ap","active":true,"front":"east","x":1764,"y":639},
+    {"id":166,"name":"Kovel","nation":"ru","side":"ap","active":true,"front":"east","x":1854,"y":598,"terrain":"swamp"},
+    {"id":167,"name":"Sarny","nation":"ru","side":"ap","active":true,"front":"east","x":1976,"y":580,"terrain":"swamp"},
+    {"id":168,"name":"Mozyr","nation":"ru","side":"ap","active":true,"front":"east","x":2129,"y":607,"terrain":"swamp"},
+    {"id":169,"name":"Chernigov","nation":"ru","side":"ap","active":true,"front":"east","x":2262,"y":631},
+    {"id":170,"name":"Kharkov","nation":"ru","side":"ap","active":true,"front":"east","x":2410,"y":698,"supply":true},
+    {"id":171,"name":"Kiev","nation":"ru","side":"ap","active":true,"front":"east","x":2215,"y":697,"vp":1},
+    {"id":172,"name":"Zhitomir","nation":"ru","side":"ap","active":true,"front":"east","x":2111,"y":690},
+    {"id":173,"name":"Rovno","nation":"ru","side":"ap","active":true,"front":"east","x":2016,"y":656,"terrain":"forest"},
+    {"id":174,"name":"Lutsk","nation":"ru","side":"ap","active":true,"front":"east","x":1890,"y":665,"terrain":"forest","fort":1},
+    {"id":175,"name":"Dubno","nation":"ru","side":"ap","active":true,"front":"east","x":1965,"y":720,"fort":1},
+    {"id":176,"name":"Przemysl","nation":"ah","side":"cp","active":true,"front":"east","x":1723,"y":712,"fort":3},
+    {"id":177,"name":"Lemberg","nation":"ah","side":"cp","active":true,"front":"east","x":1813,"y":725,"vp":1},
+    {"id":178,"name":"Uzhgorod","nation":"ah","side":"cp","active":true,"front":"east","x":1697,"y":815,"terrain":"mountain"},
+    {"id":179,"name":"Stanislau","nation":"ah","side":"cp","active":true,"front":"east","x":1796,"y":800},
+    {"id":180,"name":"Tarnopol","nation":"ah","side":"cp","active":true,"front":"east","x":1886,"y":776},
+    {"id":181,"name":"Munkacs","nation":"ah","side":"cp","active":true,"front":"east","x":1793,"y":865,"terrain":"mountain"},
+    {"id":182,"name":"Czernowitz","nation":"ah","side":"cp","active":true,"front":"east","x":1888,"y":852,"vp":1},
+    {"id":183,"name":"Kamenets-Podolski","nation":"ru","side":"ap","active":true,"front":"east","x":1973,"y":813},
+    {"id":184,"name":"Vinnitsa","nation":"ru","side":"ap","active":true,"front":"east","x":2095,"y":783},
+    {"id":185,"name":"Belaya Tserkov","nation":"ru","side":"ap","active":true,"front":"east","x":2236,"y":782},
+    {"id":186,"name":"Caucasus","nation":"ru","side":"ap","active":true,"front":"east","x":2420,"y":906,"supply":true},
+    {"id":187,"name":"Uman","nation":"ru","side":"ap","active":true,"front":"east","x":2242,"y":873},
+    {"id":188,"name":"Odessa","nation":"ru","side":"ap","active":true,"front":"east","x":2244,"y":976,"fort":3,"vp":1},
+    {"id":189,"name":"Zhmerinka","nation":"ru","side":"ap","active":true,"front":"east","x":2054,"y":866},
+    {"id":190,"name":"Jassy","nation":"ro","side":"ap","active":false,"front":"east","x":1966,"y":909},
+    {"id":191,"name":"Schossburg","nation":"ah","side":"cp","active":true,"front":"east","x":1867,"y":942,"terrain":"mountain"},
+    {"id":192,"name":"Cluj","nation":"ah","side":"cp","active":true,"front":"east","x":1777,"y":928,"vp":1},
+    {"id":193,"name":"Hermannstadt","nation":"ah","side":"cp","active":true,"front":"east","x":1779,"y":1003,"terrain":"mountain"},
+    {"id":194,"name":"Kronstadt","nation":"ah","side":"cp","active":true,"front":"east","x":1870,"y":1004,"terrain":"mountain"},
+    {"id":195,"name":"Targu Jiu","nation":"ro","side":"ap","active":false,"front":"east","x":1724,"y":1067},
+    {"id":196,"name":"Carte de Arges","nation":"ro","side":"ap","active":false,"front":"east","x":1812,"y":1065,"terrain":"mountain"},
+    {"id":197,"name":"Caracal","nation":"ro","side":"ap","active":false,"front":"south","x":1832,"y":1131},
+    {"id":198,"name":"Sofia","nation":"bu","side":"cp","active":false,"front":"south","x":1783,"y":1219,"supply":true,"capital":true,"vp":1},
+    {"id":199,"name":"Barlad","nation":"ro","side":"ap","active":false,"front":"east","x":1992,"y":974},
+    {"id":200,"name":"Kishinev","nation":"ru","side":"ap","active":true,"front":"east","x":2125,"y":941},
+    {"id":201,"name":"Ismail","nation":"ru","side":"ap","active":true,"front":"east","x":2144,"y":1020},
+    {"id":202,"name":"Galatz","nation":"ro","side":"ap","active":false,"front":"east","x":2046,"y":1058},
+    {"id":203,"name":"Ploesti","nation":"ro","side":"ap","active":false,"front":"east","x":1940,"y":1044,"terrain":"mountain","vp":1},
+    {"id":204,"name":"Bucharest","nation":"ro","side":"ap","active":false,"front":"south","x":1958,"y":1118,"capital":true,"vp":1},
+    {"id":205,"name":"Constanta","nation":"ro","side":"ap","active":false,"front":"south","x":2095,"y":1126},
+    {"id":206,"name":"Varna","nation":"bu","side":"cp","active":false,"front":"south","x":2066,"y":1200},
+    {"id":207,"name":"Plevna","nation":"bu","side":"cp","active":false,"front":"south","x":1881,"y":1201},
+    {"id":208,"name":"Kazanlik","nation":"bu","side":"cp","active":false,"front":"south","x":1935,"y":1272,"terrain":"mountain"},
+    {"id":209,"name":"Burgas","nation":"bu","side":"cp","active":false,"front":"south","x":2052,"y":1264},
+    {"id":210,"name":"Adrianople","nation":"tu","side":"cp","active":false,"front":"south","x":2060,"y":1337},
+    {"id":211,"name":"Philippoli","nation":"bu","side":"cp","active":false,"front":"south","x":1921,"y":1343,"terrain":"mountain"},
+    {"id":212,"name":"Gallipoli","nation":"tu","side":"cp","active":false,"front":"south","x":1985,"y":1398,"terrain":"mountain"},
+    {"id":213,"name":"Cana Kale","nation":"tu","side":"cp","active":false,"front":"south","x":1998,"y":1462},
+    {"id":214,"name":"Balikesir","nation":"tu","side":"cp","active":false,"front":"south","x":2094,"y":1477,"terrain":"mountain"},
+    {"id":215,"name":"Izmir","nation":"tu","side":"cp","active":false,"front":"south","x":2049,"y":1552},
+    {"id":216,"name":"MEF1","nation":"none","side":"ap","active":false,"front":"south","x":1909,"y":1435},
+    {"id":217,"name":"MEF2","nation":"none","side":"ap","active":false,"front":"south","x":1929,"y":1500},
+    {"id":218,"name":"MEF3","nation":"none","side":"ap","active":false,"front":"south","x":1986,"y":1598},
+    {"id":219,"name":"Constantinople","nation":"tu","side":"cp","active":false,"front":"near","x":2261,"y":1145,"supply":true,"capital":true,"port":true,"vp":1},
+    {"id":220,"name":"Bursa","nation":"tu","side":"cp","active":false,"front":"near","x":2269,"y":1215},
+    {"id":221,"name":"Adapazari","nation":"tu","side":"cp","active":false,"front":"near","x":2335,"y":1142},
+    {"id":222,"name":"Eskidor","nation":"tu","side":"cp","active":false,"front":"near","x":2337,"y":1211,"terrain":"mountain"},
+    {"id":223,"name":"Sinope","nation":"tu","side":"cp","active":false,"front":"near","x":2398,"y":1121},
+    {"id":224,"name":"Ankara","nation":"tu","side":"cp","active":false,"front":"near","x":2405,"y":1195,"terrain":"mountain"},
+    {"id":225,"name":"Samsun","nation":"tu","side":"cp","active":false,"front":"near","x":2460,"y":1115},
+    {"id":226,"name":"Sivas","nation":"tu","side":"cp","active":false,"front":"near","x":2495,"y":1193,"terrain":"mountain"},
+    {"id":227,"name":"Giresun","nation":"tu","side":"cp","active":false,"front":"near","x":2520,"y":1133},
+    {"id":228,"name":"Trebizond","nation":"tu","side":"cp","active":false,"front":"near","x":2591,"y":1154,"fort":1},
+    {"id":229,"name":"Erzingan","nation":"tu","side":"cp","active":false,"front":"near","x":2597,"y":1215,"terrain":"mountain"},
+    {"id":230,"name":"Rize","nation":"tu","side":"cp","active":false,"front":"near","x":2667,"y":1152},
+    {"id":231,"name":"Batum","nation":"ru","side":"ap","active":true,"front":"near","x":2727,"y":1123},
+    {"id":232,"name":"Kars","nation":"ru","side":"ap","active":true,"front":"near","x":2788,"y":1149,"terrain":"mountain"},
+    {"id":233,"name":"Poti","nation":"ru","side":"ap","active":true,"front":"near","x":2676,"y":1041,"terrain":"mountain"},
+    {"id":234,"name":"Grozny","nation":"ru","side":"ap","active":true,"front":"near","x":2803,"y":1049,"terrain":"mountain"},
+    {"id":235,"name":"Petrovsk","nation":"ru","side":"ap","active":true,"front":"near","x":2927,"y":1073},
+    {"id":236,"name":"Tbilisi","nation":"ru","side":"ap","active":true,"front":"near","x":2860,"y":1126,"terrain":"mountain"},
+    {"id":237,"name":"Elizabethpol","nation":"ru","side":"ap","active":true,"front":"near","x":2929,"y":1170},
+    {"id":238,"name":"Baku","nation":"ru","side":"ap","active":true,"front":"near","x":3003,"y":1212,"vp":1},
+    {"id":239,"name":"Erivan","nation":"ru","side":"ap","active":true,"front":"near","x":2863,"y":1191,"terrain":"mountain"},
+    {"id":240,"name":"Eleskirt","nation":"tu","side":"cp","active":false,"front":"near","x":2772,"y":1216},
+    {"id":241,"name":"Erzerum","nation":"tu","side":"cp","active":false,"front":"near","x":2695,"y":1207,"terrain":"mountain","fort":1},
+    {"id":242,"name":"Dilman","nation":"pe","side":"ap","active":false,"front":"near","x":2865,"y":1265,"terrain":"mountain"},
+    {"id":243,"name":"Tabriz","nation":"pe","side":"ap","active":false,"front":"near","x":2933,"y":1308,"terrain":"mountain"},
+    {"id":244,"name":"Van","nation":"tu","side":"cp","active":false,"front":"near","x":2784,"y":1273,"terrain":"mountain"},
+    {"id":245,"name":"Bitlis","nation":"tu","side":"cp","active":false,"front":"near","x":2717,"y":1273,"terrain":"mountain"},
+    {"id":246,"name":"Diyarbakir","nation":"tu","side":"cp","active":false,"front":"near","x":2654,"y":1268},
+    {"id":247,"name":"Kharput","nation":"tu","side":"cp","active":false,"front":"near","x":2588,"y":1271,"vp":1},
+    {"id":248,"name":"Kayseri","nation":"tu","side":"cp","active":false,"front":"near","x":2517,"y":1262},
+    {"id":249,"name":"Konya","nation":"tu","side":"cp","active":false,"front":"near","x":2440,"y":1270,"terrain":"mountain"},
+    {"id":250,"name":"Adana","nation":"tu","side":"cp","active":false,"front":"near","x":2508,"y":1320,"terrain":"mountain"},
+    {"id":251,"name":"Aleppo","nation":"tu","side":"cp","active":false,"front":"near","x":2583,"y":1350},
+    {"id":252,"name":"Urfa","nation":"tu","side":"cp","active":false,"front":"near","x":2649,"y":1332},
+    {"id":253,"name":"Mardin","nation":"tu","side":"cp","active":false,"front":"near","x":2722,"y":1334},
+    {"id":254,"name":"Mosul","nation":"tu","side":"cp","active":false,"front":"near","x":2789,"y":1343,"vp":1},
+    {"id":255,"name":"Hamadan","nation":"pe","side":"ap","active":false,"front":"near","x":2966,"y":1387,"terrain":"mountain"},
+    {"id":256,"name":"Kermanshah","nation":"tu","side":"cp","active":false,"front":"near","x":2892,"y":1419,"terrain":"mountain"},
+    {"id":257,"name":"Kirkuk","nation":"tu","side":"cp","active":false,"front":"near","x":2799,"y":1406},
+    {"id":258,"name":"Damascus","nation":"tu","side":"cp","active":false,"front":"near","x":2595,"y":1402,"vp":1},
+    {"id":259,"name":"Beirut","nation":"tu","side":"cp","active":false,"front":"near","x":2523,"y":1385},
+    {"id":260,"name":"MEF4","nation":"none","side":"ap","active":false,"front":"near","x":2380,"y":1384},
+    {"id":261,"name":"Nablus","nation":"tu","side":"cp","active":false,"front":"near","x":2498,"y":1455,"terrain":"mountain"},
+    {"id":262,"name":"Amman","nation":"tu","side":"cp","active":false,"front":"near","x":2570,"y":1465},
+    {"id":263,"name":"Baghdad","nation":"tu","side":"cp","active":false,"front":"near","x":2829,"y":1469,"vp":1},
+    {"id":264,"name":"Kut","nation":"tu","side":"cp","active":false,"front":"near","x":2893,"y":1494},
+    {"id":265,"name":"Khorramabad","nation":"pe","side":"ap","active":false,"front":"near","x":2978,"y":1456},
+    {"id":266,"name":"Ahwaz","nation":"pe","side":"ap","active":false,"front":"near","x":2989,"y":1528,"vp":1},
+    {"id":267,"name":"Qurna","nation":"tu","side":"cp","active":false,"front":"near","x":2924,"y":1544},
+    {"id":268,"name":"Samawah","nation":"tu","side":"cp","active":false,"front":"near","x":2803,"y":1536,"terrain":"desert"},
+    {"id":269,"name":"Basra","nation":"pe","side":"ap","active":true,"front":"near","x":2974,"y":1597,"fort":1,"port":true,"vp":1},
+    {"id":270,"name":"An Nasiriya","nation":"tu","side":"cp","active":false,"front":"near","x":2876,"y":1616,"terrain":"desert"},
+    {"id":271,"name":"Arabia","nation":"ar","side":"ap","active":false,"front":"near","x":2668,"y":1588,"terrain":"desert"},
+    {"id":272,"name":"Medina","nation":"tu","side":"cp","active":false,"front":"near","x":2581,"y":1666,"terrain":"desert","vp":1},
+    {"id":273,"name":"Aqaba","nation":"tu","side":"cp","active":false,"front":"near","x":2490,"y":1625,"terrain":"desert","fort":1},
+    {"id":274,"name":"Beersheba","nation":"tu","side":"cp","active":false,"front":"near","x":2537,"y":1573,"terrain":"desert","fort":2},
+    {"id":275,"name":"Jerusalem","nation":"tu","side":"cp","active":false,"front":"near","x":2544,"y":1511,"vp":1},
+    {"id":276,"name":"Gaza","nation":"tu","side":"cp","active":false,"front":"near","x":2469,"y":1524,"terrain":"desert","fort":2},
+    {"id":277,"name":"Sinai","nation":"tu","side":"cp","active":false,"front":"near","x":2417,"y":1575,"terrain":"desert"},
+    {"id":278,"name":"Cairo","nation":"eg","side":"ap","active":true,"front":"near","x":2355,"y":1602,"vp":1},
+    {"id":279,"name":"Port Said","nation":"eg","side":"ap","active":true,"front":"near","x":2345,"y":1534,"port":true,"vp":1},
+    {"id":280,"name":"Alexandria","nation":"eg","side":"ap","active":true,"front":"near","x":2277,"y":1560,"port":true,"vp":1},
+    {"id":281,"name":"Libya","nation":"eg","side":"cp","active":true,"front":"near","x":2193,"y":1547}
+  ],
+  edges: [
+    [1,2,["br"]],
+    [1,11,["br"]],
+    [1,17,["br"]],
+    [2,3],
+    [3,10],
+    [3,12],
+    [4,10],
+    [4,5],
+    [5,6],
+    [5,9],
+    [5,10],
+    [6,7],
+    [6,8],
+    [8,9],
+    [9,10],
+    [9,13],
+    [9,14],
+    [10,12],
+    [10,13],
+    [11,12],
+    [12,15],
+    [12,16],
+    [13,14],
+    [13,15],
+    [13,21],
+    [14,22],
+    [15,16],
+    [15,20],
+    [15,21],
+    [16,17],
+    [16,19],
+    [17,18],
+    [17,19],
+    [18,31],
+    [18,32],
+    [19,20],
+    [19,30],
+    [19,31],
+    [20,21],
+    [20,29],
+    [20,30],
+    [20,34],
+    [21,22],
+    [21,29],
+    [22,23],
+    [22,28],
+    [23,24],
+    [23,27],
+    [24,25],
+    [25,26],
+    [26,37],
+    [27,37],
+    [28,29],
+    [28,36],
+    [29,34],
+    [29,35],
+    [30,31],
+    [30,33],
+    [30,41],
+    [30,40],
+    [30,34],
+    [31,32],
+    [31,33],
+    [33,41],
+    [33,42],
+    [34,35],
+    [34,40],
+    [35,36],
+    [35,39],
+    [35,40],
+    [36,38],
+    [37,58],
+    [37,59],
+    [38,39],
+    [39,40],
+    [39,45],
+    [40,41],
+    [41,42],
+    [41,44],
+    [42,43],
+    [43,48],
+    [43,49],
+    [44,45],
+    [44,49],
+    [45,46],
+    [46,55],
+    [47,48],
+    [48,51],
+    [48,52],
+    [49,52],
+    [49,53],
+    [50,51],
+    [51,80],
+    [52,79],
+    [53,54],
+    [53,78],
+    [54,55],
+    [54,77],
+    [55,56],
+    [55,77],
+    [56,57],
+    [56,75],
+    [57,60],
+    [57,73],
+    [58,59],
+    [58,60],
+    [59,61],
+    [60,61],
+    [60,71],
+    [61,62],
+    [61,71],
+    [62,63],
+    [62,70],
+    [63,64],
+    [64,65],
+    [65,67],
+    [66,67],
+    [66,113,["it"]],
+    [67,68],
+    [68,69],
+    [69,70],
+    [70,71],
+    [71,72],
+    [71,73],
+    [72,74],
+    [72,88],
+    [73,74],
+    [74,87],
+    [75,76],
+    [75,87],
+    [76,77],
+    [77,86],
+    [78,79],
+    [78,83],
+    [79,80],
+    [79,81],
+    [79,82],
+    [80,81],
+    [81,97],
+    [82,83],
+    [82,94],
+    [82,95],
+    [83,84],
+    [84,85],
+    [85,91],
+    [86,89],
+    [86,90],
+    [87,88],
+    [87,89],
+    [88,108],
+    [89,90],
+    [89,108],
+    [90,91],
+    [90,106],
+    [91,92],
+    [92,93],
+    [92,105],
+    [93,94],
+    [93,103],
+    [93,104],
+    [94,95],
+    [94,102],
+    [95,96],
+    [95,102],
+    [96,98],
+    [96,100],
+    [96,101],
+    [96,102],
+    [97,98],
+    [98,100],
+    [99,100],
+    [99,136],
+    [100,101],
+    [100,136],
+    [100,135],
+    [101,102],
+    [101,134],
+    [101,135],
+    [102,103],
+    [102,134],
+    [103,104],
+    [103,133],
+    [104,105],
+    [104,132],
+    [105,106],
+    [105,131],
+    [106,107],
+    [106,128],
+    [106,130],
+    [107,108],
+    [107,126],
+    [107,128],
+    [108,109],
+    [109,124],
+    [110,111],
+    [110,124],
+    [111,112],
+    [112,113],
+    [112,121],
+    [113,114],
+    [114,115],
+    [114,117],
+    [114,118],
+    [115,116],
+    [117,118],
+    [117,119],
+    [117,120],
+    [118,120],
+    [118,121],
+    [119,120],
+    [119,211],
+    [120,198],
+    [120,211],
+    [121,122],
+    [121,198],
+    [122,123],
+    [122,125],
+    [122,198],
+    [123,124],
+    [123,125],
+    [124,126],
+    [125,126],
+    [125,127],
+    [126,128],
+    [127,128],
+    [127,195],
+    [128,129],
+    [129,130],
+    [129,192],
+    [130,131],
+    [130,178],
+    [131,132],
+    [131,178],
+    [132,133],
+    [132,176],
+    [133,134],
+    [133,165],
+    [134,135],
+    [134,163],
+    [135,162],
+    [136,137],
+    [136,147],
+    [136,161],
+    [137,138],
+    [137,139],
+    [138,139],
+    [139,140],
+    [139,146],
+    [139,147],
+    [140,141,["ru"]],
+    [140,146],
+    [141,143,["ru"]],
+    [142,143,["ru"]],
+    [142,145],
+    [143,144,["ru"]],
+    [144,145],
+    [144,151],
+    [144,152,["ru"]],
+    [145,146],
+    [145,150],
+    [146,148],
+    [146,149],
+    [146,150],
+    [147,148],
+    [147,161],
+    [148,149],
+    [148,161],
+    [149,150],
+    [149,157],
+    [150,151],
+    [150,154],
+    [151,153],
+    [151,154],
+    [152,153,["ru"]],
+    [153,154],
+    [153,155],
+    [154,156],
+    [154,157],
+    [155,156],
+    [155,158],
+    [156,158],
+    [156,159],
+    [157,159],
+    [157,160],
+    [158,169],
+    [159,160],
+    [159,168],
+    [160,161],
+    [161,162],
+    [162,163],
+    [163,164],
+    [163,165],
+    [163,166],
+    [164,166],
+    [164,167],
+    [165,166],
+    [165,174],
+    [165,176],
+    [166,167],
+    [166,174],
+    [167,173],
+    [168,172],
+    [169,171],
+    [170,171,["ru"]],
+    [171,172],
+    [171,185],
+    [172,173],
+    [172,175],
+    [172,185],
+    [173,174],
+    [173,175],
+    [174,175],
+    [174,177],
+    [175,180],
+    [175,183],
+    [176,177],
+    [176,178],
+    [176,179],
+    [177,179],
+    [177,180],
+    [178,179],
+    [178,181],
+    [179,180],
+    [179,181],
+    [179,182],
+    [180,182],
+    [180,183],
+    [181,182],
+    [181,192],
+    [182,183],
+    [183,184],
+    [183,189],
+    [184,185],
+    [184,187],
+    [184,189],
+    [185,187],
+    [186,187,["ru"]],
+    [186,188,["ru"]],
+    [186,233,["ru"]],
+    [186,234,["ru"]],
+    [187,188],
+    [188,201],
+    [189,190],
+    [189,200],
+    [190,199],
+    [191,192],
+    [191,194],
+    [192,193],
+    [193,194],
+    [193,196],
+    [194,203],
+    [195,196],
+    [195,197],
+    [196,197],
+    [196,203],
+    [197,204],
+    [197,207],
+    [198,208],
+    [199,200],
+    [199,202],
+    [199,203],
+    [200,201],
+    [201,202],
+    [202,204],
+    [202,205],
+    [203,204],
+    [204,206],
+    [204,207],
+    [205,206],
+    [206,207],
+    [206,208],
+    [206,209],
+    [207,208],
+    [208,209],
+    [208,211],
+    [209,210],
+    [210,211],
+    [210,212],
+    [210,219],
+    [212,216,["mef"]],
+    [212,219],
+    [213,217,["mef"]],
+    [213,214],
+    [214,215],
+    [214,220],
+    [215,218,["mef"]],
+    [219,220],
+    [219,221],
+    [219,222],
+    [220,222],
+    [221,223],
+    [222,224],
+    [222,249],
+    [223,225],
+    [224,225],
+    [224,226],
+    [225,226],
+    [225,227],
+    [226,229],
+    [226,248],
+    [227,228],
+    [228,229],
+    [228,230],
+    [229,241],
+    [229,247],
+    [230,231],
+    [231,232],
+    [231,233],
+    [232,236],
+    [232,241],
+    [234,235],
+    [234,236],
+    [235,236],
+    [236,237],
+    [236,239],
+    [237,238],
+    [239,240],
+    [239,242],
+    [240,241],
+    [240,244],
+    [241,246],
+    [242,243],
+    [242,244],
+    [243,255],
+    [244,245],
+    [245,246],
+    [246,247],
+    [246,253],
+    [247,248],
+    [247,252],
+    [248,250],
+    [249,250],
+    [250,260,["mef"]],
+    [250,251],
+    [251,252],
+    [251,258],
+    [251,259],
+    [252,253],
+    [253,254],
+    [254,257],
+    [255,256],
+    [255,265],
+    [256,263],
+    [256,265],
+    [257,263],
+    [258,261],
+    [258,262],
+    [259,261],
+    [261,275],
+    [261,276],
+    [262,271,["ana"]],
+    [262,275],
+    [263,264],
+    [263,268],
+    [264,267],
+    [265,266],
+    [266,267],
+    [266,269],
+    [267,269],
+    [267,270],
+    [268,270],
+    [271,275,["ana"]],
+    [271,272,["ana"]],
+    [271,273,["ana"]],
+    [272,273,["ana","tu"]],
+    [273,274],
+    [274,275],
+    [274,276],
+    [274,277],
+    [276,277],
+    [277,278],
+    [277,279],
+    [278,279],
+    [278,280],
+    [279,280],
+    [280,281],
+    [216,212],
+    [217,213],
+    [218,215],
+    [260,250]
+  ],
+  units: [
+    {"id":0,"name":"BE 1","side":"ap","nation":"be","kind":"army","rp":"a","full":[2,3,3],"reduced":[1,3,3],"pos":32,"steps":2},
+    {"id":1,"name":"BEc","side":"ap","nation":"be","kind":"corps","rp":"a","full":[1,1,3],"reduced":[0,1,3],"pos":0,"steps":2},
+    {"id":2,"name":"BR BEF","side":"ap","nation":"br","kind":"army","rp":null,"full":[5,3,3],"reduced":[4,3,3],"pos":31,"steps":2},
+    {"id":3,"name":"BR BEFc","side":"ap","nation":"br","kind":"corps","rp":null,"full":[2,2,4],"reduced":[2,1,4],"pos":0,"steps":2},
+    {"id":4,"name":"BRc","side":"ap","nation":"br","kind":"corps","rp":"br","full":[2,1,4],"reduced":[1,1,4],"pos":0,"steps":2},
+    {"id":5,"name":"BRc","side":"ap","nation":"br","kind":"corps","rp":"br","full":[2,1,4],"reduced":[1,1,4],"pos":279,"steps":1},
+    {"id":6,"name":"BRc","side":"ap","nation":"br","kind":"corps","rp":"br","full":[2,1,4],"reduced":[1,1,4],"pos":278,"steps":1},
+    {"id":7,"name":"BRc","side":"ap","nation":"br","kind":"corps","rp":"br","full":[2,1,4],"reduced":[1,1,4],"pos":269,"steps":1},
+    {"id":8,"name":"FR 1","side":"ap","nation":"fr","kind":"army","rp":"fr","full":[3,3,3],"reduced":[2,3,3],"pos":35,"steps":2},
+    {"id":9,"name":"FR 2","side":"ap","nation":"fr","kind":"army","rp":"fr","full":[3,3,3],"reduced":[2,3,3],"pos":35,"steps":2},
+    {"id":10,"name":"FR 3","side":"ap","nation":"fr","kind":"army","rp":"fr","full":[3,3,3],"reduced":[2,3,3],"pos":34,"steps":2},
+    {"id":11,"name":"FR 4","side":"ap","nation":"fr","kind":"army","rp":"fr","full":[3,3,3],"reduced":[2,3,3],"pos":34,"steps":2},
+    {"id":12,"name":"FR 5","side":"ap","nation":"fr","kind":"army","rp":"fr","full":[3,3,3],"reduced":[2,3,3],"pos":30,"steps":2},
+    {"id":13,"name":"FR 6","side":"ap","nation":"fr","kind":"army","rp":"fr","full":[3,3,3],"reduced":[2,3,3],"pos":15,"steps":1},
+    {"id":14,"name":"FR 9","side":"ap","nation":"fr","kind":"army","rp":"fr","full":[3,3,3],"reduced":[2,3,3],"pos":29,"steps":1},
+    {"id":15,"name":"FRc","side":"ap","nation":"fr","kind":"corps","rp":"fr","full":[1,1,4],"reduced":[1,1,4],"pos":0,"steps":2},
+    {"id":16,"name":"FRc","side":"ap","nation":"fr","kind":"corps","rp":"fr","full":[1,1,4],"reduced":[1,1,4],"pos":0,"steps":2},
+    {"id":17,"name":"FRc","side":"ap","nation":"fr","kind":"corps","rp":"fr","full":[1,1,4],"reduced":[1,1,4],"pos":0,"steps":2},
+    {"id":18,"name":"FRc","side":"ap","nation":"fr","kind":"corps","rp":"fr","full":[1,1,4],"reduced":[1,1,4],"pos":0,"steps":2},
+    {"id":19,"name":"FRc","side":"ap","nation":"fr","kind":"corps","rp":"fr","full":[1,1,4],"reduced":[1,1,4],"pos":0,"steps":2},
+    {"id":20,"name":"FRc","side":"ap","nation":"fr","kind":"corps","rp":"fr","full":[1,1,4],"reduced":[1,1,4],"pos":0,"steps":2},
+    {"id":21,"name":"FRc","side":"ap","nation":"fr","kind":"corps","rp":"fr","full":[1,1,4],"reduced":[1,1,4],"pos":0,"steps":2},
+    {"id":22,"name":"FRc","side":"ap","nation":"fr","kind":"corps","rp":"fr","full":[1,1,4],"reduced":[1,1,4],"pos":36,"steps":2},
+    {"id":23,"name":"FRc","side":"ap","nation":"fr","kind":"corps","rp":"fr","full":[1,1,4],"reduced":[1,1,4],"pos":36,"steps":2},
+    {"id":24,"name":"FRc","side":"ap","nation":"fr","kind":"corps","rp":"fr","full":[1,1,4],"reduced":[1,1,4],"pos":27,"steps":2},
+    {"id":25,"name":"RU 1","side":"ap","nation":"ru","kind":"army","rp":"ru","full":[3,2,3],"reduced":[2,2,3],"pos":147,"steps":2},
+    {"id":26,"name":"RU 2","side":"ap","nation":"ru","kind":"army","rp":"ru","full":[3,2,3],"reduced":[2,2,3],"pos":135,"steps":2},
+    {"id":27,"name":"RU 3","side":"ap","nation":"ru","kind":"army","rp":"ru","full":[3,2,3],"reduced":[2,2,3],"pos":175,"steps":2},
+    {"id":28,"name":"RU 4","side":"ap","nation":"ru","kind":"army","rp":"ru","full":[3,2,3],"reduced":[2,2,3],"pos":133,"steps":2},
+    {"id":29,"name":"RU 5","side":"ap","nation":"ru","kind":"army","rp":"ru","full":[3,2,3],"reduced":[2,2,3],"pos":165,"steps":2},
+    {"id":30,"name":"RU 8","side":"ap","nation":"ru","kind":"army","rp":"ru","full":[3,2,3],"reduced":[2,2,3],"pos":183,"steps":2},
+    {"id":31,"name":"RUc","side":"ap","nation":"ru","kind":"corps","rp":"ru","full":[1,1,3],"reduced":[0,1,3],"pos":0,"steps":2},
+    {"id":32,"name":"RUc","side":"ap","nation":"ru","kind":"corps","rp":"ru","full":[1,1,3],"reduced":[0,1,3],"pos":0,"steps":2},
+    {"id":33,"name":"RUc","side":"ap","nation":"ru","kind":"corps","rp":"ru","full":[1,1,3],"reduced":[0,1,3],"pos":0,"steps":2},
+    {"id":34,"name":"RUc","side":"ap","nation":"ru","kind":"corps","rp":"ru","full":[1,1,3],"reduced":[0,1,3],"pos":0,"steps":2},
+    {"id":35,"name":"RUc","side":"ap","nation":"ru","kind":"corps","rp":"ru","full":[1,1,3],"reduced":[0,1,3],"pos":0,"steps":2},
+    {"id":36,"name":"RUc","side":"ap","nation":"ru","kind":"corps","rp":"ru","full":[1,1,3],"reduced":[0,1,3],"pos":140,"steps":2},
+    {"id":37,"name":"RUc","side":"ap","nation":"ru","kind":"corps","rp":"ru","full":[1,1,3],"reduced":[0,1,3],"pos":139,"steps":2},
+    {"id":38,"name":"RUc","side":"ap","nation":"ru","kind":"corps","rp":"ru","full":[1,1,3],"reduced":[0,1,3],"pos":161,"steps":2},
+    {"id":39,"name":"RUc","side":"ap","nation":"ru","kind":"corps","rp":"ru","full":[1,1,3],"reduced":[0,1,3],"pos":174,"steps":2},
+    {"id":40,"name":"RUc","side":"ap","nation":"ru","kind":"corps","rp":"ru","full":[1,1,3],"reduced":[0,1,3],"pos":188,"steps":2},
+    {"id":41,"name":"RUc","side":"ap","nation":"ru","kind":"corps","rp":"ru","full":[1,1,3],"reduced":[0,1,3],"pos":231,"steps":2},
+    {"id":42,"name":"RUc","side":"ap","nation":"ru","kind":"corps","rp":"ru","full":[1,1,3],"reduced":[0,1,3],"pos":232,"steps":2},
+    {"id":43,"name":"RUc","side":"ap","nation":"ru","kind":"corps","rp":"ru","full":[1,1,3],"reduced":[0,1,3],"pos":239,"steps":2},
+    {"id":44,"name":"SB 1","side":"ap","nation":"sb","kind":"army","rp":"a","full":[2,2,3],"reduced":[1,2,3],"pos":125,"steps":2},
+    {"id":45,"name":"SB 2","side":"ap","nation":"sb","kind":"army","rp":"a","full":[2,2,3],"reduced":[1,2,3],"pos":123,"steps":2},
+    {"id":46,"name":"SBc","side":"ap","nation":"sb","kind":"corps","rp":"a","full":[1,1,4],"reduced":[0,1,4],"pos":0,"steps":2},
+    {"id":47,"name":"SBc","side":"ap","nation":"sb","kind":"corps","rp":"a","full":[1,1,4],"reduced":[0,1,4],"pos":0,"steps":2},
+    {"id":48,"name":"MNc","side":"ap","nation":"mn","kind":"corps","rp":"a","full":[1,1,0],"reduced":[0,1,0],"pos":111,"steps":2},
+    {"id":49,"name":"GE 1","side":"cp","nation":"ge","kind":"army","rp":"ge","full":[5,3,3],"reduced":[3,3,3],"pos":42,"steps":2},
+    {"id":50,"name":"GE 2","side":"cp","nation":"ge","kind":"army","rp":"ge","full":[5,3,3],"reduced":[3,3,3],"pos":41,"steps":2},
+    {"id":51,"name":"GE 3","side":"cp","nation":"ge","kind":"army","rp":"ge","full":[5,3,3],"reduced":[3,3,3],"pos":41,"steps":2},
+    {"id":52,"name":"GE 4","side":"cp","nation":"ge","kind":"army","rp":"ge","full":[5,3,3],"reduced":[3,3,3],"pos":40,"steps":2},
+    {"id":53,"name":"GE 5","side":"cp","nation":"ge","kind":"army","rp":"ge","full":[5,3,3],"reduced":[3,3,3],"pos":40,"steps":2},
+    {"id":54,"name":"GE 6","side":"cp","nation":"ge","kind":"army","rp":"ge","full":[5,3,3],"reduced":[3,3,3],"pos":39,"steps":2},
+    {"id":55,"name":"GE 7","side":"cp","nation":"ge","kind":"army","rp":"ge","full":[5,3,3],"reduced":[3,3,3],"pos":38,"steps":1},
+    {"id":56,"name":"GE 8","side":"cp","nation":"ge","kind":"army","rp":"ge","full":[5,3,3],"reduced":[3,3,3],"pos":136,"steps":2},
+    {"id":57,"name":"GEc","side":"cp","nation":"ge","kind":"corps","rp":"ge","full":[2,1,4],"reduced":[1,1,4],"pos":0,"steps":2},
+    {"id":58,"name":"GEc","side":"cp","nation":"ge","kind":"corps","rp":"ge","full":[2,1,4],"reduced":[1,1,4],"pos":0,"steps":2},
+    {"id":59,"name":"GEc","side":"cp","nation":"ge","kind":"corps","rp":"ge","full":[2,1,4],"reduced":[1,1,4],"pos":0,"steps":2},
+    {"id":60,"name":"GEc","side":"cp","nation":"ge","kind":"corps","rp":"ge","full":[2,1,4],"reduced":[1,1,4],"pos":0,"steps":2},
+    {"id":61,"name":"GEc","side":"cp","nation":"ge","kind":"corps","rp":"ge","full":[2,1,4],"reduced":[1,1,4],"pos":0,"steps":2},
+    {"id":62,"name":"GEc","side":"cp","nation":"ge","kind":"corps","rp":"ge","full":[2,1,4],"reduced":[1,1,4],"pos":0,"steps":2},
+    {"id":63,"name":"GEc","side":"cp","nation":"ge","kind":"corps","rp":"ge","full":[2,1,4],"reduced":[1,1,4],"pos":0,"steps":2},
+    {"id":64,"name":"GEc","side":"cp","nation":"ge","kind":"corps","rp":"ge","full":[2,1,4],"reduced":[1,1,4],"pos":0,"steps":2},
+    {"id":65,"name":"GEc","side":"cp","nation":"ge","kind":"corps","rp":"ge","full":[2,1,4],"reduced":[1,1,4],"pos":48,"steps":1},
+    {"id":66,"name":"GEc","side":"cp","nation":"ge","kind":"corps","rp":"ge","full":[2,1,4],"reduced":[1,1,4],"pos":136,"steps":2},
+    {"id":67,"name":"GEc","side":"cp","nation":"ge","kind":"corps","rp":"ge","full":[2,1,4],"reduced":[1,1,4],"pos":93,"steps":1},
+    {"id":68,"name":"AH 1","side":"cp","nation":"ah","kind":"army","rp":"ah","full":[3,2,3],"reduced":[1,2,3],"pos":132,"steps":2},
+    {"id":69,"name":"AH 2","side":"cp","nation":"ah","kind":"army","rp":"ah","full":[3,2,3],"reduced":[1,2,3],"pos":181,"steps":1},
+    {"id":70,"name":"AH 3","side":"cp","nation":"ah","kind":"army","rp":"ah","full":[3,2,3],"reduced":[1,2,3],"pos":180,"steps":2},
+    {"id":71,"name":"AH 4","side":"cp","nation":"ah","kind":"army","rp":"ah","full":[3,2,3],"reduced":[1,2,3],"pos":176,"steps":2},
+    {"id":72,"name":"AH 5","side":"cp","nation":"ah","kind":"army","rp":"ah","full":[3,2,3],"reduced":[1,2,3],"pos":126,"steps":2},
+    {"id":73,"name":"AH 6","side":"cp","nation":"ah","kind":"army","rp":"ah","full":[3,2,3],"reduced":[1,2,3],"pos":124,"steps":2},
+    {"id":74,"name":"AHc","side":"cp","nation":"ah","kind":"corps","rp":"ah","full":[1,1,3],"reduced":[0,1,3],"pos":0,"steps":2},
+    {"id":75,"name":"AHc","side":"cp","nation":"ah","kind":"corps","rp":"ah","full":[1,1,3],"reduced":[0,1,3],"pos":0,"steps":2},
+    {"id":76,"name":"AHc","side":"cp","nation":"ah","kind":"corps","rp":"ah","full":[1,1,3],"reduced":[0,1,3],"pos":0,"steps":2},
+    {"id":77,"name":"AHc","side":"cp","nation":"ah","kind":"corps","rp":"ah","full":[1,1,3],"reduced":[0,1,3],"pos":0,"steps":2},
+    {"id":78,"name":"AHc","side":"cp","nation":"ah","kind":"corps","rp":"ah","full":[1,1,3],"reduced":[0,1,3],"pos":104,"steps":2},
+    {"id":79,"name":"AHc","side":"cp","nation":"ah","kind":"corps","rp":"ah","full":[1,1,3],"reduced":[0,1,3],"pos":182,"steps":2},
+    {"id":80,"name":"AHc","side":"cp","nation":"ah","kind":"corps","rp":"ah","full":[1,1,3],"reduced":[0,1,3],"pos":179,"steps":2},
+    {"id":81,"name":"AHc","side":"cp","nation":"ah","kind":"corps","rp":"ah","full":[1,1,3],"reduced":[0,1,3],"pos":127,"steps":2},
+    {"id":82,"name":"AHc","side":"cp","nation":"ah","kind":"corps","rp":"ah","full":[1,1,3],"reduced":[0,1,3],"pos":87,"steps":2},
+    {"id":83,"name":"BR 2","side":"ap","nation":"br","kind":"army","rp":"br","full":[4,3,3],"reduced":[3,3,3],"pos":-1,"steps":2,"card":"A1"},
+    {"id":84,"name":"BRc","side":"ap","nation":"br","kind":"corps","rp":"br","full":[2,1,4],"reduced":[1,1,4],"pos":-1,"steps":2,"card":"A1"},
+    {"id":85,"name":"RU 11","side":"ap","nation":"ru","kind":"army","rp":"ru","full":[3,2,3],"reduced":[2,2,3],"pos":-1,"steps":2,"card":"A3"},
+    {"id":86,"name":"RUc","side":"ap","nation":"ru","kind":"corps","rp":"ru","full":[1,1,3],"reduced":[0,1,3],"pos":-1,"steps":2,"card":"A3"},
+    {"id":87,"name":"RUc","side":"ap","nation":"ru","kind":"corps","rp":"ru","full":[1,1,3],"reduced":[0,1,3],"pos":-1,"steps":2,"card":"A8"},
+    {"id":88,"name":"RUc","side":"ap","nation":"ru","kind":"corps","rp":"ru","full":[1,1,3],"reduced":[0,1,3],"pos":-1,"steps":2,"card":"A8"},
+    {"id":89,"name":"FR 10","side":"ap","nation":"fr","kind":"army","rp":"fr","full":[3,3,3],"reduced":[2,3,3],"pos":-1,"steps":2,"card":"A10"},
+    {"id":90,"name":"RU 9","side":"ap","nation":"ru","kind":"army","rp":"ru","full":[3,2,3],"reduced":[2,2,3],"pos":-1,"steps":2,"card":"A11"},
+    {"id":91,"name":"RU 10","side":"ap","nation":"ru","kind":"army","rp":"ru","full":[3,2,3],"reduced":[2,2,3],"pos":-1,"steps":2,"card":"A11"},
+    {"id":92,"name":"BR 1","side":"ap","nation":"br","kind":"army","rp":"br","full":[4,3,3],"reduced":[3,3,3],"pos":-1,"steps":2,"card":"A14"},
+    {"id":93,"name":"BRc","side":"ap","nation":"br","kind":"corps","rp":"br","full":[2,1,4],"reduced":[1,1,4],"pos":-1,"steps":2,"card":"A14"},
+    {"id":94,"name":"GE 9","side":"cp","nation":"ge","kind":"army","rp":"ge","full":[5,3,3],"reduced":[3,3,3],"pos":-1,"steps":2,"card":"C7"},
+    {"id":95,"name":"GE 10","side":"cp","nation":"ge","kind":"army","rp":"ge","full":[5,3,3],"reduced":[3,3,3],"pos":-1,"steps":2,"card":"C12"},
+    {"id":96,"name":"GEc","side":"cp","nation":"ge","kind":"corps","rp":"ge","full":[2,1,4],"reduced":[1,1,4],"pos":-1,"steps":2,"card":"C12"},
+    {"id":97,"name":"GEc","side":"cp","nation":"ge","kind":"corps","rp":"ge","full":[2,1,4],"reduced":[1,1,4],"pos":-1,"steps":2,"card":"C12"},
+    {"id":98,"name":"AH 7","side":"cp","nation":"ah","kind":"army","rp":"ah","full":[3,2,3],"reduced":[1,2,3],"pos":-1,"steps":2,"card":"C14"},
+    {"id":99,"name":"AHc","side":"cp","nation":"ah","kind":"corps","rp":"ah","full":[1,1,3],"reduced":[0,1,3],"pos":-1,"steps":2,"card":"C14"},
+    {"id":100,"name":"AHc","side":"cp","nation":"ah","kind":"corps","rp":"ah","full":[1,1,3],"reduced":[0,1,3],"pos":-1,"steps":2,"card":"C14"}
+  ],
+  cards: [
+    {"id":"A1","name":"British Reinforcements (BR 2)","side":"ap","ops":4,"sr":4,"rp":{"a":1,"br":2,"fr":2,"ru":3},"star":true,"ws":1,"reinf":[83,84]},
+    {"id":"A2","name":"Blockade","side":"ap","ops":4,"sr":4,"rp":{"a":1,"br":2,"fr":2,"ru":3},"star":true,"ws":2,"event":"blockade"},
+    {"id":"A3","name":"Russian Reinforcements (RU 11)","side":"ap","ops":3,"sr":4,"rp":{"br":1,"fr":1,"ru":2},"star":true,"reinf":[85,86]},
+    {"id":"A4","name":"Pleve","side":"ap","ops":2,"sr":2,"rp":{"br":1,"fr":1,"ru":1},"cc":true,"star":true,"event":"pleve"},
+    {"id":"A5","name":"Putnik","side":"ap","ops":2,"sr":2,"rp":{"br":1,"fr":1,"ru":1},"cc":true,"event":"putnik"},
+    {"id":"A6","name":"Withdrawal","side":"ap","ops":2,"sr":2,"rp":{"br":1,"fr":1,"ru":1},"cc":true,"star":true,"event":"ap_withdrawal"},
+    {"id":"A7","name":"Severe Weather","side":"ap","ops":2,"sr":2,"rp":{"br":1,"fr":1,"ru":1},"cc":true,"event":"ap_severe_weather"},
+    {"id":"A8","name":"Russian Reinforcements (2 corps)","side":"ap","ops":2,"sr":2,"rp":{"br":1,"fr":1,"ru":1},"star":true,"reinf":[87,88]},
+    {"id":"A9","name":"Moltke","side":"ap","ops":3,"sr":4,"rp":{"br":1,"fr":1,"ru":2},"star":true,"event":"moltke"},
+    {"id":"A10","name":"French Reinforcements (FR 10)","side":"ap","ops":3,"sr":4,"rp":{"br":1,"fr":1,"ru":2},"star":true,"reinf":[89]},
+    {"id":"A11","name":"Russian Reinforcements (RU 9, RU 10)","side":"ap","ops":3,"sr":4,"rp":{"br":1,"fr":1,"ru":2},"star":true,"reinf":[90,91]},
+    {"id":"A12","name":"Entrench","side":"ap","ops":3,"sr":4,"rp":{"br":1,"fr":1,"ru":2},"star":true,"event":"ap_entrench"},
+    {"id":"A13","name":"Rape of Belgium","side":"ap","ops":4,"sr":4,"rp":{"a":1,"br":2,"fr":2,"ru":3},"star":true,"ws":2,"event":"rape_of_belgium"},
+    {"id":"A14","name":"British Reinforcements (BR 1)","side":"ap","ops":4,"sr":4,"rp":{"a":1,"br":2,"fr":2,"ru":3},"star":true,"ws":1,"reinf":[92,93]},
+    {"id":"C1","name":"Guns of August","side":"cp","ops":3,"sr":4,"rp":{"ah":1,"ge":2},"star":true,"ws":2,"event":"guns_of_august"},
+    {"id":"C2","name":"Wireless Intercepts","side":"cp","ops":2,"sr":2,"rp":{"ge":1},"cc":true,"star":true,"event":"wireless_intercepts"},
+    {"id":"C3","name":"Von Francois","side":"cp","ops":2,"sr":2,"rp":{"ge":1},"cc":true,"event":"von_francois"},
+    {"id":"C4","name":"Severe Weather","side":"cp","ops":2,"sr":2,"rp":{"ge":1},"cc":true,"event":"cp_severe_weather"},
+    {"id":"C5","name":"Landwehr","side":"cp","ops":2,"sr":2,"rp":{"ge":1},"star":true,"event":"landwehr"},
+    {"id":"C6","name":"Entrench","side":"cp","ops":3,"sr":4,"rp":{"ah":1,"ge":2},"star":true,"event":"cp_entrench"},
+    {"id":"C7","name":"German Reinforcements (GE 9)","side":"cp","ops":3,"sr":4,"rp":{"ah":1,"ge":2},"star":true,"reinf":[94]},
+    {"id":"C8","name":"Race to the Sea","side":"cp","ops":3,"sr":4,"rp":{"ah":1,"ge":2},"star":true,"event":"race_to_the_sea"},
+    {"id":"C9","name":"Reichstag Truce","side":"cp","ops":4,"sr":4,"rp":{"ah":2,"ge":3},"star":true,"ws":1,"event":"reichstag_truce"},
+    {"id":"C10","name":"SUD Army","side":"cp","ops":3,"sr":4,"rp":{"ah":1,"ge":2},"star":true,"event":"sud_army"},
+    {"id":"C11","name":"Oberost","side":"cp","ops":2,"sr":2,"rp":{"ge":1},"star":true,"ws":1,"event":"oberost"},
+    {"id":"C12","name":"German Reinforcements (GE 10)","side":"cp","ops":4,"sr":4,"rp":{"ah":2,"ge":3},"star":true,"reinf":[95,96,97]},
+    {"id":"C13","name":"Falkenhayn","side":"cp","ops":4,"sr":4,"rp":{"ah":2,"ge":3},"star":true,"ws":2,"event":"falkenhayn"},
+    {"id":"C14","name":"Austria-Hungary Reinforcements (AH 7)","side":"cp","ops":4,"sr":4,"rp":{"ah":2,"ge":3},"star":true,"reinf":[98,99,100]}
+  ],
+  trenches: [
+    104,
+    57,
+    87,
+    88,
+    40,
+    38,
+    99,
+    31,
+    279,
+    278,
+    269,
+    34,
+    35,
+    36,
+    15,
+    140,
+    188
+  ],
+  decks: {"cp":["C1","C2","C3","C4","C5","C6","C7","C8","C9","C10","C11","C12","C13","C14"],"ap":["A1","A2","A3","A4","A5","A6","A7","A8","A9","A10","A11","A12","A13","A14"]}
+};
+
+
+"use strict";
+
+const VERSION = "1.7.0";
+const SIDES = ["cp", "ap"];
+const SIDE = {cp: "Central Powers", ap: "Allies"};
+const NATION = {ge:"Germany", ah:"Austria-Hungary", fr:"France", br:"Britain", ru:"Russia", be:"Belgium", sb:"Serbia", mn:"Montenegro", al:"Albania", eg:"Egypt", it:"Italy", gr:"Greece", bu:"Bulgaria", ro:"Romania", tu:"Ottoman Empire", pe:"Persia", ar:"Arabia", a:"Allied minors"};
+const TURNS = ["", "August 1914", "September 1914", "Fall 1914"];
+const SP = [null, ...DATA.spaces];
+const UN = DATA.units;
+const CARD = Object.fromEntries(DATA.cards.map(c => [c.id, c]));
+const CITY = Object.fromEntries(DATA.spaces.map(p => [p.name, p.id]));
+const ADJ = SP.map(() => []);
+for (const [a,b,nations] of DATA.edges) {
+  ADJ[a].push({to:b, nations});
+  ADJ[b].push({to:a, nations});
+}
+const ACTIVE = DATA.spaces.filter(p => p.active).map(p => p.id);
+const RESERVE = 0, UNENTERED = -1, DEAD = -2, REMOVED = -3;
+const OTHER = side => side === "cp" ? "ap" : "cp";
+const SIGN = side => side === "cp" ? 1 : -1;
+const point = n => SP[n]?.name ?? "Reserve";
+const activeFort = (s,p) => s.forts[p] ? SP[p].fort : 0;
+const stats = (s,u) => s.steps[u] === 2 ? UN[u].full : UN[u].reduced;
+const rf = (s,u) => stats(s,u)[1];
+const isArmy = u => UN[u].kind === "army";
+const nat = u => UN[u].nation;
+const bef = u => UN[u].name.startsWith("BR BEF");
+const capped = (n,lo,hi) => Math.min(hi, Math.max(lo,n));
+const unique = list => [...new Set(list)];
+const sum = list => list.reduce((a,b) => a+b,0);
+const byId = (a,b) => a-b;
+const has = (o,k) => Object.hasOwn(o,k);
+const clone = value => JSON.parse(JSON.stringify(value));
+const check = (ok,msg) => { if (!ok) throw new Error(msg); };
+const count = (list,test) => list.filter(test).length;
+const note = (s,text,type="note") => s.log.push({turn:s.turn,round:s.round,side:s.side,type,text});
+const invalidate = s => { s.rev++; };
+const phaseName = {card:"Strategy card", activate:"Activate spaces", move:"Movement", attack:"Combat", event:"Event orders", sr:"Strategic redeployment", battle:"Battle", rebuild:"Replacements", draw:"Draw strategy cards", over:"Game over"};
+const INTRO_CP_WIN = 14;
+const INTRO_DRAW = 11;
+const SCORING = "Allies win at 10 VP or fewer. Central Powers win at 14 VP or more. 11–13 VP is a draw.";
+const CAPS = {ge:["Berlin"],ah:["Vienna","Budapest"],br:["London"],fr:["Paris"],ru:["Petrograd","Moscow"],be:["Brussels"],sb:["Belgrade"],mn:["Cetinje"]};
+const WEST = new Set(["be","fr","ge"]);
+const COAST = new Set(["Amiens","Calais","Ostend"].map(n => CITY[n]));
+const NE = p => SP[p].front === "near";
+const port = (s,p,side) => SP[p].port && s.control[p] === side && !besieged(s,p) &&
+  (side === "cp" ? ["ge","ru"].includes(SP[p].nation) : !["ge","ru"].includes(SP[p].nation));
+const eventTitle = {
+  blockade:"Record the blockade and raise Allied War Status.",
+  pleve:"Add 1 to Russian fire in an eligible battle.",
+  putnik:"Add 1 to Serbian fire in an eligible battle.",
+  ap_withdrawal:"Recover one defending step after firing, then retreat one space.",
+  ap_severe_weather:"Add 2 to defensive fire in fall mountains or fall swamps.",
+  cp_severe_weather:"Add 2 to defensive fire in fall mountains or fall swamps.",
+  moltke:"Until Falkenhayn, Central Powers activations in France and Belgium cost 1 OP per unit. August or September only.",
+  ap_entrench:"Place a level 1 trench under a supplied army. Both sides can then dig trenches.",
+  cp_entrench:"Place a level 1 trench under a supplied army. Both sides can then dig trenches.",
+  rape_of_belgium:"Subtract 1 VP if Guns of August has been played.",
+  guns_of_august:"Destroy the Liège fort, advance the German 1st and 2nd Armies, and activate the first three German armies to attack. Opening round only.",
+  wireless_intercepts:"Guarantee a German flank attempt against an all-Russian defense.",
+  von_francois:"Add 1 to German attacking fire against Russian troops.",
+  landwehr:"Restore up to two reduced German steps immediately, for a total of 2 German RP.",
+  race_to_the_sea:"Open Amiens, Calais and Ostend to normal Central Powers movement.",
+  reichstag_truce:"Add 1 VP and raise Central Powers War Status.",
+  sud_army:"Allow one eligible Austrian and German corps stack to activate as one nationality each round.",
+  oberost:"Allow German attacks on Russian forts.",
+  falkenhayn:"End Moltke’s activation penalty. Play in fall, or earlier after Moltke."
+};
+
+function random(s) {
+  s.rng = (s.rng + 0x6d2b79f5) >>> 0;
+  let x = s.rng;
+  x = Math.imul(x ^ (x >>> 15), x | 1);
+  x ^= x + Math.imul(x ^ (x >>> 7), x | 61);
+  return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
+}
+function d6(s) { return 1 + Math.floor(random(s) * 6); }
+function shuffle(s,list) {
+  for (let i=list.length-1; i>0; i--) {
+    const j = Math.floor(random(s)*(i+1));
+    [list[i],list[j]] = [list[j],list[i]];
+  }
+  return list;
+}
+function freshGame(seed=1914, human="cp", guns=true) {
+  seed = Number(seed) >>> 0;
+  const s = {
+    version:VERSION, seed, rng:seed, human, turn:1, round:1, side:"cp", phase:"card", rev:0, vp:10,
+    pos:UN.map(u=>u.pos), steps:UN.map(u=>u.steps),
+    control:SP.map(p=>p?.active ? p.side : null),
+    forts:SP.map(p=>Boolean(p?.active && p.fort)),
+    trench:SP.map(p=>p && DATA.trenches.includes(p.id) && p.active ? {side:p.side,level:1}:null),
+    players:Object.fromEntries(SIDES.map(side=>[side,{deck:[...DATA.decks[side]],hand:[],discard:[],ready:[],removed:[],rp:{},ws:0,mo:null,last:null,reinf:[],history:[]} ])),
+    events:{}, action:null, battle:null, crossed:{br:false,ru:false,ruSR:false,cpSR:false}, log:[], result:null
+  };
+  if (guns) {
+    s.players.cp.deck = s.players.cp.deck.filter(c=>c!=="C1");
+    s.players.cp.hand.push("C1");
+  }
+  for (const side of SIDES) {
+    shuffle(s,s.players[side].deck);
+    drawToSeven(s,side);
+  }
+  note(s,`1914 Introductory Scenario · Seed ${seed}`,"turn");
+  note(s,guns ? "Central Powers selected Guns of August for their opening hand." : "Central Powers drew their full opening hand.");
+  startTurn(s);
+  return s;
+}
+
+function drawToSeven(s,side) {
+  const p = s.players[side];
+  while (p.hand.length < 7) {
+    if (!p.deck.length) {
+      if (!p.discard.length) break;
+      p.deck = shuffle(s,p.discard.splice(0));
+    }
+    p.hand.push(p.deck.pop());
+  }
+  p.hand.sort((a,b)=>Number(a.slice(1))-Number(b.slice(1)));
+}
+function startTurn(s) {
+  const rolls = {ap:d6(s), cp:d6(s)};
+  let ap = [null,"fr","fr","br",null,null,"ru"][rolls.ap];
+  let cp = [null,"ah","ah",null,"ge",null,null][rolls.cp];
+  const taken = n => (CAPS[n] ?? []).every(city=>s.control[CITY[city]] !== (["ge","ah"].includes(n)?"cp":"ap"));
+  if (ap==="fr" && taken("fr")) ap="br";
+  if ((ap==="br" && taken("br")) || (ap==="ru" && taken("ru"))) ap=null;
+  if (cp && taken(cp)) cp=null;
+  for (const [side,mo] of Object.entries({ap,cp})) {
+    Object.assign(s.players[side],{mo,last:null,reinf:[],history:[]});
+  }
+  s.crossed = {br:false,ru:false,ruSR:false,cpSR:false};
+  s.round=1;
+  s.side="cp";
+  s.phase="card";
+  note(s,`${TURNS[s.turn]} · mandated offensives — Central ${cp ? NATION[cp] : "none"} (${rolls.cp}), Allied ${ap ? NATION[ap] : "none"} (${rolls.ap}).`,"turn");
+}
+
+const boardCache = new WeakMap();
+function board(s) {
+  const saved = boardCache.get(s);
+  if (saved?.rev === s.rev) return saved;
+  const stacks = SP.map(()=>[]);
+  for (let u=0;u<UN.length;u++) if (s.pos[u]>0) stacks[s.pos[u]].push(u);
+  const data = {rev:s.rev,stacks,supply:new Map()};
+  boardCache.set(s,data);
+  return data;
+}
+function stack(s,p) { return board(s).stacks[p]; }
+function occupies(s,p,side) { return stack(s,p).some(u=>UN[u].side===side); }
+function siegeForce(units,fort) { return units.some(isArmy) || units.length>=fort; }
+function besieged(s,p) {
+  return Boolean(activeFort(s,p) && occupies(s,p,OTHER(SP[p].side)) && siegeForce(stack(s,p),SP[p].fort));
+}
+function ownsRoute(s,p,side,blocked=0) {
+  return p!==blocked && SP[p].active && !occupies(s,p,OTHER(side)) &&
+    (s.control[p]===side || (SP[p].side!==side && besieged(s,p)));
+}
+function edgeFor(edge,nation,group="") {
+  return !edge.nations || edge.nations.includes(nation) ||
+    (group==="east" && edge.nations.includes("ru")) || group==="attrition";
+}
+function supplyGroup(n) { return ["ru","sb"].includes(n) ? n : n==="mn" ? "mn" : n==="br" ? "br" : "west"; }
+function sources(side,group) {
+  if (side==="cp") return [CITY.Essen,CITY.Breslau];
+  const eastern = [CITY.Petrograd,CITY.Moscow,CITY.Kharkov,CITY.Caucasus,CITY.Belgrade];
+  if (group==="ru") return eastern;
+  if (group==="sb") return [...eastern,CITY.Salonika];
+  if (group==="attrition") return [CITY.London,...eastern,CITY.Salonika];
+  return [CITY.London];
+}
+function supplySet(s,side,group,blocked=0) {
+  const cache = board(s).supply;
+  const key = side+"/"+group+"/"+blocked;
+  if (cache.has(key)) return cache.get(key);
+  const pass = p => ownsRoute(s,p,side,blocked);
+  const reached = new Set(), queue = [];
+  const add = p => { if (pass(p)&&!reached.has(p)) { reached.add(p); queue.push(p); } };
+  sources(side,group).forEach(add);
+  const hasSea = !["ru","sb","mn"].includes(group);
+  let joinedSea = false;
+  const nation = side==="cp"?"ge":group;
+  for (let i=0;i<queue.length;i++) {
+    const p=queue[i];
+    for (const e of ADJ[p]) {
+      if (edgeFor(e,nation,group==="ru"||group==="sb"?"east":group)) add(e.to);
+    }
+    if (!joinedSea && hasSea && port(s,p,side)) {
+      joinedSea=true;
+      for (const q of ACTIVE) if (port(s,q,side)) add(q);
+    }
+  }
+  cache.set(key,reached);
+  return reached;
+}
+function suppliedAt(s,u,p=s.pos[u],blocked=0) {
+  if (p===RESERVE) return true;
+  if (p<1 || p===blocked) return false;
+  if (nat(u)==="mn" || (nat(u)==="sb" && SP[p].nation==="sb")) return true;
+  const side=UN[u].side, group=side==="cp"?"central":supplyGroup(nat(u));
+  const supply=supplySet(s,side,group,blocked);
+  if (supply.has(p)) return true;
+  if (!activeFort(s,p) || SP[p].side===side || !occupies(s,p,side)) return false;
+  return ADJ[p].some(e=>edgeFor(e,nat(u),group==="ru"||group==="sb"?"east":group)&&supply.has(e.to));
+}
+function changeControl(s,p,side) {
+  const old=s.control[p];
+  if (old===side || activeFort(s,p)) return;
+  s.control[p]=side;
+  if (s.trench[p] && s.trench[p].side!==side) {
+    s.trench[p]=s.trench[p].level===2 ? {side,level:1}:null;
+  }
+  if (old && SP[p].vp) {
+    s.vp+=SIGN(side);
+    note(s,`${point(p)} changes control · ${side==="cp"?"+1":"−1"} VP.`,"vp");
+  }
+  invalidate(s);
+}
+function destroyFort(s,p,side) {
+  s.forts[p]=false;
+  invalidate(s);
+  changeControl(s,p,side);
+}
+function onMap(s,side) { return UN.filter(u=>s.pos[u.id]>0&&(!side||u.side===side)).map(u=>u.id); }
+function portGate(s,side,p,defending=0) {
+  return side!=="cp" || !COAST.has(p) || p===defending || s.events.race_to_the_sea || s.players.cp.ws>=4;
+}
+function crossing(u,from,to) { return nat(u)==="ru" && NE(from)!==NE(to); }
+function legalEdge(s,u,from,to,kind="move") {
+  const edge=ADJ[from].find(e=>e.to===to);
+  if (!edge || !SP[to].active || !edgeFor(edge,nat(u))) return false;
+  if (bef(u) && !["br","fr","ge","be"].includes(SP[to].nation)) return false;
+  if (isArmy(u) && NE(to)) return false;
+  if (nat(u)==="mn" && kind!=="attack") return false;
+  const crossingUse = kind==="sr" ? s.crossed.ruSR : s.crossed.ru;
+  if (crossing(u,from,to) && (isArmy(u) || (crossingUse!==false && crossingUse!==u))) return false;
+  if (s.turn===1 && nat(u)==="ru" && SP[to].nation==="ge" && activeFort(s,to)) return false;
+  return true;
+}
+function markCrossing(s,u,from,to) { if (crossing(u,from,to)) s.crossed.ru=u; }
+function marchAcross(s,ids,from,to) {
+  return ids.every(u=>legalEdge(s,u,from,to))&&count(ids,u=>crossing(u,from,to))<=1;
+}
+
+function activationCost(s,p) {
+  const ids=stack(s,p), nats=unique(ids.map(nat));
+  if (s.events.moltke && !s.events.falkenhayn && s.side==="cp" && ["fr","be"].includes(SP[p].nation)) return ids.length;
+  if (nats.length===2 && nats.includes("be") && nats.includes("br") &&
+      ["Antwerp","Ostend","Calais","Amiens"].includes(point(p))) return 1;
+  return nats.length;
+}
+function sudPossible(s,p) {
+  const list=stack(s,p);
+  return s.side==="cp" && s.events.sud_army && list.some(u=>nat(u)==="ah") &&
+    list.length>1 && count(list,u=>nat(u)==="ah")===1 && list.every(u=>nat(u)==="ah"||(nat(u)==="ge"&&!isArmy(u))) &&
+    !(s.events.moltke&&!s.events.falkenhayn&&["fr","be"].includes(SP[p].nation));
+}
+function canMark(s,p,mode) {
+  const a=s.action;
+  if (s.phase!=="activate" || !occupies(s,p,s.side) || !stack(s,p).some(u=>suppliedAt(s,u))) return false;
+  const old=a.marks[p];
+  if (old?.mode===mode) return true;
+  if (mode==="attack" && s.side==="ap" && NE(p) &&
+      Object.entries(a.marks).some(([q,m])=>Number(q)!==p&&m.mode==="attack"&&NE(Number(q)))) return false;
+  const cost=activationCost(s,p);
+  return cost-(sudPossible(s,p)&&!Object.entries(a.marks).some(([q,m])=>Number(q)!==p&&m.sud)?1:0) <= a.budget-a.spent+(old?.cost??0);
+}
+function mark(s,p,mode) {
+  check(canMark(s,p,mode),"This space cannot be activated for that order.");
+  const a=s.action, previous=a.marks[p];
+  a.spent-=previous?.cost??0;
+  delete a.marks[p];
+  if (previous?.mode===mode) return;
+  const base=activationCost(s,p), sud=base>1 && sudPossible(s,p)&&!Object.values(a.marks).some(m=>m.sud) &&
+    !(s.events.moltke&&!s.events.falkenhayn&&["fr","be"].includes(SP[p].nation));
+  const cost=base-(sud?1:0);
+  check(a.spent+cost<=a.budget,"That activation exceeds the card’s OPs.");
+  a.marks[p]={mode,cost,sud,ids:stack(s,p).filter(u=>suppliedAt(s,u))};
+  a.spent+=cost;
+}
+function beginMovement(s) {
+  check(s.phase==="activate","No activations to confirm.");
+  s.phase="move";
+}
+function eligibleMove(s,u) {
+  const p=s.pos[u], a=s.action;
+  return p>0 && UN[u].side===s.side && a.marks[p]?.mode==="move" &&
+    a.marks[p].ids.includes(u) && !a.moved.includes(u) && suppliedAt(s,u);
+}
+function mayLeaveSiege(s,ids,p) {
+  if (!activeFort(s,p) || SP[p].side===UN[ids[0]].side) return true;
+  const remain=stack(s,p).filter(u=>!ids.includes(u));
+  return !remain.length || siegeForce(remain,SP[p].fort);
+}
+function marchPaths(s,ids,allowOverstack=false) {
+  const result=new Map();
+  if (!ids.length || !ids.every(u=>eligibleMove(s,u)&&s.pos[u]===s.pos[ids[0]])) return result;
+  const from=s.pos[ids[0]], mf=Math.min(...ids.map(u=>stats(s,u)[2]));
+  if (!mf || !mayLeaveSiege(s,ids,from)) return result;
+  const open=[[from,[]]], best=new Map([[from,0]]);
+  for (let i=0;i<open.length;i++) {
+    const [p,path]=open[i];
+    if (path.length>=mf) continue;
+    for (const e of ADJ[p]) {
+      const q=e.to;
+      if (best.has(q) || occupies(s,q,OTHER(s.side)) || !marchAcross(s,ids,p,q)) continue;
+      const newSiege=activeFort(s,q)&&SP[q].side!==s.side&&!besieged(s,q);
+      if (newSiege&&!siegeForce([...ids,...stack(s,q)],SP[q].fort)) continue;
+      const next=[...path,q];
+      best.set(q,next.length);
+      if ((allowOverstack||stack(s,q).length+ids.length<=3)&&s.action.marks[q]?.mode!=="attack"&&portGate(s,s.side,q)) result.set(q,next);
+      if (!newSiege) open.push([q,next]);
+    }
+  }
+  return result;
+}
+function alternativeRoutes(s,ids,dest) {
+  if (!marchPaths(s,ids,true).has(dest)) return [];
+  const origin=s.pos[ids[0]], limit=Math.min(...ids.map(u=>stats(s,u)[2]));
+  const paths=[], todo=[[origin,[]]];
+  for (let i=0;i<todo.length&&paths.length<16;i++) {
+    const [p,path]=todo[i];
+    if (p===dest) { paths.push(path); continue; }
+    if (path.length===limit) continue;
+    for (const {to:q} of ADJ[p]) {
+      if (q===origin||path.includes(q)||occupies(s,q,OTHER(s.side))||
+          !marchAcross(s,ids,p,q)) continue;
+      if (activeFort(s,q)&&SP[q].side!==s.side&&!besieged(s,q)&&
+          (q!==dest||!siegeForce([...ids,...stack(s,q)],SP[q].fort))) continue;
+      todo.push([q,[...path,q]]);
+    }
+  }
+  return paths;
+}
+function march(s,ids,dest,route) {
+  check(s.phase==="move" && unique(ids).length===ids.length,"Select a stack during movement.");
+  const path=route?alternativeRoutes(s,ids,dest).find(p=>p.join(",")===route.join(",")):marchPaths(s,ids,true).get(dest);
+  check(path,"That march is unavailable.");
+  const from=s.pos[ids[0]];
+  let p=from;
+  for (const q of path) {
+    for (const u of ids) { markCrossing(s,u,p,q); s.pos[u]=q; }
+    invalidate(s);
+    changeControl(s,q,s.side);
+    p=q;
+  }
+  s.action.moved.push(...ids);
+  note(s,`${ids.map(u=>UN[u].name).join(", ")} moved ${point(from)} → ${path.map(point).join(" → ")}.`,"move");
+}
+function trenchPossible(s,u) {
+  const p=s.pos[u];
+  return s.events.entrench && eligibleMove(s,u) && isArmy(u) && (s.trench[p]?.level??0)<2 &&
+    !s.action.dig.some(id=>s.pos[id]===p);
+}
+function dig(s,u) {
+  check(s.phase==="move" && trenchPossible(s,u),"This army cannot dig here.");
+  s.action.moved.push(u);
+  s.action.dig.push(u);
+}
+function endMovement(s) {
+  check(s.phase==="move" && ACTIVE.every(p=>stack(s,p).length<=3),"Reduce every stack to three units before finishing movement.");
+  for (const u of s.action.dig) {
+    const p=s.pos[u], die=d6(s);
+    if (die<=rf(s,u)) s.trench[p]={side:s.side,level:(s.trench[p]?.level??0)+1};
+    note(s,`${point(p)} entrench roll ${die} · ${die<=rf(s,u)?"trench built":"unsuccessful"}.`,"roll");
+  }
+  invalidate(s);
+  s.phase="attack";
+}
+
+function friendlyCapital(s,nation) {
+  if (["be","sb","mn"].includes(nation)) return true;
+  return (CAPS[nation]??[]).every(n=>s.control[CITY[n]]=== (["ge","ah"].includes(nation)?"cp":"ap")&&!besieged(s,CITY[n]));
+}
+function srCost(u) { return isArmy(u)?4:1; }
+function canSR(s,u) {
+  return (s.pos[u]>=0 && UN[u].side===s.side && !s.action.moved.includes(u) && s.action.budget-s.action.spent>=srCost(u) && suppliedAt(s,u));
+}
+function srDestinations(s,u,allowOverstack=false) {
+  if (!canSR(s,u)) return [];
+  const from=s.pos[u], nation=nat(u), side=s.side, corps=!isArmy(u);
+  const room=p=>allowOverstack||stack(s,p).length<3;
+  const restrictedNE=p=>NE(p) && !["ru","br","ge","ah"].includes(nation);
+  const limitBR=(a,b)=>nation==="br" && (Boolean(a&&NE(a))!==Boolean(b&&NE(b))) && (bef(u)||s.crossed.br);
+  const limitOther=(a,b)=>Boolean(a&&NE(a))!==Boolean(b&&NE(b)) &&
+    ((nation==="ru" && s.crossed.ruSR!==false && s.crossed.ruSR!==u)||(side==="cp"&&s.crossed.cpSR));
+  const pass = p => ownsRoute(s,p,side) && (nation!=="ru"||SP[p].nation==="ru") &&
+    (!bef(u)||["br","fr","ge","be"].includes(SP[p].nation)) && (!isArmy(u)||!NE(p));
+  const valid = p => pass(p) && room(p) && suppliedAt(s,u,p) && portGate(s,side,p) && !limitOther(from,p) &&
+    (!activeFort(s,p)||SP[p].side===side||besieged(s,p)) && (nation!=="mn"||p===CITY.Cetinje);
+  if (from===RESERVE) {
+    if (!corps || !friendlyCapital(s,nation)) return [];
+    return ACTIVE.filter(p=>valid(p)&&!restrictedNE(p)&&!limitBR(0,p) &&
+      ((SP[p].nation===nation&&(SP[p].capital||SP[p].supply)) ||
+        (stack(s,p).some(v=>nat(v)===nation&&suppliedAt(s,v)) && !(nation==="sb" && SP[p].nation==="sb" && p!==CITY.Belgrade && !supplySet(s,side,"ru").has(p)))));
+  }
+  if (!mayLeaveSiege(s,[u],from)) return [];
+  const result = new Set();
+  if (corps&&friendlyCapital(s,nation)&&!restrictedNE(from)&&!limitBR(from,0)&&!limitOther(from,0)) result.add(0);
+  if (nation==="mn") return [...result];
+  const seen=new Set([from]), queue=[from];
+  for (let i=0;i<queue.length;i++) {
+    const p=queue[i];
+    for (const e of ADJ[p]) {
+      if (!seen.has(e.to)&&pass(e.to)&&legalEdge(s,u,p,e.to,"sr")) {
+        seen.add(e.to); queue.push(e.to);
+        if (valid(e.to)) result.add(e.to);
+      }
+    }
+  }
+  if (corps&&nation!=="ru"&&port(s,from,side)&&!restrictedNE(from)) {
+    for (const p of ACTIVE) if (p!==from&&port(s,p,side)&&valid(p)&&!restrictedNE(p)&&!limitBR(from,p)) result.add(p);
+  }
+  return [...result];
+}
+function redeploy(s,u,to) {
+  check(s.phase==="sr"&&srDestinations(s,u,true).includes(to),"That redeployment is unavailable.");
+  const from=s.pos[u];
+  if (Boolean(from&&NE(from))!==Boolean(to&&NE(to))) {
+    if (nat(u)==="br") s.crossed.br=true;
+    if (nat(u)==="ru") s.crossed.ruSR=u;
+    if (s.side==="cp") s.crossed.cpSR=true;
+  }
+  s.pos[u]=to;
+  s.action.moved.push(u);
+  s.action.spent+=srCost(u);
+  invalidate(s);
+  note(s,`${UN[u].name} redeployed ${point(from)} → ${point(to)}.`,"move");
+}
+
+function entrySpaces(s,u) {
+  const side=UN[u].side, n=nat(u);
+  let list=ACTIVE.filter(p=>SP[p].nation===n&&(SP[p].capital||SP[p].supply));
+  if (n==="be") list=["Brussels","Antwerp","Ostend"].map(name=>CITY[name]);
+  if (n==="sb"&&s.control[CITY.Nis]==="cp") return [];
+  if (n==="fr"&&s.control[CITY.Paris]==="ap"&&!besieged(s,CITY.Paris)&&stack(s,CITY.Paris).length===3) list.push(CITY.Orleans);
+  const valid=p=>s.control[p]===side&&!besieged(s,p)&&stack(s,p).length<3&&suppliedAt(s,u,p);
+  const choices=list.filter(valid);
+  if (n==="be"&&!choices.length&&valid(CITY.Calais)) choices.push(CITY.Calais);
+  return choices;
+}
+function cardDescription(id) {
+  const c=CARD[id];
+  return c.reinf ? `Bring in ${c.reinf.map(u=>UN[u].name).join(", ")}. Armies enter at eligible home spaces. Corps go to reserve.` : eventTitle[c.event];
+}
+function eventChoices(s,id) {
+  const c=CARD[id];
+  if (!c||c.cc) return [];
+  if (c.reinf) {
+    const n=nat(c.reinf[0]), armies=c.reinf.filter(isArmy);
+    if (s.turn===1 || s.players[c.side].reinf.includes(n)) return [];
+    let plans=[{placements:[],label:"Receive corps in reserve"}];
+    for (const u of armies) {
+      plans=plans.flatMap(plan=>entrySpaces(s,u).filter(p=>stack(s,p).length+count(plan.placements,t=>t[1]===p)<3).map(p=>{
+        const placements=[...plan.placements,[u,p]];
+        return {placements,label:placements.map(([v,q])=>`${UN[v].name} at ${point(q)}`).join(" · ")};
+      }));
+    }
+    return plans;
+  }
+  const e=c.event;
+  if (e==="guns_of_august" && (s.turn!==1||s.round!==1)) return [];
+  if (e==="rape_of_belgium" && !s.events.guns_of_august) return [];
+  if (e==="moltke" && s.turn>2) return [];
+  if (e==="falkenhayn" && s.turn<3&&!s.events.moltke) return [];
+  if (e.endsWith("_entrench")) {
+    if (s.events.entrench) return [];
+    return unique(onMap(s,c.side).filter(u=>isArmy(u)&&suppliedAt(s,u)&&!s.trench[s.pos[u]]).map(u=>s.pos[u]))
+      .map(p=>({p,label:`Dig at ${point(p)}`}));
+  }
+  if (e==="landwehr") {
+    const reduced=UN.filter(u=>u.nation==="ge"&&s.steps[u.id]===1&&s.pos[u.id]>=0&&suppliedAt(s,u.id)).map(u=>u.id);
+    const groups=[[],...reduced.map(u=>[u])];
+    for (let i=0;i<reduced.length;i++) for (let j=i+1;j<reduced.length;j++) groups.push([reduced[i],reduced[j]]);
+    return groups.map(units=>({units,label:units.length?units.map(u=>`${UN[u].name} · ${point(s.pos[u])}`).join(" + "):"Play event"}));
+  }
+  return [{label:"Play event"}];
+}
+function legalModes(s,id) {
+  if (s.phase!=="card") return [];
+  if (!id) return ["ops"];
+  const p=s.players[s.side];
+  if (!p.hand.includes(id)) return [];
+  return ["ops",...(p.last!=="sr"?["sr"]:[]),...(p.last!=="rp"?["rp"]:[]),...(eventChoices(s,id).length?["event"]:[])];
+}
+function beginAction(s,id,mode) {
+  check(legalModes(s,id).includes(mode),"That card use is unavailable.");
+  const c=CARD[id], p=s.players[s.side];
+  if (id) p.hand.splice(p.hand.indexOf(id),1);
+  s.action={id,mode,budget:mode==="ops"?(c?.ops??1):mode==="sr"?c.sr:0,spent:0,marks:{},moved:[],dig:[],fired:[],targets:[],retreated:[],ccUsed:[]};
+  p.history.push({id:id??null,mode});
+  p.last=mode;
+  note(s,`${SIDE[s.side]} · ${c?c.name:"Automatic operation"} · ${mode==="event"?"Event":mode.toUpperCase()}.`,"card");
+  if (id && mode!=="event") p.discard.push(id);
+  if (mode==="ops") s.phase="activate";
+  if (mode==="sr") s.phase="sr";
+  if (mode==="event") s.phase="event";
+  if (mode==="rp") {
+    for (const [n,rp] of Object.entries(c.rp)) p.rp[n]=(p.rp[n]??0)+rp*2;
+    finishAction(s);
+  }
+}
+function playEvent(s,index=0) {
+  check(s.phase==="event","No event is pending.");
+  const c=CARD[s.action.id], choice=eventChoices(s,c.id)[index], e=c.event;
+  check(choice,"That event choice is unavailable.");
+  const player=s.players[s.side];
+  player[c.star?"removed":"discard"].push(c.id);
+  player.ws+=c.ws??0;
+  if (c.star) s.vp+=SIGN(s.side);
+  if (c.reinf) {
+    player.reinf.push(nat(c.reinf[0]));
+    for (const u of c.reinf) s.pos[u]=isArmy(u)?choice.placements.find(p=>p[0]===u)[1]:0;
+    note(s,choice.label,"event");
+  } else {
+    s.events[e]=true;
+    if (e==="reichstag_truce") s.vp++;
+    if (e==="rape_of_belgium") s.vp--;
+    if (e==="landwehr") for (const u of choice.units) s.steps[u]=2;
+    if (e.endsWith("_entrench")) {
+      s.events.entrench=true;
+      s.trench[choice.p]={side:s.side,level:1};
+      note(s,choice.label,"event");
+    }
+    if (e==="guns_of_august") {
+      const liege=CITY.Liege, armies=UN.filter(u=>["GE 1","GE 2","GE 3"].includes(u.name)).map(u=>u.id);
+      destroyFort(s,liege,s.side);
+      for (const u of armies.slice(0,2)) s.pos[u]=liege;
+      invalidate(s);
+      for (const u of armies) {
+        const p=s.pos[u];
+        s.action.marks[p]??={mode:"attack",cost:0,ids:[]};
+        s.action.marks[p].ids.push(u);
+      }
+      s.phase="attack";
+      note(s,"Liège fort falls. The German 1st, 2nd and 3rd Armies are ready to attack.","event");
+      return;
+    }
+  }
+  invalidate(s);
+  finishAction(s);
+}
+function finishAction(s) {
+  check(!s.battle,"Resolve the battle first.");
+  check(ACTIVE.every(p=>stack(s,p).length<=3),"A stack exceeds the three-unit limit.");
+  s.action=null;
+  if (s.side==="cp") {
+    s.side="ap";
+    s.phase="card";
+  } else if (s.round<6) {
+    s.round++;
+    s.side="cp";
+    s.phase="card";
+  } else {
+    closeActionPhase(s);
+  }
+}
+function attrition(s) {
+  const lost=onMap(s).filter(u=>!suppliedAt(s,u));
+  const totals=Object.fromEntries(SIDES.map(side=>[side,supplySet(s,side,"attrition")]));
+  const flips=ACTIVE.filter(p=>s.control[p]&&!activeFort(s,p)&&!totals[s.control[p]].has(p) &&
+    !(SP[p].nation==="al"&&s.control[p]==="ap") &&
+    !(SP[p].nation==="sb"&&s.control[p]==="ap") &&
+    !(s.control[p]==="ap"&&stack(s,p).some(u=>nat(u)==="mn")));
+  for (const u of lost) {
+    note(s,`${UN[u].name} at ${point(s.pos[u])} lost to attrition.`,"loss");
+    s.pos[u]=isArmy(u)?REMOVED:DEAD;
+  }
+  invalidate(s);
+  for (const p of flips) changeControl(s,p,OTHER(s.control[p]));
+}
+function closeActionPhase(s) {
+  note(s,"Attrition and siege resolution.","turn");
+  attrition(s);
+  for (const p of ACTIVE.filter(p=>besieged(s,p))) {
+    const roll=d6(s), modified=roll-(s.turn<3?2:0), falls=modified>SP[p].fort;
+    if (falls) destroyFort(s,p,OTHER(SP[p].side));
+    note(s,`${point(p)} siege roll ${roll}${s.turn<3?" (−2)":""} · fort ${falls?"falls":"holds"}.`,"roll");
+  }
+  for (const side of SIDES) {
+    const mo=s.players[side].mo;
+    if (mo) {
+      s.vp-=SIGN(side);
+      note(s,`${SIDE[side]} missed its ${NATION[mo]} offensive · ${side==="cp"?"−1":"+1"} VP.`,"vp");
+    }
+  }
+  if (s.vp>=20||s.vp<=0) { endGame(s,s.vp>=20?"cp":"ap",true); return; }
+  s.phase="rebuild";
+  s.side="ap";
+  skipEmptyReplacement(s);
+}
+function skipEmptyReplacement(s) {
+  if (s.phase==="rebuild"&&!replacementChoices(s,s.side).length) endRebuild(s);
+}
+function replacementChoices(s,side) {
+  const rp=s.players[side].rp;
+  return UN.flatMap(u=>{
+    if (u.side!==side || !u.rp || !rp[u.rp] || !friendlyCapital(s,u.nation)) return [];
+    const p=s.pos[u.id], cost=isArmy(u.id)?2:1;
+    if (rp[u.rp]<cost) return [];
+    if (p===DEAD) return (isArmy(u.id)?entrySpaces(s,u.id):[RESERVE]).map(dest=>({u:u.id,dest,cost,rebuild:true}));
+    if (p>=0 && s.steps[u.id]===1 && suppliedAt(s,u.id)) return [{u:u.id,dest:p,cost,rebuild:false}];
+    return [];
+  });
+}
+function replaceStep(s,choice) {
+  check(s.phase==="rebuild"&&replacementChoices(s,s.side).some(x=>x.u===choice.u&&x.dest===choice.dest),"That replacement is unavailable.");
+  const {u,dest}=choice, p=s.players[s.side], rebuild=s.pos[u]===DEAD;
+  p.rp[UN[u].rp]-=isArmy(u)?2:1;
+  s.pos[u]=dest;
+  s.steps[u]=rebuild?1:2;
+  invalidate(s);
+  note(s,`${UN[u].name} ${rebuild?"rebuilt at":"restored at"} ${point(dest)}.`,"event");
+  skipEmptyReplacement(s);
+}
+function endRebuild(s) {
+  s.players[s.side].rp={};
+  if (s.side==="ap") { s.side="cp"; skipEmptyReplacement(s); return; }
+  if (s.turn===3) { endGame(s,s.vp>=INTRO_CP_WIN?"cp":s.vp<INTRO_DRAW?"ap":"draw",false); return; }
+  for (const side of SIDES) {
+    const p=s.players[side];
+    p.discard.push(...p.ready.splice(0));
+  }
+  s.side="ap";
+  s.phase="draw";
+  skipEmptyDraw(s);
+}
+function skipEmptyDraw(s) {
+  if (s.phase==="draw"&&!s.players[s.side].hand.some(id=>CARD[id].cc)) draw(s,[]);
+}
+function draw(s,discards) {
+  const p=s.players[s.side];
+  check(s.phase==="draw"&&unique(discards).length===discards.length&&discards.every(id=>p.hand.includes(id)&&CARD[id].cc),"Only retained combat cards may be discarded.");
+  p.hand=p.hand.filter(id=>!discards.includes(id));
+  p.discard.push(...discards);
+  drawToSeven(s,s.side);
+  if (s.side==="ap") { s.side="cp"; skipEmptyDraw(s); return; }
+  s.turn++;
+  startTurn(s);
+}
+function endGame(s,winner,automatic) {
+  s.phase="over";
+  s.result={winner,automatic,vp:s.vp};
+  note(s,`${winner==="draw"?"Draw":SIDE[winner]+" win"} · ${s.vp} VP${automatic?" · automatic victory":""}.`,"turn");
+}
+
+
+const ARMY_FIRE = [
+  [0,1,1,1,2,2], [1,1,2,2,3,3], [1,2,2,3,3,4], [2,2,3,3,4,4], [2,3,3,4,4,5],
+  [3,3,4,4,5,5], [3,4,4,5,5,7], [4,4,5,5,7,7], [4,5,5,7,7,7], [5,5,7,7,7,7]
+];
+const CORPS_FIRE = [
+  [0,0,0,0,1,1], [0,0,0,1,1,1], [0,1,1,1,1,1], [1,1,1,1,2,2], [1,1,1,2,2,2],
+  [1,1,2,2,2,3], [1,1,2,2,3,3], [1,2,2,3,3,4], [2,2,3,3,4,4]
+];
+const ARMY_COLUMNS = [1,2,3,4,5,6,9,12,15,16];
+const ROUGH = new Set(["mountain","swamp","forest","desert"]);
+
+function targetDefenders(s,p) { return stack(s,p).filter(u=>UN[u].side!==s.side); }
+function defenderFort(s,p) { return SP[p].side===OTHER(s.side)?activeFort(s,p):0; }
+function canUnitAttack(s,u,p) {
+  const from=s.pos[u], a=s.action;
+  if (from<=0 || UN[u].side!==s.side || a.marks[from]?.mode!=="attack" || !a.marks[from].ids.includes(u) ||
+      a.fired.includes(u) || !suppliedAt(s,u)) return false;
+  if (defenderFort(s,p) && SP[p].nation==="ru" && nat(u)==="ge" && !s.events.oberost && s.players.cp.ws<4) return false;
+  if (from===p) return Boolean(defenderFort(s,p));
+  return !besieged(s,p) && legalEdge(s,u,from,p,"attack");
+}
+function legalAttack(s,ids,p) {
+  if (s.phase!=="attack" || !p || !SP[p]?.active || s.action.targets.includes(p) || !ids.length ||
+      unique(ids).length!==ids.length || !ids.every(u=>canUnitAttack(s,u,p))) return false;
+  if (count(ids,u=>crossing(u,s.pos[u],p))>1) return false;
+  if (!defenderFort(s,p) && targetDefenders(s,p).every(u=>s.action.retreated.includes(u))) return false;
+  const origins=unique(ids.map(u=>s.pos[u]));
+  if (origins.includes(CITY.London) && !origins.some(q=>["fr","be"].includes(SP[q].nation))) return false;
+  for (const from of origins) {
+    if (from!==p && activeFort(s,from) && SP[from].side!==s.side &&
+        !siegeForce(stack(s,from).filter(u=>!ids.includes(u)),SP[from].fort)) return false;
+  }
+  const nations=unique(ids.map(u=>nat(u)==="mn"?"sb":nat(u)));
+  if (origins.length>1 && nations.length>1 && !origins.some(from=>nations.every(n=>ids.some(u=>s.pos[u]===from&&(nat(u)===n||(n==="sb"&&nat(u)==="mn")))))) return false;
+  return true;
+}
+function possibleAttackers(s,p) {
+  return unique([p,...ADJ[p].map(e=>e.to)]).flatMap(q=>stack(s,q)).filter(u=>canUnitAttack(s,u,p));
+}
+function mandated(s,ids,p,defs) {
+  const mo=s.players[s.side].mo;
+  if (!mo || !defs.length || !ids.some(u=>nat(u)===mo)) return false;
+  if (mo==="ge") return WEST.has(SP[p].nation)&&defs.some(u=>["br","be","fr"].includes(nat(u)));
+  if (mo==="br"||mo==="fr") return WEST.has(SP[p].nation)&&defs.some(u=>nat(u)==="ge");
+  return true;
+}
+function declareAttack(s,ids,p) {
+  check(legalAttack(s,ids,p),"The selected units cannot make this attack.");
+  const defs=targetDefenders(s,p).filter(u=>!s.action.retreated.includes(u));
+  const b=s.battle={p,attackers:[...ids],original:[...ids],defenders:defs,originalDefenders:defs.length,used:{cp:[],ap:[]},flank:null,stage:"flank",
+    rolls:{},hit:{},damage:[],replacement:{},retreatPaths:[],advance:[],retreat:[],retreatCount:0};
+  s.action.fired.push(...ids);
+  s.action.targets.push(p);
+  for (const u of ids) if (s.pos[u]!==p) markCrossing(s,u,s.pos[u],p);
+  if (mandated(s,ids,p,defs)) {
+    note(s,`${NATION[s.players[s.side].mo]} mandated offensive fulfilled.`,"event");
+    s.players[s.side].mo=null;
+  }
+  note(s,`${ids.map(u=>UN[u].name).join(", ")} attacks ${point(p)}.`,"combat");
+  s.phase="battle";
+  if (!flankOptions(s,b).length) b.stage="attackCards";
+}
+function flankOptions(s,b) {
+  const origins=unique(b.attackers.map(u=>s.pos[u]));
+  if (origins.length<2 || !b.attackers.some(isArmy) || !b.defenders.length ||
+      ["mountain","swamp"].includes(SP[b.p].terrain) || s.trench[b.p]) return [];
+  const open=p=>!ADJ[p].some(e=>!e.nations&&e.to!==b.p&&occupies(s,e.to,OTHER(s.side)));
+  const options=origins.map(p=>({p,drm:count(origins,q=>q!==p&&open(q)),label:`Pin from ${point(p)}`}));
+  const player=s.players[s.side];
+  if (s.side==="cp" && player.hand.includes("C2") && b.attackers.some(u=>nat(u)==="ge") && b.defenders.every(u=>nat(u)==="ru")) {
+    options.push({p:origins[0],wireless:true,label:"Use Wireless Intercepts"});
+  }
+  return options;
+}
+function availableCC(s,side) {
+  const b=s.battle, attacker=side===s.side, ids=attacker?b.attackers:b.defenders, foes=attacker?b.defenders:b.attackers;
+  if (!ids.length || (!attacker && targetDefenders(s,b.p).some(u=>!suppliedAt(s,u)))) return [];
+  const p=s.players[side], own=n=>ids.some(u=>nat(u)===n);
+  const valid={
+    pleve:own("ru"),
+    putnik:own("sb"),
+    ap_withdrawal:!attacker,
+    ap_severe_weather:!attacker&&s.turn===3&&["mountain","swamp"].includes(SP[b.p].terrain),
+    cp_severe_weather:!attacker&&s.turn===3&&["mountain","swamp"].includes(SP[b.p].terrain),
+    von_francois:attacker&&own("ge")&&foes.some(u=>nat(u)==="ru")
+  };
+  return [...p.hand,...p.ready].filter(id=>CARD[id].cc&&valid[CARD[id].event]&&!s.action.ccUsed.includes(id));
+}
+function useCC(s,side,ids) {
+  const p=s.players[side], b=s.battle;
+  for (const id of ids) {
+    p.hand=p.hand.filter(c=>c!==id);
+    p.ready=p.ready.filter(c=>c!==id);
+    s.action.ccUsed.push(id);
+    b.used[side].push(id);
+    note(s,`${SIDE[side]} uses ${CARD[id].name}.`,"card");
+  }
+}
+function fireRow(s,ids,p,isAttack,fort=0) {
+  if (!ids.length&&!fort) return [0,0,0,0,0,0];
+  const army=ids.some(isArmy), cf=sum(ids.map(u=>stats(s,u)[0]))+fort;
+  const trench=stack(s,p).some(u=>UN[u].side===OTHER(s.side)) && s.trench[p]?.side===OTHER(s.side) ? s.trench[p].level:0;
+  const shifts=isAttack ? -(trench+(["mountain","swamp"].includes(SP[p].terrain)?1:0)) : trench ? 1:0;
+  if (!army) return CORPS_FIRE[capped(Math.min(cf,8)+shifts,0,8)];
+  const col=ARMY_COLUMNS.findLastIndex(x=>x<=cf);
+  return ARMY_FIRE[capped(Math.max(0,col)+shifts,0,9)];
+}
+function drmFor(s,side) {
+  const b=s.battle;
+  let drm=side===s.side && b.attackers.every(u=>s.pos[u]===CITY.Sinai) ? -3:0;
+  for (const id of b.used[side]) {
+    const e=CARD[id].event;
+    if (["pleve","putnik","von_francois"].includes(e)) drm++;
+    if (e?.endsWith("severe_weather")) drm+=2;
+  }
+  return drm;
+}
+function fire(s,side) {
+  const b=s.battle, att=side===s.side, ids=att?b.attackers:b.defenders;
+  const active=ids.filter(u=>s.pos[u]>0);
+  const fort=att?0:defenderFort(s,b.p);
+  if (!active.length&&!fort) { b.hit[side]=0; return; }
+  const roll=d6(s), drm=drmFor(s,side);
+  const row=fireRow(s,active,b.p,att,fort);
+  b.rolls[side]=roll;
+  b.hit[side]=row[capped(roll+drm,1,6)-1];
+  note(s,`${SIDE[side]} fires · ${roll}${drm?` (${drm>0?"+":""}${drm})`:""} → loss number ${b.hit[side]}.`,"roll");
+}
+function lossLabel(steps) {
+  if (!steps.length) return "No effective step loss";
+  return steps.map(x=>x.fort?`Destroy ${point(x.fort)} fort`:x.add!==undefined?
+    `${UN[x.u].name} eliminated, ${UN[x.add].name} replaces`:x.after?
+      `${UN[x.u].name} reduced`:`${UN[x.u].name} eliminated`).join(" · ");
+}
+function reserveReplacement(s,u,used) {
+  const choices=UN.filter(v=>v.kind==="corps"&&v.nation===nat(u)&&s.pos[v.id]===0&&!used.includes(v.id)&&
+    (bef(u)?v.name==="BR BEFc":!bef(v.id)));
+  return choices.sort((a,b)=>s.steps[b.id]-s.steps[a.id]||a.id-b.id)[0]?.id;
+}
+function lossPlans(s,ids,loss,fortP=0,attacker=false,withdrawal=false) {
+  const plans=[], seenStates=new Set(), stepCounts=[...s.steps], fort=fortP?defenderFort(s,fortP):0;
+  const available=ids.filter(u=>s.pos[u]>0), out=available.filter(u=>!suppliedAt(s,u));
+  function visit(left,active,used,ops) {
+    const key=left+"/"+active.map(u=>u+":"+stepCounts[u]).sort().join(",")+"/"+ops.filter(o=>o.add!==undefined).map(o=>o.add+":"+o.u).sort().join(",");
+    if (seenStates.has(key)) return;
+    seenStates.add(key);
+    let next=active.filter(u=>(stepCounts[u]===2?UN[u].full[1]:UN[u].reduced[1])<=left);
+    if (attacker&&!ops.length) {
+      const first=next.find(u=>UN[u].name==="BR BEF")??next.find(u=>UN[u].name==="BR BEFc");
+      if (first!==undefined) next=[first];
+    }
+    if (!next.length) {
+      const destroyed=active.length===0&&fort>0&&left>=fort;
+      plans.push({used:loss-left+(destroyed?fort:0),ops:destroyed?[...ops,{fort:fortP}]:ops});
+      return;
+    }
+    for (const u of next) {
+      const before=stepCounts[u], after=before-1;
+      const pay=before===2?UN[u].full[1]:UN[u].reduced[1];
+      const origin=s.pos[u]>0?s.pos[u]:ops.find(o=>o.add===u).origin;
+      stepCounts[u]=after;
+      let op={u,before,after,origin};
+      if (after) {
+        visit(left-pay,active,used,[...ops,op]);
+      } else {
+        const corps=isArmy(u)?reserveReplacement(s,u,used):undefined;
+        const remain=active.filter(x=>x!==u);
+        if (corps!==undefined) {
+          op={...op,add:corps};
+          remain.push(corps);
+        }
+        op.permanent=!UN[u].rp || (isArmy(u)&&(out.includes(u)||corps===undefined));
+        visit(left-pay,remain,corps===undefined?used:[...used,corps],[...ops,op]);
+      }
+      stepCounts[u]=before;
+    }
+  }
+  visit(loss,available,[],[]);
+  const max=Math.max(...plans.map(p=>p.used));
+  let best=plans.filter(p=>p.used===max);
+  if (max<loss && best.some(p=>p.ops.some(o=>o.permanent&&isArmy(o.u)&&o.add===undefined))) {
+    best=best.filter(p=>p.ops.some(o=>o.permanent&&isArmy(o.u)&&o.add===undefined));
+  }
+  if (withdrawal&&best.some(p=>p.ops.some(o=>!o.fort&&!isArmy(o.u)))) {
+    best=best.filter(p=>p.ops.some(o=>!o.fort&&!isArmy(o.u)));
+  }
+  const seen=new Set();
+  return best.flatMap(p=>{
+    const key=p.ops.map(o=>o.fort?`F${o.fort}`:`${o.u}:${o.after}:${o.add??""}`).sort().join("/");
+    if (seen.has(key)) return [];
+    seen.add(key);
+    return [{...p,label:lossLabel(p.ops)}];
+  });
+}
+function applyLosses(s,side,plan) {
+  const b=s.battle, ids=side===s.side?b.attackers:b.defenders;
+  if (plan.ops.length) note(s,plan.label+".","loss");
+  for (const o of plan.ops) {
+    if (o.fort) {
+      s.forts[o.fort]=false;
+      invalidate(s);
+      if (occupies(s,o.fort,s.side)) changeControl(s,o.fort,s.side);
+      continue;
+    }
+    s.steps[o.u]=o.after||1;
+    if (!o.after) s.pos[o.u]=o.permanent?REMOVED:DEAD;
+    if (o.add!==undefined) {
+      s.pos[o.add]=o.origin;
+      b.replacement[o.add]=o.u;
+      ids.push(o.add);
+    }
+    if (side!==s.side) b.damage.push(o);
+  }
+  invalidate(s);
+}
+function captureRetreated(s) {
+  const b=s.battle;
+  if (b.hit[s.side]<1) return;
+  for (const u of stack(s,b.p).filter(u=>s.action.retreated.includes(u))) {
+    s.pos[u]=UN[u].rp?DEAD:REMOVED;
+    note(s,`${UN[u].name} eliminated after a second battle on its retreat route.`,"loss");
+  }
+  invalidate(s);
+}
+function beginFire(s) {
+  const b=s.battle, a=s.side, d=OTHER(a);
+  b.stage="loss";
+  if (b.flank===null) {
+    fire(s,a); fire(s,d);
+    b.lossOrder=[d,a];
+  } else {
+    const first=b.flank?a:d;
+    fire(s,first);
+    b.lossOrder=[OTHER(first),first];
+  }
+  b.lossIndex=0;
+}
+function restoreWithdrawal(s) {
+  const b=s.battle;
+  const damaged=b.damage.filter(o=>!o.fort);
+  const corps=damaged.filter(o=>!isArmy(o.u));
+  const op=corps.findLast(o=>s.pos[o.u]<0)??corps.at(-1)??damaged.findLast(o=>o.after===1||!o.permanent);
+  if (!op) return;
+  if (!op.after&&isArmy(op.u)&&op.add!==undefined) {
+    s.pos[op.add]=RESERVE;
+    b.defenders=b.defenders.filter(u=>u!==op.add);
+  }
+  if (s.pos[op.u]<0) s.pos[op.u]=op.origin;
+  s.steps[op.u]=op.before;
+  invalidate(s);
+  note(s,`Withdrawal recovers a step of ${UN[op.u].name}.`,"event");
+}
+function settleFire(s) {
+  const b=s.battle, a=s.side, d=OTHER(a);
+  for (const side of SIDES) {
+    const player=s.players[side];
+    for (const id of b.used[side]) {
+      player[CARD[id].star?"removed":b.hit[side]>b.hit[OTHER(side)]?"ready":"discard"].push(id);
+      if (CARD[id].star) s.vp+=SIGN(side);
+    }
+  }
+  const withdrawal=b.used[d].includes("A6");
+  if (withdrawal) restoreWithdrawal(s);
+  b.defenders=b.defenders.filter(u=>s.pos[u]===b.p);
+  const atFull=b.attackers.some(u=>s.pos[u]>0&&s.steps[u]===2);
+  const win=b.hit[a]>b.hit[d]&&atFull;
+  if (b.defenders.length&&(withdrawal||win)) {
+    b.retreatCount=withdrawal?1:Math.min(2,b.hit[a]-b.hit[d]);
+    b.retreat=[...b.defenders];
+    b.stage="retreat";
+    b.canHold=!withdrawal&&(Boolean(s.trench[b.p])||ROUGH.has(SP[b.p].terrain));
+    return;
+  }
+  if (!b.defenders.length&&(b.originalDefenders||!defenderFort(s,b.p))) { startAdvance(s); return; }
+  clearBattle(s);
+}
+function supplyIfCaptured(s,u,p) {
+  if (suppliedAt(s,u,p)) return true;
+  const side=UN[u].side, group=side==="cp"?"central":supplyGroup(nat(u));
+  if (SP[p].port&&!["sb","ru","mn"].includes(group) && supplySet(s,side,group).size &&
+      (side==="cp"?["ge","ru"].includes(SP[p].nation):!["ge","ru"].includes(SP[p].nation))) {
+    return ACTIVE.some(q=>port(s,q,side)&&supplySet(s,side,group).has(q));
+  }
+  return !activeFort(s,p)&&ADJ[p].some(e=>edgeFor(e,nat(u),["ru","sb"].includes(group)?"east":group)&&supplySet(s,side,group).has(e.to));
+}
+function retreatRoutes(s,u,start,steps) {
+  if (nat(u)==="mn") return [];
+  const side=UN[u].side, rank=p=>(s.control[p]===side?0:2)+(supplyIfCaptured(s,u,p)?0:1);
+  let paths=[], partial=[];
+  const may=(p,q)=>q!==start&&legalEdge(s,u,p,q,"retreat")&&!occupies(s,q,OTHER(side))&&
+    (!activeFort(s,q)||SP[q].side===side||besieged(s,q));
+  for (const {to:p} of ADJ[start]) {
+    if (!may(start,p)) continue;
+    if (steps===1&&stack(s,p).length<3) paths.push({path:[p],rank:rank(p),label:point(p)});
+    if (steps===2) {
+      partial.push({path:[p],rank:rank(p),dies:true,label:`${point(p)} · eliminated after one space`});
+      for (const {to:q} of ADJ[p]) {
+        if (may(p,q)&&stack(s,q).length<3) paths.push({path:[p,q],rank:rank(p)*4+rank(q),label:`${point(p)} → ${point(q)}`});
+      }
+    }
+  }
+  if (!paths.length) paths=partial;
+  const best=Math.min(...paths.map(x=>x.rank));
+  return paths.filter(x=>x.rank===best);
+}
+function startAdvance(s) {
+  const b=s.battle;
+  b.advance=b.original.filter(u=>s.pos[u]>0&&s.pos[u]!==b.p&&s.steps[u]===2&&nat(u)!=="mn");
+  b.stage="advance";
+  if (!b.advance.length||targetDefenders(s,b.p).length) clearBattle(s);
+}
+function advanceRoutes(s,u) {
+  const b=s.battle, from=s.pos[u], p=b.p;
+  if (!legalEdge(s,u,from,p,"advance")||occupies(s,p,OTHER(s.side))) return [];
+  const fort=defenderFort(s,p), mayBesiege=!fort||besieged(s,p)||isArmy(u)||stack(s,p).length+1>=fort;
+  if (!mayBesiege) return [];
+  const paths=stack(s,p).length<3?[[p]]:[];
+  if (!ROUGH.has(SP[p].terrain)&&!fort&&b.retreatCount===2) {
+    for (const q of unique(b.retreatPaths.map(path=>path[0]).filter(Boolean))) {
+      if (legalEdge(s,u,p,q,"advance")&&stack(s,q).length<3&&portGate(s,s.side,q,p)&&
+          !occupies(s,q,OTHER(s.side))&&(!defenderFort(s,q)||besieged(s,q)||isArmy(u)||stack(s,q).length+1>=defenderFort(s,q))) paths.push([p,q]);
+    }
+  }
+  return paths.map(path=>({path,label:path.map(point).join(" → ")}));
+}
+function clearBattle(s) {
+  s.battle=null;
+  s.phase="attack";
+}
+function battleDecision(s) {
+  const b=s.battle, a=s.side, d=OTHER(a);
+  if (b.stage==="flank") {
+    const opts=flankOptions(s,b);
+    return {side:a,kind:"flank",title:"Attempt a flank attack?",opts:[{label:"Fire simultaneously"},...opts]};
+  }
+  if (b.stage==="attackCards"||b.stage==="defendCards") {
+    const side=b.stage==="attackCards"?a:d;
+    return {side,kind:"cards",title:b.stage==="attackCards"?"Attacking combat cards":"Defensive combat cards",cards:availableCC(s,side)};
+  }
+  if (b.stage==="loss") {
+    const side=b.lossOrder[b.lossIndex], isAttack=side===a;
+    const opts=lossPlans(s,isAttack?b.attackers:b.defenders,b.hit[OTHER(side)],isAttack?0:b.p,isAttack,!isAttack&&b.used[d].includes("A6"));
+    return {side,kind:"loss",title:`Assign losses · ${b.hit[OTHER(side)]}`,opts};
+  }
+  if (b.stage==="retreat") {
+    const u=b.retreat[0];
+    const opts=retreatRoutes(s,u,b.p,b.retreatCount);
+    if (!opts.length) opts.push({path:[],dies:true,label:"No route · unit eliminated"});
+    if (b.canHold) {
+      const defenders=b.defenders.filter(v=>s.pos[v]===b.p);
+      for (const v of defenders) {
+        if (s.steps[v]===2||defenders.length>1||(isArmy(v)&&reserveReplacement(s,v,[])!==undefined)) {
+          opts.push({hold:v,label:`Hold position · lose one ${UN[v].name} step`});
+        }
+      }
+    }
+    return {side:d,kind:"retreat",title:`Retreat ${UN[u].name} · ${b.retreatCount} space${b.retreatCount===1?"":"s"}`,u,opts};
+  }
+  const u=b.advance[0], paths=advanceRoutes(s,u);
+  return {side:a,kind:"advance",title:`Advance ${UN[u].name}?`,u,opts:[{label:`Stay at ${point(s.pos[u])}`},...paths]};
+}
+function answerBattle(s,value) {
+  check(s.phase==="battle","There is no battle to resolve.");
+  const b=s.battle, decision=battleDecision(s), {kind,side,u}=decision;
+  if (kind==="cards") {
+    check(Array.isArray(value)&&unique(value).length===value.length&&value.every(id=>decision.cards.includes(id)),"Ineligible combat card.");
+    useCC(s,side,value);
+    if (b.stage==="attackCards") b.stage="defendCards";
+    else beginFire(s);
+    return;
+  }
+  const choice=decision.opts[value];
+  check(choice,"Choose a legal battle order.");
+  if (kind==="flank") {
+    if (choice.p) {
+      if (choice.wireless) useCC(s,s.side,["C2"]);
+      const roll=choice.wireless?null:d6(s);
+      b.flank=choice.wireless||roll+choice.drm>=4;
+      note(s,`Flank ${b.flank?"succeeds":"fails"}${roll?` · ${roll} + ${choice.drm}`:""}.`,"roll");
+    }
+    b.stage="attackCards";
+  } else if (kind==="loss") {
+    if (side!==s.side) captureRetreated(s);
+    applyLosses(s,side,choice);
+    b.lossIndex++;
+    if (b.lossIndex===2) settleFire(s);
+    else if (b.flank!==null) fire(s,side);
+  } else if (kind==="retreat") {
+    if (choice.hold!==undefined) {
+      const v=choice.hold, before=s.steps[v], add=before===1&&isArmy(v)?reserveReplacement(s,v,[]):undefined;
+      applyLosses(s,side,{ops:[{u:v,before,after:before-1,origin:b.p,add,permanent:!UN[v].rp||(isArmy(v)&&(add===undefined||!suppliedAt(s,v)))}],label:`${UN[v].name} takes an extra step loss to hold`});
+      clearBattle(s);
+      return;
+    }
+    b.canHold=false;
+    b.retreat.shift();
+    b.retreatPaths.push(choice.path);
+    if (choice.dies) {
+      s.pos[u]=isArmy(u)||!UN[u].rp?REMOVED:DEAD;
+      if (b.replacement[u]!==undefined) s.pos[b.replacement[u]]=REMOVED;
+      note(s,`${UN[u].name} eliminated for failure to complete its retreat.`,"loss");
+    } else {
+      const dest=choice.path.at(-1);
+      let p=b.p;
+      for (const q of choice.path) { markCrossing(s,u,p,q); p=q; }
+      s.pos[u]=dest;
+      s.action.retreated.push(u);
+      changeControl(s,dest,side);
+      note(s,`${UN[u].name} retreats ${point(b.p)} → ${choice.path.map(point).join(" → ")}.`,"move");
+    }
+    invalidate(s);
+    if (!b.retreat.length) startAdvance(s);
+  } else if (kind==="advance") {
+    b.advance.shift();
+    if (choice.path) {
+      let from=s.pos[u];
+      for (const p of choice.path) {
+        markCrossing(s,u,from,p);
+        s.pos[u]=p;
+        changeControl(s,p,s.side);
+        from=p;
+      }
+      invalidate(s);
+      note(s,`${UN[u].name} advances into ${choice.path.map(point).join(" → ")}.`,"move");
+    }
+    if (!b.advance.length) clearBattle(s);
+  }
+}
+
+
+/*
+ * The planner sees the public board and the acting side's cards. It compares
+ * OPS packages, redeployment, replacements, and events at every Action Round.
+ */
+const aiCache = new WeakMap();
+const unitValue = (s,u) => (isArmy(u)?5.0:1.7) + stats(s,u)[0]*.6;
+const anchorValue = p => (SP[p].vp?7.4:0)+(SP[p].supply?2.0:0)+(SP[p].capital?1.1:0)+(SP[p].port?.6:0);
+function threatenedAnchor(s,ctx,p) {
+  if (s.control[p]!==ctx.side||stack(s,p).length||!ctx.enReach.has(p)) return 0;
+  const source=SP[p].supply?(ctx.side==="cp"?5:2.5):0;
+  return source+anchorValue(p)*.57;
+}
+const areaOf = p => SP[p].front==="near"?"Near East":SP[p].front==="south"?"Balkans":SP[p].front==="east"?"Eastern Front":"Western Front";
+const maxBy = (options,score) => {
+  let best=null, high=-Infinity;
+  for (const x of options) { const value=score(x); if (value>high) { best=x; high=value; } }
+  return best;
+};
+function geographicDistance(goals) {
+  const d=SP.map(()=>24), todo=[...goals];
+  for (const p of goals) d[p]=0;
+  for (let i=0;i<todo.length;i++) {
+    const p=todo[i];
+    for (const e of ADJ[p]) if (SP[e.to].active&&d[e.to]>d[p]+1) {
+      d[e.to]=d[p]+1;
+      todo.push(e.to);
+    }
+  }
+  return d;
+}
+function hostileReach(s,side) {
+  const reach = new Map();
+  for (const u of onMap(s,side)) {
+    const from=s.pos[u], mf=stats(s,u)[2];
+    if (!mf || !suppliedAt(s,u) || !mayLeaveSiege(s,[u],from)) continue;
+    const todo=[[from,0]], seen=new Set([from]);
+    for (let i=0;i<todo.length;i++) {
+      const [p,len]=todo[i];
+      if (len>=mf) continue;
+      for (const e of ADJ[p]) {
+        const q=e.to;
+        if (seen.has(q)||!legalEdge(s,u,p,q)||occupies(s,q,OTHER(side))) continue;
+        const fort=activeFort(s,q)&&SP[q].side!==side&&!besieged(s,q);
+        if (fort&&!isArmy(u)&&SP[q].fort>1) continue;
+        seen.add(q);
+        if (portGate(s,side,q)) reach.set(q,Math.max(reach.get(q)??0,unitValue(s,u)));
+        if (!fort) todo.push([q,len+1]);
+      }
+    }
+  }
+  return reach;
+}
+function networkCuts(s,side,spaces) {
+  const units=onMap(s,side).filter(u=>suppliedAt(s,u));
+  const cut=new Map();
+  for (const p of spaces) {
+    if (s.control[p]!==side || stack(s,p).length) continue;
+    const lost=units.filter(u=>!suppliedAt(s,u,s.pos[u],p));
+    if (lost.length) cut.set(p,sum(lost.map(u=>unitValue(s,u))));
+  }
+  return cut;
+}
+function context(s,side) {
+  let entry=aiCache.get(s);
+  if (!entry || entry.rev!==s.rev) {
+    entry={rev:s.rev,sides:{}};
+    aiCache.set(s,entry);
+  }
+  if (entry.sides[side]) return entry.sides[side];
+  const enemy=OTHER(side), our=onMap(s,side), their=onMap(s,enemy);
+  const front=geographicDistance(their.map(u=>s.pos[u]));
+  const goal=geographicDistance(ACTIVE.filter(p=>SP[p].vp&&s.control[p]===enemy));
+  const enReach=hostileReach(s,enemy), ourReach=hostileReach(s,side);
+  const danger=networkCuts(s,side,enReach.keys());
+  const cut=networkCuts(s,enemy,ourReach.keys());
+  const weights=SP.map((p,i)=>p?sum(ADJ[i].flatMap(e=>stack(s,e.to)).filter(u=>UN[u].side===enemy&&suppliedAt(s,u)).map(u=>stats(s,u)[0])):0);
+  const ctx={side,enemy,our,their,front,goal,enReach,danger,cut,weights,oos:our.filter(u=>!suppliedAt(s,u))};
+  entry.sides[side]=ctx;
+  return ctx;
+}
+function frontBias(p,style) {
+  if (style==="west") return SP[p].front==="west"?1.3:.82;
+  if (style==="east") return SP[p].front==="east"||SP[p].front==="south"?1.3:.8;
+  return 1;
+}
+function movementValue(s,ctx,ids,path,style) {
+  const from=s.pos[ids[0]], to=path.at(-1), side=ctx.side;
+  const power=sum(ids.map(u=>stats(s,u)[0]));
+  const armies=count(ids,isArmy);
+  const position= p => (5-Math.min(ctx.front[p],5))*(.34+power*.12)+(5-Math.min(ctx.goal[p],5))*.3;
+  const seized=sum(path.map(p=>s.control[p]!==side&&!activeFort(s,p)?(SP[p].vp?7.4:.24):0));
+  const newlyBesieged=activeFort(s,to)&&SP[to].side!==side&&!besieged(s,to);
+  const protects=Math.min(16,(ctx.danger.get(to)??0)*.78+threatenedAnchor(s,ctx,to));
+  const cuts=sum(path.map(p=>Math.min(10,(ctx.cut.get(p)??0)*.72)));
+  const guard=stack(s,from).length===ids.length&&ctx.enReach.has(from)?anchorValue(from)*.75:0;
+  const capturesSupply=sum(path.map(p=>s.control[p]!==side&&ctx.oos.some(u=>ADJ[s.pos[u]].some(e=>e.to===p))?2.2:0));
+  const rough=ROUGH.has(SP[to].terrain)?1.2:0;
+  const trench=(s.trench[to]?.side===side?s.trench[to].level:0);
+  const defense=power+sum(stack(s,to).map(u=>stats(s,u)[0]))+trench*2+rough+(s.control[to]===side?activeFort(s,to):0);
+  const exposure=Math.max(0,ctx.weights[to]-defense*1.35-2)*(.23+armies*.13);
+  const digs=s.trench[from]?.side===side&&ctx.front[from]===1&&stack(s,from).length===ids.length?.8:0;
+  const leavesSource=side==="cp"&&SP[from].supply&&stack(s,from).length===ids.length?6:0;
+  let score=(position(to)-position(from))*frontBias(to,style)+seized+protects+cuts+capturesSupply-guard-exposure-digs-leavesSource-.25;
+  if (newlyBesieged) score+=1.15+(SP[to].vp?2:0);
+  if (!ids.every(u=>supplyIfCaptured(s,u,to))&&!path.some(p=>s.control[p]!==side&&ADJ[p].some(e=>ownsRoute(s,e.to,side)))) score-=9+armies*5;
+  if (to===CITY.London&&ctx.side==="ap") score-=1;
+  return score;
+}
+function tacticalBoard(s) {
+  const {turn,round,side,phase,vp,rev,centralFocus,pos,steps,control,forts,trench,events,crossed,players}=s;
+  return {turn,round,side,phase,vp,rev,centralFocus,pos,steps,control,forts,trench,events,crossed,players};
+}
+function operationProbe(s,mode) {
+  return {...tacticalBoard(s),phase:mode,log:s.log,rng:FORECAST_OWN_DICE,battle:null,
+    action:{marks:{},moved:[],fired:[],targets:[],retreated:[],ccUsed:[],dig:[],budget:4,spent:0}};
+}
+function marchReplyValue(s,ctx,move) {
+  const {ids,path}=move, side=ctx.side, from=s.pos[ids[0]];
+  const after={...tacticalBoard(s),pos:[...s.pos],control:[...s.control]};
+  for (const u of ids) after.pos[u]=path.at(-1);
+  for (const p of path) if (!activeFort(s,p)) after.control[p]=side;
+  const ownLoss=ctx.our.filter(u=>suppliedAt(s,u)&&!suppliedAt(after,u));
+  const saved=ctx.oos.filter(u=>suppliedAt(after,u));
+  const foeLoss=ctx.their.filter(u=>suppliedAt(s,u)&&!suppliedAt(after,u));
+  let value=sum(saved.map(u=>unitValue(s,u)*1.25))+sum(foeLoss.map(u=>unitValue(s,u)*.55))-
+    sum(ownLoss.map(u=>unitValue(s,u)*1.55));
+  if (s.side==="ap"&&s.round===6) return value;
+  const reach=hostileReach(after,ctx.enemy);
+  const weak=unique([from,...path,...ADJ[from].map(e=>e.to)]).filter(p=>reach.has(p));
+  const cuts=networkCuts(after,side,weak);
+  let newRisk=0;
+  for (const [p,loss] of cuts) newRisk=Math.max(newRisk,loss-(ctx.danger.get(p)??0));
+  value-=Math.min(24,newRisk*.88);
+  if (reach.has(from)&&!stack(after,from).length) {
+    value-=anchorValue(from)*.85+(SP[from].supply?8:0);
+  }
+  for (const p of path) {
+    if (SP[p].vp&&s.control[p]!==side&&reach.has(p)) value-=4.0;
+  }
+  return value;
+}
+function activationPrice(s,p) {
+  const base=activationCost(s,p);
+  return sudPossible(s,p)&&base===2&&!(s.events.moltke&&!s.events.falkenhayn&&["fr","be"].includes(SP[p].nation))?1:base;
+}
+function movementGroups(ids, side) {
+  const groups = [ids, ...(ids.length > 1 ? ids.map(u => [u]) : [])];
+  if (side === "cp" && ids.length === 3) {
+    groups.push([ids[0], ids[1]], [ids[0], ids[2]], [ids[1], ids[2]]);
+  }
+  return groups;
+}
+
+function splitSupplyValue(board, ctx, after, group) {
+  const origin = group.origins[0];
+  const reach = hostileReach(after, "ap");
+  const nearby = unique([origin, ...group.path, ...ADJ[origin].map(edge => edge.to)]);
+  const cuts = networkCuts(after, "cp", nearby.filter(p => reach.has(p)));
+  const newRisk = Math.max(0, ...[...cuts].map(([p, loss]) => loss - (ctx.danger.get(p) ?? 0)));
+  const exposed = count(group.path, p => SP[p].vp && board.control[p] !== "cp" && reach.has(p));
+  const unguarded = !stack(after, origin).length && reach.has(origin);
+  const guardCost = unguarded ? anchorValue(origin) * 1.6 + (SP[origin].supply ? 14 : 0) : 0;
+  const saved = ctx.oos.filter(u => suppliedAt(after, u));
+  const lost = ctx.our.filter(u => suppliedAt(board, u) && !suppliedAt(after, u));
+  const enemyCut = ctx.their.filter(u => suppliedAt(board, u) && !suppliedAt(after, u));
+  return sum(saved.map(u => unitValue(board, u) * 1.25)) +
+    sum(enemyCut.map(u => unitValue(board, u) * .55)) -
+    sum(lost.map(u => unitValue(board, u) * 1.55)) -
+    Math.min(24, newRisk * .88) - exposed * 4 - guardCost;
+}
+
+function splitCandidates(board, ctx, ranked) {
+  const byGroup = new Map();
+  for (const move of ranked) {
+    if (move.score <= .48) continue;
+    const key = move.ids.join(",");
+    if (!byGroup.has(key)) byGroup.set(key, []);
+    if (byGroup.get(key).length < 2) byGroup.get(key).push(move);
+  }
+  const choices = [...byGroup.values()].flat().sort((a, b) => b.score - a.score);
+  const combinations = [];
+  function extend(orders, from) {
+    if (orders.length > 1) {
+      const first = orders[0];
+      combinations.push({
+        kind: "package", orders, origins: first.origins, cost: first.cost, to: first.to,
+        ids: orders.flatMap(move => move.ids), path: unique(orders.flatMap(move => move.path)),
+        score: sum(orders.map((move, index) => move.score * (1 - index * .18)))
+      });
+    }
+    if (orders.length === 3) return;
+    for (let i = from; i < choices.length; i++) {
+      const move = choices[i], next = [...orders, move];
+      if (orders.some(other => other.to === move.to || other.ids.some(u => move.ids.includes(u)))) continue;
+      const captures = next.flatMap(order => order.path.filter(p => board.control[p] === "ap"));
+      if (new Set(captures).size === captures.length) extend(next, i + 1);
+    }
+  }
+  extend([], 0);
+  const checked = [];
+  for (const group of combinations.sort((a, b) => b.score - a.score).slice(0, 6)) {
+    const after = previewOperations(board, "cp", group.orders, group.cost);
+    if (!after) continue;
+    const score = group.score + splitSupplyValue(board, ctx, after, group);
+    if (score > .55) checked.push({ ...group, score });
+  }
+  return checked.sort((a, b) => b.score - a.score).slice(0, 2);
+}
+
+function moveCandidates(s,ctx,style) {
+  const probe=operationProbe(s,"move"), result=[];
+  for (const p of unique(ctx.our.map(u=>s.pos[u]))) {
+    const ids=stack(s,p).filter(u=>suppliedAt(s,u)&&stats(s,u)[2]>0);
+    if (!ids.length) continue;
+    const cost=activationPrice(s,p);
+    probe.action.marks[p]={mode:"move",ids};
+    const best=[];
+    for (const group of movementGroups(ids,s.side)) {
+      const paths=marchPaths(probe,group);
+      for (const [to,path] of paths) {
+        const score=movementValue(s,ctx,group,path,style);
+        if (score>.48||ctx.oos.length>0) best.push({kind:"move",origins:[p],ids:group,to,path,cost,score});
+      }
+    }
+    best.sort((a,b)=>b.score-a.score);
+    const checked=best.slice(0,8).map(m=>({...m,score:m.score+marchReplyValue(s,ctx,m)}));
+    checked.sort((a,b)=>b.score-a.score);
+    result.push(...checked.filter(m=>m.score>.48).slice(0,3));
+    if (s.side==="cp") result.push(...splitCandidates(s,ctx,best));
+    const army=ids.find(u=>trenchPossible(probe,u));
+    if (army!==undefined&&ctx.front[p]<=1) {
+      const score=1.55+(SP[p].vp?.7:0)+Math.min(1.5,ctx.weights[p]*.13);
+      result.push({kind:"dig",origins:[p],u:army,cost,score});
+    }
+    delete probe.action.marks[p];
+  }
+  return result;
+}
+function attackScore(s,ctx,ids,p,style) {
+  const defenders=targetDefenders(s,p).filter(u=>!s.action.retreated.includes(u));
+  const fort=defenderFort(s,p), a=fireRow(s,ids,p,true), d=fireRow(s,defenders,p,false,fort);
+  const minimalLF=group=>group.length?Math.min(...group.map(u=>rf(s,u))):1;
+  const aMin=minimalLF(ids), dMin=defenders.length?minimalLF(defenders):fort||1;
+  let win=0, take=0, give=0;
+  for (const x of a) for (const y of d) {
+    if (x>y && x>=dMin) win++;
+    if (x>=dMin) give+=x;
+    if (y>=aMin) take+=y;
+  }
+  const isMO=mandated(s,ids,p,defenders);
+  const deadline=s.round>=5?1.1+(s.round-5)*1.4:.38;
+  const exposed=ids.filter(u=>isArmy(u)&&s.steps[u]===1&&reserveReplacement(s,u,[])===undefined);
+  const fortsOnly=!defenders.length&&fort;
+  const objective=anchorValue(p)+(ctx.cut.get(p)??0)*.46+(fort?1.4:0);
+  const risk=(take/36)*(ctx.side==="cp"?1.04:1)+exposed.length*take/65;
+  return ((give/36)*1.12-risk+(win/36)*(2.25+objective*.8) -
+    (fortsOnly&&a.every(x=>x<fort)?3:0) + (isMO?1.35+deadline:0) -.9)*frontBias(p,style);
+}
+function groupsOfOrigins(origins,limit=4) {
+  const groups=[];
+  function include(from,chosen) {
+    if (chosen.length) groups.push(chosen);
+    if (chosen.length===limit) return;
+    for (let i=from;i<origins.length;i++) include(i+1,[...chosen,origins[i]]);
+  }
+  include(0,[]);
+  return groups;
+}
+function attackCandidates(s,ctx,style,probeAll=false) {
+  const probe=probeAll?operationProbe(s,"attack"):s;
+  if (probeAll) for (const p of unique(ctx.our.map(u=>s.pos[u]))) {
+    probe.action.marks[p]={mode:"attack",ids:stack(s,p).filter(u=>suppliedAt(s,u))};
+  }
+  const result=[];
+  const targets=unique([...ctx.their.map(u=>s.pos[u]),...ACTIVE.filter(p=>defenderFort(s,p))]);
+  for (const p of targets) {
+    const attackers=possibleAttackers(probe,p);
+    const origins=unique(attackers.map(u=>s.pos[u]));
+    for (const places of groupsOfOrigins(origins)) {
+      const cost=sum(places.map(q=>activationPrice(s,q)));
+      if (probeAll&&cost>4) continue;
+      const all=attackers.filter(u=>places.includes(s.pos[u]));
+      const nations=unique(all.map(nat));
+      const packs=[all,...(nations.length>1?nations.map(n=>all.filter(u=>nat(u)===n)):[])];
+      for (const ids of packs) {
+        if (!legalAttack(probe,ids,p)) continue;
+        const used=unique(ids.map(u=>s.pos[u]));
+        const score=attackScore(probe,ctx,ids,p,style);
+        if (score>0) result.push({kind:"attack",origins:used,ids,to:p,cost:sum(used.map(q=>activationPrice(s,q))),score});
+      }
+    }
+  }
+  return result;
+}
+function pickOperations(candidates,budget,s) {
+  const ordered=[...candidates].sort((a,b)=>b.score/(b.cost**.68)-a.score/(a.cost**.68));
+  const chosen=[], occupied=new Set(), targets=new Set();
+  let cost=0, sumValue=0, includesPackage=false;
+  for (const item of ordered) {
+    const orders=item.orders??[item];
+    const destinations=orders.map(order=>order.to).filter(Boolean);
+    if (cost+item.cost>budget||item.origins.some(p=>occupied.has(p)||targets.has(p))||
+        destinations.some(p=>targets.has(p)||occupied.has(p))) continue;
+    if (item.kind==="attack"&&s.side==="ap"&&item.origins.some(NE)&&
+        (item.origins.filter(NE).length>1||chosen.some(m=>m.kind==="attack"&&m.origins.some(NE)))) continue;
+    const discounted=item.score*(chosen.length?.9:1);
+    if (discounted<.55) continue;
+    const needsPreview=includesPackage||Boolean(item.orders);
+    if (needsPreview&&!previewOperations(s,s.side,[...chosen,...orders],budget)) continue;
+    includesPackage=needsPreview;
+    cost+=item.cost;
+    sumValue+=discounted;
+    chosen.push(...orders);
+    item.origins.forEach(p=>occupied.add(p));
+    destinations.forEach(p=>targets.add(p));
+  }
+  return {items:chosen,score:sumValue};
+}
+function srCandidates(s,ctx,style,probe=false) {
+  const t=probe?operationProbe(s,"sr"):s;
+  const results=[], usedRes=new Set();
+  for (const u of UN.filter(u=>u.side===ctx.side&&s.pos[u.id]>=0)) {
+    const id=u.id, from=s.pos[id], reserve=from===0, n=u.nation;
+    if (reserve) {
+      if (usedRes.has(n+u.name)) continue;
+      const same=UN.filter(v=>v.name===u.name&&s.pos[v.id]===0).length;
+      if (same<=1 || (same<=2&&ctx.our.some(v=>nat(v)===n&&isArmy(v)&&s.steps[v]===1))) continue;
+      usedRes.add(n+u.name);
+    }
+    if (from>0&&ctx.front[from]<=1&&!reserve) continue;
+    for (const to of srDestinations(t,id)) {
+      if (!to) continue;
+      const garrison=ctx.side==="cp"&&reserve&&n==="ge"&&SP[to].supply&&!stack(s,to).length ? 9 : 0;
+      const protection=threatenedAnchor(s,ctx,to)+(ctx.danger.get(to)??0)*.65+garrison;
+      if (ctx.front[to]>2&&protection<1) continue;
+      const forward=ctx.front[to]===1?2.0:1.05;
+      const defense=stack(s,to).length===0&&SP[to].vp?1.0:0;
+      const load=stack(s,to).some(v=>nat(v)!==n)?1.25:0;
+      const congestion=stack(s,to).length===2?.5:0;
+      let score=(forward*(isArmy(id)?1.7:1)+protection+defense-load-congestion-(reserve?.4:1.0))*frontBias(to,style);
+      if (from>0&&ctx.enReach.has(from)) score-=anchorValue(from)*.7;
+      if (score>.65) results.push({u:id,to,score,cost:srCost(id)});
+    }
+  }
+  return results.sort((a,b)=>b.score-a.score);
+}
+function rpScore(s,card,ctx) {
+  if (s.turn===3) return 0;
+  const p=s.players[ctx.side];
+  const deficits={};
+  for (const u of UN.filter(u=>u.side===ctx.side&&u.rp&&friendlyCapital(s,u.nation))) {
+    const id=u.id, loc=s.pos[id], cost=isArmy(id)?2:1;
+    if (loc===DEAD&&(!isArmy(id)||entrySpaces(s,id).length)) deficits[u.rp]=(deficits[u.rp]??0)+(isArmy(id)?cost*2:cost);
+    else if (loc>=0&&s.steps[id]===1&&suppliedAt(s,id)) deficits[u.rp]=(deficits[u.rp]??0)+cost;
+  }
+  const fill=sum(Object.entries(card.rp).map(([n,rp])=>Math.min(rp*2,Math.max(0,(deficits[n]??0)-(p.rp[n]??0)))*(n==="a"?.72:1.05)));
+  return fill*(s.round>=4?1.0:.72);
+}
+function eventValue(s,id,choice,ctx) {
+  const c=CARD[id], e=c.event;
+  const starValue=ctx.side==="cp"?11.4:7.4;
+  const base=c.star?starValue:0;
+  const threshold=ctx.side==="cp"&&s.players.cp.ws<4&&s.players.cp.ws+(c.ws??0)>=4?1.1:0;
+  if (c.reinf) {
+    const forces=sum(c.reinf.map(u=>isArmy(u)?(s.turn===2?3.2:1.65):.62));
+    const proximity=sum(choice.placements.map(([,p])=>Math.max(0,4-ctx.front[p])*.46));
+    return base+forces+proximity+threshold;
+  }
+  if (e==="guns_of_august") return base+23.5;
+  if (e==="reichstag_truce"||e==="rape_of_belgium") {
+    return base+7.4+threshold+(e==="reichstag_truce"?4:0);
+  }
+  if (e==="moltke") return base+2.5+count(ctx.their,u=>["fr","be"].includes(SP[s.pos[u]].nation))*.26;
+  if (e==="falkenhayn") return base+threshold+(s.events.moltke?3.3:0);
+  if (e==="landwehr") return base+sum(choice.units.map(u=>isArmy(u)?2.0:.6));
+  if (e==="blockade") return base;
+  if (e?.endsWith("_entrench")) return base+Math.min(3,ctx.weights[choice.p]*.21)+anchorValue(choice.p)*.21;
+  if (e==="race_to_the_sea"||e==="oberost") return base+threshold+(s.players.cp.ws<4?.85:0);
+  return base+threshold;
+}
+function cardChoices(s,style) {
+  const ctx=context(s,s.side), p=s.players[s.side];
+  const candidates=[...moveCandidates(s,ctx,style),...attackCandidates(s,ctx,style,true)];
+  const opsPlans = new Map();
+  const sr= p.last!=="sr"?srCandidates(s,ctx,style,true):[];
+  const lastRound=s.turn===3&&s.round===6;
+  const choices=[];
+  for (const id of [null,...p.hand]) {
+    const c=CARD[id], budget=c?.ops??1;
+    const modes=legalModes(s,id);
+    const ev=id?eventChoices(s,id):[];
+    const order=ev.length?maxBy(ev.map((x,i)=>({x,i})),o=>eventValue(s,id,o.x,ctx)):null;
+    const saveEvent=ctx.side==="cp"&&!lastRound&&(c?.reinf||c?.event==="reichstag_truce");
+    const keep=c ? .38+c.ops*.16+(order&&s.round<6?.66:0)+(saveEvent?1.5:0) : 0;
+    if (!opsPlans.has(budget)) opsPlans.set(budget,pickOperations(candidates,budget,s));
+    const plan=opsPlans.get(budget);
+    choices.push({id,mode:"ops",items:plan.items,score:plan.score-keep,why:plan.items.length?
+      `Operations on the ${areaOf(plan.items[0].to??plan.items[0].origins[0])}`:"Conserve cards"});
+    if (!c) continue;
+    if (modes.includes("rp")) choices.push({id,mode:"rp",score:rpScore(s,c,ctx)-keep,why:"Bank replacements for depleted formations"});
+    if (modes.includes("sr")&&sr.length) {
+      const main=sr.find(x=>x.cost<=c.sr), another=main&&sr.find(x=>x.u!==main.u&&x.to!==main.to&&x.cost+main.cost<=c.sr);
+      if (main) choices.push({id,mode:"sr",score:main.score+(another?.score??0)*.65-keep,why:"Reinforce a threatened sector"});
+    }
+    if (order) choices.push({id,mode:"event",index:order.i,score:eventValue(s,id,order.x,ctx)-.38,why:"Play a timely event"});
+  }
+  return {ctx,candidates,choices};
+}
+function chooseCard(s,style) {
+  const {ctx,candidates,choices}=cardChoices(s,style);
+  if (s.side==="ap") return maxBy(choices,o=>o.score);
+  const objective=centralObjective(s,ctx,candidates);
+  const base=selectCentralAction(s,style,choices,candidates,ctx,objective);
+  const plan=planCentralFollowUp(s,style,choices,candidates,ctx,base);
+  const defended=protectEarlySupply(s,style,choices,candidates,ctx,plan);
+  const supplied=amendSupplyOperations(s,style,ctx,defended);
+  const recovered=recoverArmySupply(s,style,ctx,choices,candidates,supplied);
+  return planFinalAction(s,style,ctx,choices,candidates,recovered);
+}
+function rankLoss(s,plan) {
+  return -sum(plan.ops.map(o=>{
+    if (o.fort) return 7;
+    const army=isArmy(o.u);
+    if (o.after) return army?2.0+(s.steps[o.u]===2?.1:0):.7;
+    return army?(o.permanent?10:5):1.65;
+  }));
+}
+function defendWithWithdrawal(s,d) {
+  const b=s.battle, ctx=context(s,d);
+  if (!b.defenders.some(u=>retreatRoutes(s,u,b.p,1).some(x=>!x.dies))) return false;
+  const incoming=fireRow(s,b.attackers,b.p,true);
+  const reply=fireRow(s,b.defenders,b.p,false,defenderFort(s,b.p));
+  const threat=sum(incoming)/6-sum(reply)/6+(b.flank===true?1:b.flank===false?-1:0);
+  return threat>1.3 && (!SP[b.p].vp || threat>2.8) && !ctx.danger.has(b.p);
+}
+function botBattle(s,decision=battleDecision(s)) {
+  const {side,kind,opts,u}=decision, b=s.battle;
+  if (kind==="cards") {
+    return decision.cards.filter(id=>id==="A6"?defendWithWithdrawal(s,side):true);
+  }
+  if (kind==="flank") {
+    const selected=maxBy(opts.map((o,i)=>({o,i})),({o})=>o.wireless?4:o.p?o.drm-1.3:0);
+    return selected.i;
+  }
+  if (kind==="loss") return maxBy(opts.map((o,i)=>({o,i})),x=>rankLoss(s,x.o)).i;
+  const ctx=context(s,side);
+  if (kind==="retreat") {
+    return maxBy(opts.map((o,i)=>({o,i})),({o})=>{
+      if (o.hold!==undefined) return anchorValue(b.p)*.7+(activeFort(s,b.p)?1.4:0)+(s.trench[b.p]?.level??0)-
+        (isArmy(o.hold)&&s.steps[o.hold]===1?4:1.65)-(suppliedAt(s,o.hold)?0:7);
+      if (o.dies) return -12+o.path.length;
+      const dest=o.path.at(-1);
+      return (supplyIfCaptured(s,u,dest)?2.5:-7)-Math.max(0,ctx.weights[dest]-stats(s,u)[0])* .2 +
+        (s.trench[dest]?.side===side?.9:0)+stack(s,dest).length*.15;
+    }).i;
+  }
+  return maxBy(opts.map((o,i)=>({o,i})),({o})=>o.path?movementValue(s,ctx,[u],o.path,"balanced")+
+    marchReplyValue(s,ctx,{ids:[u],path:o.path})*.8+
+    (stack(s,b.p).length===0?1.3:-.12):0).i;
+}
+function botStep(s,style="balanced") {
+  if (s.phase==="card") {
+    const choice=chooseCard(s,style);
+    if (s.side==="cp"&&choice.focus!==s.centralFocus) {
+      if (choice.focus) {
+        s.centralFocus=choice.focus;
+        note(s,`Central Powers objective · ${point(choice.focus)}`,"ai");
+      } else {
+        delete s.centralFocus;
+      }
+    }
+    note(s,choice.why+".","ai");
+    if (choice.followUp) note(s,`Plan for the next action · ${choice.followUp}.`,"ai");
+    beginAction(s,choice.id,choice.mode);
+    if (s.action) s.action.ai={items:choice.items??[],index:choice.index??0,plannedAttacks:choice.plannedAttacks??false};
+  } else if (s.phase==="activate") {
+    for (const item of s.action.ai?.items??[]) {
+      const mode=item.kind==="attack"?"attack":"move";
+      if (item.origins.every(p=>canMark(s,p,mode))) {
+        for (const p of item.origins) {
+          if (s.action.marks[p]?.mode!==mode&&canMark(s,p,mode)) mark(s,p,mode);
+        }
+      }
+    }
+    beginMovement(s);
+  } else if (s.phase==="move") {
+    for (const item of s.action.ai?.items??[]) {
+      if (item.kind==="move"&&marchPaths(s,item.ids).has(item.to)) march(s,item.ids,item.to);
+      if (item.kind==="dig"&&trenchPossible(s,item.u)) dig(s,item.u);
+    }
+    endMovement(s);
+  } else if (s.phase==="attack") {
+    const plan=s.action.ai;
+    const candidate=plan?.plannedAttacks?
+      plan.items.find(o=>o.kind==="attack"&&legalAttack(s,o.ids,o.to)):
+      maxBy(attackCandidates(s,context(s,s.side),style),x=>x.score);
+    if (candidate) declareAttack(s,candidate.ids,candidate.to);
+    else finishAction(s);
+  } else if (s.phase==="event") {
+    playEvent(s,s.action.ai?.index??0);
+  } else if (s.phase==="sr") {
+    const candidate=srCandidates(s,context(s,s.side),style)[0];
+    if (candidate) redeploy(s,candidate.u,candidate.to);
+    else finishAction(s);
+  } else if (s.phase==="battle") {
+    answerBattle(s,botBattle(s));
+  } else if (s.phase==="rebuild") {
+    const ctx=context(s,s.side);
+    const choice=maxBy(replacementChoices(s,s.side),o=>(isArmy(o.u)?3.0:1)+(o.rebuild?1:0)+
+      (o.dest>0?Math.max(0,4-ctx.front[o.dest])*.33:0));
+    if (choice) replaceStep(s,choice);
+    else endRebuild(s);
+  } else if (s.phase==="draw") {
+    draw(s,s.players[s.side].hand.filter(id=>CARD[id].cc&&s.players[s.side].hand.length>2));
+  }
+}
+function automaticBattle(s) {
+  if (s.phase!=="battle") return false;
+  const d=battleDecision(s);
+  return d.kind==="cards"?d.cards.length===0:d.opts.length===1;
+}
+
+
+/*
+ * Central Powers plans are compared on the public board. The opponent's hand,
+ * deck, and future die rolls are outside the preview.
+ */
+const REPLY_OPS = 4;
+const FORECAST_OWN_DICE = 14;   // Representative simultaneous fire: 3 and 3.
+const FORECAST_REPLY_DICE = 13; // Representative simultaneous fire: 4 and 3.
+const REPLY_SEARCH = {marches:15,pairCandidates:9,attacks:3};
+const PLANNING_REPLY = {marches:8,pairCandidates:4,attacks:2,ownCards:true};
+const ALLIED_MARCH_FORECAST = "early";
+
+function centralObjective(s,ctx,orders) {
+  if (s.vp>=INTRO_CP_WIN) return null;
+  const targets = new Map();
+  for (const item of orders) {
+    if (item.kind==="dig") continue;
+    for (const p of item.path??[item.to]) {
+      if (!SP[p]?.vp||s.control[p]!=="ap") continue;
+      const canHold = item.to===p ? 1.1 : ctx.enReach.has(p) ? -1.4 : 0;
+      const candidate = Math.min(8,item.score/item.cost)+canHold+(item.ids.some(isArmy)?1:0);
+      targets.set(p,Math.max(targets.get(p)??0,candidate));
+    }
+  }
+  const current=SP[s.centralFocus];
+  return maxBy([...targets.keys()],p=>targets.get(p)+(p===s.centralFocus?2:SP[p].front===current?.front?1:0));
+}
+
+function previewPosition(s,side,ownCards=false) {
+  const players=Object.fromEntries(SIDES.map(faction=>{
+    const p=s.players[faction];
+    return [faction,{
+      mo:p.mo, last:p.last, ws:p.ws, reinf:[...p.reinf], rp:{...p.rp},
+      hand:ownCards&&faction==="cp"?[...p.hand]:[],
+      deck:[], discard:[], removed:[], ready:[...p.ready], history:[]
+    }];
+  }));
+  return {
+    ...tacticalBoard(s),side,phase:"card",players,action:null,battle:null,log:[],
+    pos:[...s.pos],steps:[...s.steps],control:[...s.control],
+    forts:[...s.forts],trench:[...s.trench],events:{...s.events},crossed:{...s.crossed},
+    rng:FORECAST_OWN_DICE
+  };
+}
+
+function previewOperations(board,side,orders,budget,ownCards=false,seed=FORECAST_OWN_DICE) {
+  const s=operationProbe(previewPosition(board,side,ownCards),"activate");
+  s.rng=seed;
+  s.action.budget=budget;
+  for (const order of orders) {
+    const mode=order.kind==="attack"?"attack":"move";
+    for (const p of order.origins) {
+      if (s.action.marks[p]?.mode===mode) continue;
+      if (s.action.marks[p]||!canMark(s,p,mode)) return null;
+      mark(s,p,mode);
+    }
+  }
+  beginMovement(s);
+  for (const order of orders) {
+    if (order.kind==="move") {
+      if (!marchPaths(s,order.ids).has(order.to)) return null;
+      march(s,order.ids,order.to);
+    }
+    if (order.kind==="dig"&&trenchPossible(s,order.u)) dig(s,order.u);
+  }
+  endMovement(s);
+  return s;
+}
+
+function previewBattle(s,order,seed) {
+  if (!legalAttack(s,order.ids,order.to)) return false;
+  s.rng=seed;
+  declareAttack(s,order.ids,order.to);
+  // Use simultaneous fire so the sampled rolls describe the two fire results.
+  while (s.battle) {
+    const decision=battleDecision(s);
+    const value=decision.kind==="flank"?0:botBattle(s,decision);
+    answerBattle(s,value);
+  }
+  return true;
+}
+
+function previewOwnAction(board,choice,style,requireAttacks=false) {
+  if (choice.mode==="ops") {
+    const budget=CARD[choice.id]?.ops??1;
+    const s=previewOperations(board,"cp",choice.items,budget,true);
+    if (!s) return null;
+    s.players.cp.hand=s.players.cp.hand.filter(id=>id!==choice.id);
+    s.players.cp.last="ops";
+    for (const order of choice.items.filter(item=>item.kind==="attack")) {
+      if (!previewBattle(s,order,FORECAST_OWN_DICE)&&requireAttacks) return null;
+    }
+    return s;
+  }
+  const s=previewPosition(board,"cp",true);
+  beginAction(s,choice.id,choice.mode);
+  if (s.phase==="event") playEvent(s,choice.index);
+  if (s.phase==="sr") {
+    while (s.action.spent<s.action.budget) {
+      const next=srCandidates(s,context(s,"cp"),style)[0];
+      if (!next) break;
+      redeploy(s,next.u,next.to);
+    }
+  }
+  return s;
+}
+
+function previewMarches(board,side,destinations) {
+  const s=operationProbe(previewPosition(board,side),"move");
+  const orders=[];
+  for (const p of unique(onMap(s,side).map(u=>s.pos[u]))) {
+    const ids=stack(s,p).filter(u=>suppliedAt(s,u)&&stats(s,u)[2]>0);
+    if (!ids.length) continue;
+    s.action.marks[p]={mode:"move",ids};
+    const cost=activationPrice(s,p);
+    for (const group of movementGroups(ids,s.side)) {
+      for (const [to,path] of marchPaths(s,group)) {
+        if (destinations ? !destinations.has(to) : !path.some(q=>s.control[q]===OTHER(side))) continue;
+        orders.push({kind:"move",ids:group,origins:[p],to,path,cost});
+      }
+    }
+    delete s.action.marks[p];
+  }
+  return orders;
+}
+
+function centralExposure(s,reference) {
+  const isolated=onMap(s,"cp").filter(u=>!suppliedAt(s,u));
+  const armies=count(isolated,isArmy);
+  const corps=isolated.length-armies;
+  const lost=count(onMap(reference,"cp"),u=>isArmy(u)&&s.pos[u]===REMOVED);
+  return {armies,corps,lost,harm:(armies+lost)*5.2+corps*.75+(reference.vp-s.vp)*2};
+}
+
+const alliedMarchRanking = new WeakMap();
+
+function alliedMarchCandidates(board) {
+  const reach=hostileReach(board,"ap");
+  const cuts=networkCuts(board,"cp",reach.keys());
+  return previewMarches(board,"ap").map(order=>({
+    ...order, priority:sum(order.path.map(p=>board.control[p]==="cp"?
+      (SP[p].vp?3:0)+.4+(SP[p].supply?4:0)+(cuts.get(p)??0)*.37:0))
+  })).sort((a,b)=>b.priority-a.priority);
+}
+
+function rankAlliedMarches(board) {
+  const cached = alliedMarchRanking.get(board);
+  if (cached && cached.rev === board.rev && cached.turn === board.turn && cached.crossing === board.crossed.ru) {
+    return cached.orders;
+  }
+  const impacts = new Map();
+  const ranked = [];
+  for (const order of alliedMarchCandidates(board)) {
+    if (order.cost > REPLY_OPS) continue;
+    const from = order.origins[0];
+    const opensRoute = board.control[from] === "cp" && order.ids.length === stack(board, from).length;
+    const entersFort = board.control[order.to] === "cp" && activeFort(board, order.to);
+    // Only captured spaces and newly occupied or vacated forts can change Central supply.
+    const captures = order.path.filter(p => board.control[p] === "cp" && !activeFort(board, p)).sort((a, b) => a - b);
+    const key = [opensRoute ? from : 0, entersFort ? order.to : 0, ...captures].join(",");
+    if (!impacts.has(key)) {
+      const after = previewOperations(board, "ap", [order], REPLY_OPS);
+      impacts.set(key, after ? centralExposure(after, board).harm : null);
+    }
+    const harm = impacts.get(key);
+    if (harm !== null) ranked.push({ order, harm });
+  }
+  ranked.sort((a, b) => b.harm - a.harm || b.order.priority - a.order.priority);
+  const orders = ranked.map(entry => entry.order);
+  alliedMarchRanking.set(board, { rev: board.rev, turn: board.turn, crossing: board.crossed.ru, orders });
+  return orders;
+}
+
+function forecastAlliedReply(board,includeCombat,search=REPLY_SEARCH,rankMarches=ALLIED_MARCH_FORECAST==="all") {
+  const assess=search.assess??centralExposure, budget=search.ops??REPLY_OPS;
+  let worst={orders:[],state:board,...assess(board,board)};
+  const marches=rankMarches?rankAlliedMarches(board):alliedMarchCandidates(board);
+
+  function consider(orders,battle=null) {
+    const t=previewOperations(board,"ap",orders,budget,search.ownCards);
+    if (!t || (battle&&!previewBattle(t,battle,search.dice??FORECAST_REPLY_DICE))) return null;
+    const result={orders,state:t,...assess(t,board)};
+    if (result.harm>worst.harm) worst=result;
+    return result;
+  }
+
+  const singles=[], perOrigin=new Map();
+  for (const order of marches) {
+    const p=order.origins[0], checked=perOrigin.get(p)??0;
+    if (checked>=2) continue;
+    perOrigin.set(p,checked+1);
+    const result=consider([order]);
+    if (result) singles.push(result);
+    if (singles.length>=search.marches) break;
+  }
+  singles.sort((a,b)=>b.harm-a.harm);
+  const best=singles.slice(0,search.pairCandidates);
+  for (let i=0;i<best.length;i++) for (let j=i+1;j<best.length;j++) {
+    const x=best[i].orders[0], y=best[j].orders[0];
+    if (x.cost+y.cost<=budget && x.origins[0]!==y.origins[0]) consider([x,y]);
+  }
+
+  if (includeCombat) {
+    const p=previewPosition(board,"ap");
+    const attacks=attackCandidates(p,context(p,"ap"),"balanced",true)
+      .sort((a,b)=>b.score-a.score);
+    const targets=new Set();
+    for (const attack of attacks) {
+      if (targets.has(attack.to)||attack.cost>budget) continue;
+      targets.add(attack.to);
+      consider([attack],attack);
+      const companion=best.map(x=>x.orders[0]).find(x=>x.cost+attack.cost<=budget&&
+        !attack.origins.includes(x.origins[0])&&!attack.origins.includes(x.to));
+      if (companion) consider([companion,attack],attack);
+      if (targets.size>=search.attacks) break;
+    }
+  }
+  return worst;
+}
+
+function centralGuardOrders(board,projected,reply,ctx,style) {
+  const targets=new Set(reply.orders.flatMap(m=>m.path??[m.to]));
+  for (const u of onMap(projected,"cp").filter(u=>isArmy(u)&&!suppliedAt(projected,u))) {
+    for (const e of ADJ[projected.pos[u]]) {
+      if (projected.control[e.to]==="ap") targets.add(e.to);
+    }
+  }
+  return previewMarches(board,"cp",targets).map(m=>({
+    ...m,score:movementValue(board,ctx,m.ids,m.path,style)+marchReplyValue(board,ctx,m)
+  })).sort((a,b)=>b.score-a.score);
+}
+
+function centralChoiceValue(board,choice,reply,target) {
+  const end=previewPosition(reply.state,"ap");
+  attrition(end);
+  const finalRound=board.turn===3&&board.round===6;
+  const endVP=end.vp+(end.players.ap.mo?1:0)-(end.players.cp.mo?1:0);
+  const outcome=finalRound?(endVP>=INTRO_CP_WIN?18:endVP>=INTRO_DRAW?5:0):0;
+  const armyLoss=count(onMap(board,"cp"),u=>isArmy(u)&&end.pos[u]===REMOVED);
+  // With another action available, a cut is still dangerous and can sometimes be repaired.
+  const exposure=board.round===6?1:board.round===5?.84:.72;
+  const secured=target&&end.control[target]==="cp"&&supplySet(end,"cp","central").has(target);
+  return choice.score*.32+(endVP-board.vp)*2.4+outcome+(secured?1.2:0)-
+    (armyLoss*5.2+reply.corps*.75)*exposure;
+}
+
+function operationWithPriority(board,ops,candidates,order,why) {
+  const card=ops.find(p=>(CARD[p.id]?.ops??1)>=order.cost);
+  if (!card) return null;
+  const priority=500;
+  const plan=pickOperations([{...order,score:order.score+priority},...candidates],CARD[card.id]?.ops??1,board);
+  return {...card,items:plan.items,score:plan.score-priority-.9,why};
+}
+
+function selectCentralAction(board,style,choices,candidates,ctx,target) {
+  const base=maxBy(choices,o=>o.score);
+  const focused={...base,focus:target};
+  if (board.round<4) return focused;
+
+  const projected=previewOwnAction(board,base,style);
+  if (!projected) return focused;
+  const reply=forecastAlliedReply(projected,true);
+  const finalRound=board.turn===3&&board.round===6;
+  const ownBattleLoss=count(onMap(board,"cp"),u=>isArmy(u)&&projected.pos[u]===REMOVED);
+  const threatened=reply.armies+reply.lost+ownBattleLoss>=2||reply.harm>=7.2;
+  const missedTarget=target&&reply.state.control[target]!=="cp";
+  const victoryOrders=board.vp<INTRO_CP_WIN?
+    candidates.filter(o=>SP[o.to]?.vp&&board.control[o.to]==="ap"):[];
+  if (!threatened&&!finalRound&&!missedTarget&&!victoryOrders.length) return focused;
+
+  const alternatives=[], seenBudgets=new Set();
+  const ops=choices.filter(o=>o.mode==="ops").sort((a,b)=>b.score-a.score);
+  for (const plan of ops) {
+    const budget=CARD[plan.id]?.ops??1;
+    if (seenBudgets.has(budget)) continue;
+    seenBudgets.add(budget);
+    if (plan!==base) alternatives.push(plan);
+  }
+  for (const mode of ["sr","event","rp"]) {
+    const choice=maxBy(choices.filter(o=>o.mode===mode),o=>o.score);
+    if (choice&&choice!==base) alternatives.push(choice);
+  }
+
+  if (missedTarget) {
+    const orders=candidates.filter(o=>o.to===target||o.path?.includes(target));
+    for (const kind of ["move","attack"]) {
+      const order=maxBy(orders.filter(o=>o.kind===kind),o=>o.score/o.cost);
+      const action=order&&operationWithPriority(board,ops,candidates,order,`Advance toward ${point(target)}`);
+      if (action) alternatives.push(action);
+    }
+  }
+  const victoryAttacks=victoryOrders.filter(o=>o.kind==="attack").sort((a,b)=>b.score/b.cost-a.score/a.cost);
+  const attackTargets=new Set();
+  for (const order of victoryAttacks) {
+    if (attackTargets.has(order.to)) continue;
+    const action=operationWithPriority(board,ops,candidates,order,"Attack a victory space");
+    if (!action) continue;
+    alternatives.push(action);
+    attackTargets.add(order.to);
+    if (attackTargets.size===2) break;
+  }
+  if (threatened) {
+    const destinations=new Set();
+    for (const m of centralGuardOrders(board,projected,reply,ctx,style)) {
+      if (destinations.has(m.to)) continue;
+      const action=operationWithPriority(board,ops,candidates,m,"Protect or reopen a threatened supply route");
+      if (!action) continue;
+      alternatives.push(action);
+      destinations.add(m.to);
+      if (destinations.size>=5) break;
+    }
+  }
+
+  const initialValue=centralChoiceValue(board,base,reply,target);
+  const ranked=[];
+  for (const choice of alternatives) {
+    const next=previewOwnAction(board,choice,style);
+    if (!next) continue;
+    const movementReply=forecastAlliedReply(next,false);
+    ranked.push({choice,next,value:centralChoiceValue(board,choice,movementReply,target)});
+  }
+  ranked.sort((a,b)=>b.value-a.value);
+  let selected=base, value=initialValue;
+  for (const {choice,next} of ranked.slice(0,4)) {
+    const score=centralChoiceValue(board,choice,forecastAlliedReply(next,true),target);
+    if (score>value+1) {
+      selected=choice;
+      value=score;
+    }
+  }
+  return {...selected,focus:target,plannedAttacks:selected.mode==="ops"};
+}
+
+function centralPlanningValue(position) {
+  const end=previewPosition(position,"ap");
+  attrition(end);
+  const attritionWeight=position.round===6?.78:.48;
+  const vp=position.vp+(end.vp-position.vp)*attritionWeight;
+  const reach=hostileReach(position,"ap");
+  const exposedVP=count(ACTIVE,p=>SP[p].vp&&position.control[p]==="cp"&&reach.has(p)&&!stack(position,p).length);
+  const strength=side=>sum(onMap(position,side).filter(isArmy).map(u=>
+    (1+position.steps[u]*.75)*(suppliedAt(position,u)?1:.28)));
+  const repairable=new Map();
+  const seen=new Set();
+  for (const {u} of replacementChoices(position,"cp")) {
+    if (!isArmy(u)||seen.has(u)) continue;
+    seen.add(u);
+    const nation=UN[u].rp;
+    repairable.set(nation,(repairable.get(nation)??0)+1);
+  }
+  const banked=sum([...repairable].map(([n,number])=>Math.min(number,position.players.cp.rp[n]/2)));
+  const mandate=(position.players.ap.mo?1:0)-(position.players.cp.mo?1:0);
+  const heldVP=vp-exposedVP*.34;
+  return {heldVP,value:heldVP*3.4+strength("cp")-strength("ap")*.72+banked*1.1+mandate*.9};
+}
+
+function distinctPlanningChoices(options) {
+  const distinct=[], keys=new Set();
+  for (const choice of options) {
+    if (!choice) continue;
+    const key=JSON.stringify([choice.id,choice.mode,choice.index,choice.items?.map(o=>[o.kind,o.ids,o.to,o.u])]);
+    if (keys.has(key)) continue;
+    keys.add(key);
+    distinct.push(choice);
+  }
+  return distinct;
+}
+
+function bestCentralFollowUp(position,style,round) {
+  const board=previewPosition(position,"cp",true);
+  board.round=round;
+  const {choices}=cardChoices(board,style);
+  const ops=choices.filter(o=>o.mode==="ops");
+  const best=items=>maxBy(items,o=>o.score);
+  const options=distinctPlanningChoices([
+    best(ops),best(ops.filter(o=>CARD[o.id]?.ops===2)),
+    best(choices.filter(o=>o.mode==="event")),
+    best(choices.filter(o=>["rp","sr"].includes(o.mode)&&o.score>1))
+  ]);
+  let result=null;
+  for (const choice of options) {
+    const after=previewOwnAction(board,choice,style);
+    if (!after) continue;
+    const assessment=centralPlanningValue(after);
+    const value=assessment.value+choice.score*.16;
+    if (!result||value>result.value) result={heldVP:assessment.heldVP,value,choice};
+  }
+  return result??{...centralPlanningValue(board),choice:null};
+}
+
+function planCentralFollowUp(board,style,choices,candidates,ctx,base) {
+  if (board.turn>2||board.round>=4||(board.turn===1&&board.round===1)) return base;
+  const initial=previewOwnAction(board,base,style);
+  if (!initial) return base;
+  const reply=forecastAlliedReply(initial,true,PLANNING_REPLY);
+  const ops=choices.filter(o=>o.mode==="ops").sort((a,b)=>b.score-a.score);
+  const cheap=ops.find(o=>CARD[o.id]?.ops===2);
+  const bestMode=mode=>maxBy(choices.filter(o=>o.mode===mode&&o.score>1),o=>o.score);
+  const approach=maxBy(candidates.filter(o=>base.focus&&(o.to===base.focus||o.path?.includes(base.focus))),
+    o=>o.score/o.cost);
+  const advance=approach&&operationWithPriority(board,ops,candidates,approach,`Advance toward ${point(base.focus)}`);
+  const guard=reply.armies>=2?centralGuardOrders(board,initial,reply,ctx,style)[0]:null;
+  const protect=guard&&operationWithPriority(board,ops,candidates,guard,"Protect a route for the next attack");
+  const options=distinctPlanningChoices([base,ops[0],cheap,bestMode("event"),bestMode("sr"),bestMode("rp"),advance,protect]);
+  const mix=(quiet,active)=>quiet*.38+active*.62;
+  const ranked=[];
+  for (const choice of options) {
+    const after=choice===base?initial:previewOwnAction(board,choice,style);
+    if (!after) continue;
+    const counter=choice===base?reply:forecastAlliedReply(after,true,PLANNING_REPLY);
+    const immediate=centralPlanningValue(after).value;
+    const value=counter.state===after?immediate:mix(immediate,centralPlanningValue(counter.state).value);
+    ranked.push({choice,after,counter,value,rank:value+choice.score*.28});
+  }
+  const baseline=ranked[0];
+  const alternatives=ranked.slice(1).sort((a,b)=>b.rank-a.rank);
+  if (!alternatives.length) return base;
+  const shortlist=unique([...alternatives.slice(0,2),alternatives.find(p=>p.choice===cheap)]).filter(Boolean);
+  function evaluate({choice,after,counter,value}) {
+    const round=board.round+1;
+    const active=bestCentralFollowUp(counter.state,style,round);
+    const quiet=counter.state===after?active:bestCentralFollowUp(after,style,round);
+    const score=value*.34+mix(quiet.value,active.value)*.66+choice.score*.28;
+    return {active,quiet,score};
+  }
+  const normal=evaluate(baseline);
+  let selected=base, high=normal.score+1.3;
+  for (const plan of shortlist) {
+    const {active,quiet,score}=evaluate(plan);
+    if (active.choice&&score>high&&active.heldVP>=normal.active.heldVP+.75&&quiet.heldVP>=normal.quiet.heldVP-.2) {
+      const choice=plan.choice;
+      const follow=active.choice;
+      const destination=follow.items?.find(o=>o.to)?.to;
+      const description=destination?`${follow.mode.toUpperCase()} toward ${point(destination)}`:
+        `${CARD[follow.id]?.name??"Automatic operation"} (${follow.mode.toUpperCase()})`;
+      selected={...choice,focus:base.focus,plannedAttacks:choice.mode==="ops",followUp:description};
+      high=score;
+    }
+  }
+  return selected;
+}
+
+function openSupplyGaps(board, threatened) {
+  const todo = threatened.filter(u => board.pos[u] > 0 && !suppliedAt(board, u)).map(u => board.pos[u]);
+  const seen = new Set(todo), gaps = new Set();
+  const mayCapture = p => board.control[p] === "ap" && !activeFort(board, p) && !occupies(board, p, "ap");
+  for (let i = 0; i < todo.length; i++) {
+    for (const edge of ADJ[todo[i]]) {
+      const p = edge.to;
+      if (!edgeFor(edge, "ge") || seen.has(p)) continue;
+      seen.add(p);
+      if (ownsRoute(board, p, "cp")) todo.push(p);
+      else if (mayCapture(p)) gaps.add(p);
+    }
+  }
+  const supplied = supplySet(board, "cp", "central");
+  for (const p of [...gaps]) {
+    for (const { to: q } of ADJ[p]) {
+      if (mayCapture(q) && ADJ[q].some(edge => supplied.has(edge.to))) gaps.add(q);
+    }
+  }
+  return gaps;
+}
+
+function defenseMarches(board, ctx, style, threatened, reply, maxOps) {
+  const cutPoints = new Set(reply.orders.flatMap(order => order.path ?? [order.to]));
+  const relief = openSupplyGaps(board, threatened);
+  const vulnerable = new Set(threatened);
+  const groups = { guard: [], retreat: [], relief: [] };
+  for (const order of previewMarches(board, "cp", new Set(ACTIVE))) {
+    if (order.cost > maxOps) continue;
+    const { to, ids, path } = order;
+    const covers = cutPoints.has(to);
+    const withdraws = count(ids, u => vulnerable.has(u));
+    const repairs = path.some(p => relief.has(p));
+    if (!covers && !withdraws && !repairs) continue;
+    const value = movementValue(board, ctx, ids, path, style);
+    const power = sum(ids.map(u => stats(board, u)[0]));
+    const pressure = ctx.weights[to];
+    const defense = power + sum(stack(board, to).map(u => stats(board, u)[0]));
+    const quiet = board.control[to] === "cp" && !ctx.enReach.has(to);
+    const safe = quiet && pressure <= defense + 2;
+    if (covers) groups.guard.push({ ...order, score: value,
+      priority: 3 + Math.min(6, defense - pressure * .5) * .36 + value * .40 - order.cost * .7 });
+    if (withdraws && safe) groups.retreat.push({ ...order, score: value,
+      priority: withdraws * 4 + value * .42 + (SP[to].vp ? .8 : 0) - order.cost * .55 });
+    if (repairs) groups.relief.push({ ...order, score: value,
+      priority: 5 + value * .44 + (quiet ? 1 : 0) - order.cost * .7 });
+  }
+  const pool = [];
+  for (const moves of Object.values(groups)) {
+    const destinations = new Set();
+    const origins = new Map();
+    for (const move of moves.sort((a, b) => b.priority - a.priority)) {
+      const origin = move.origins[0];
+      if (destinations.has(move.to) || (origins.get(origin) ?? 0) >= 2) continue;
+      origins.set(origin, (origins.get(origin) ?? 0) + 1);
+      destinations.add(move.to);
+      pool.push(move);
+      if (destinations.size === 5) break;
+    }
+  }
+  const seen = new Set();
+  return pool.filter(move => {
+    const key = move.ids.join(",") + "/" + move.to;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function repeatAlliedReply(after, original, searched) {
+  if (!original.orders.length) return searched;
+  const replay = previewOperations(after, "ap", original.orders, REPLY_OPS, true);
+  if (!replay) return searched;
+  for (const order of original.orders.filter(order => order.kind === "attack")) {
+    if (!previewBattle(replay, order, FORECAST_REPLY_DICE)) return searched;
+  }
+  const result = centralExposure(replay, after);
+  return result.harm > searched.harm ? { ...result, orders: original.orders, state: replay } : searched;
+}
+
+function supplyDefenseAssessment(board, choice, after, reply) {
+  const quiet = centralPlanningValue(after);
+  const active = centralPlanningValue(reply.state);
+  const risk = count(onMap(board, "cp"), u => isArmy(u) &&
+    (reply.state.pos[u] === REMOVED || (reply.state.pos[u] > 0 && !suppliedAt(reply.state, u))));
+  const value = .28 * quiet.value + .72 * active.value - risk * 1.1 + .16 * choice.score;
+  return { value, heldVP: active.heldVP, risk };
+}
+
+const SUPPLY_DEFENSE_REASON = "Protect supply before the next Allied action";
+
+function protectEarlySupply(board, style, choices, candidates, ctx, base) {
+  if (board.round >= 4 || (board.turn === 1 && board.round === 1)) return base;
+  const after = previewOwnAction(board, base, style);
+  if (!after) return base;
+  const rankMarches = ALLIED_MARCH_FORECAST !== "limited";
+  const reply = forecastAlliedReply(after, true, PLANNING_REPLY, rankMarches);
+  const threatened = onMap(board, "cp").filter(u => isArmy(u) && (reply.state.pos[u] === REMOVED ||
+    (reply.state.pos[u] > 0 && !suppliedAt(reply.state, u))));
+  if (threatened.length < 2) return base;
+
+  const ops = choices.filter(choice => choice.mode === "ops").sort((a, b) => b.score - a.score);
+  const maxOps = Math.max(...ops.map(choice => CARD[choice.id]?.ops ?? 1));
+  const options = [];
+  for (const order of defenseMarches(board, ctx, style, threatened, reply, maxOps)) {
+    const choice = operationWithPriority(board, ops, candidates, order, SUPPLY_DEFENSE_REASON);
+    if (choice?.items.some(item => item.kind === "move" && item.to === order.to &&
+        item.ids.join(",") === order.ids.join(","))) options.push(choice);
+  }
+  options.push(maxBy(choices.filter(choice => choice.mode === "sr"), choice => choice.score));
+  const baseline = supplyDefenseAssessment(board, base, after, reply);
+  const comparisons = [];
+  for (const choice of distinctPlanningChoices(options)) {
+    const next = previewOwnAction(board, choice, style);
+    if (!next || next.vp < after.vp - 1) continue;
+    const searched = forecastAlliedReply(next, true, PLANNING_REPLY, rankMarches);
+    const counter = repeatAlliedReply(next, reply, searched);
+    const score = supplyDefenseAssessment(board, choice, next, counter);
+    if (baseline.risk - score.risk < 2 || score.value <= baseline.value + 1 ||
+        score.heldVP < baseline.heldVP - .7) continue;
+    comparisons.push({ choice, score, counter });
+  }
+  comparisons.sort((a, b) => b.score.value - a.score.value);
+  let baselineFollow;
+  for (const { choice, counter } of comparisons.slice(0, 2)) {
+    baselineFollow ??= bestCentralFollowUp(reply.state, style, board.round + 1);
+    const follow = bestCentralFollowUp(counter.state, style, board.round + 1);
+    if (follow.heldVP < baselineFollow.heldVP - .25 || follow.value < baselineFollow.value) continue;
+    return { ...choice, focus: base.focus, plannedAttacks: choice.mode === "ops", why: SUPPLY_DEFENSE_REASON };
+  }
+  return base;
+}
+
+
+/*
+ * Amend an OPS plan using the same card. Try to protect the corridor with
+ * units from the planned activation before diverting another stack.
+ */
+const HOLD_SUPPLY_REASON = "Keep the supply route open";
+const RESTORE_SUPPLY_REASON = "Reopen supply to isolated armies";
+
+function supplyRisk(armies, position) {
+  return count(armies, u => position.pos[u] === REMOVED ||
+    (position.pos[u] > 0 && !suppliedAt(position, u)));
+}
+
+function removeMarchingUnits(items, units) {
+  const result = [];
+  for (const item of items) {
+    if (item.kind === "dig" && units.includes(item.u)) continue;
+    if (item.kind !== "move") {
+      result.push(item);
+      continue;
+    }
+    const ids = item.ids.filter(u => !units.includes(u));
+    if (ids.length) result.push(ids.length === item.ids.length ? item : { ...item, ids });
+  }
+  return result;
+}
+
+function amendedOrders(board, base, order) {
+  const existingAttacks = base.items.filter(item => item.kind === "attack");
+  if (existingAttacks.some(item => item.origins.includes(order.origins[0]))) return [];
+  const compatible = removeMarchingUnits(base.items, order.ids);
+  const items = [...compatible, order];
+  const budget = CARD[base.id]?.ops ?? 1;
+  const cost = orders => sum(unique(orders.flatMap(item => item.origins)).map(p => activationPrice(board, p)));
+  if (cost(items) <= budget) return [items];
+
+  // Keep the original attacks. If another activation is needed, try dropping
+  // one of the lowest value movement or entrenchment activations.
+  const protectedOrigins = new Set([...existingAttacks.flatMap(item => item.origins), ...order.origins]);
+  const expendable = unique(compatible.flatMap(item => item.origins))
+    .filter(p => !protectedOrigins.has(p))
+    .sort((a, b) => value(a) - value(b));
+  function value(p) {
+    return sum(compatible.filter(item => item.origins.includes(p)).map(item => Math.min(16, item.score)));
+  }
+  return expendable.slice(0, 2).map(p => items.filter(item => !item.origins.includes(p)))
+    .filter(plan => cost(plan) <= budget);
+}
+
+function corridorAmendments(board, base, projected, cutPoints) {
+  const items = [];
+  for (const move of base.items.filter(order => order.kind === "move")) {
+    const origin = move.origins[0];
+    const guard = [...move.ids].sort((a, b) => Number(isArmy(a)) - Number(isArmy(b)) ||
+      stats(board, a)[0] - stats(board, b)[0])[0];
+    if (cutPoints.has(origin) && !occupies(projected, origin, "cp")) {
+      items.push(removeMarchingUnits(base.items, [guard]));
+    }
+    for (const [index, to] of move.path.entries()) {
+      if (to === move.to || !cutPoints.has(to) || occupies(projected, to, "cp")) continue;
+      // Move only the guard to the junction and let the rest finish the march.
+      const order = { ...move, ids: [guard], to, path: move.path.slice(0, index + 1) };
+      items.push(...amendedOrders(board, base, order));
+    }
+  }
+  return items;
+}
+
+function supplyReplyTemplates(projected, primary, armies) {
+  const replies = [primary];
+  const paths = new Set(primary.orders.filter(order => order.kind === "move")
+    .map(order => order.origins[0] + "/" + order.to));
+  const currentRisk = supplyRisk(armies, projected);
+  for (const march of rankAlliedMarches(projected)) {
+    const key = march.origins[0] + "/" + march.to;
+    if (paths.has(key)) continue;
+    paths.add(key);
+    const state = previewOperations(projected, "ap", [march], REPLY_OPS);
+    if (!state || supplyRisk(armies, state) < currentRisk + 2) continue;
+    replies.push({ orders: [march], state, ...centralExposure(state, projected) });
+    if (replies.length === 3) break;
+  }
+  return replies;
+}
+
+function replaySupplyThreats(position, templates, reply) {
+  let worst = reply ?? { orders: [], state: position, ...centralExposure(position, position) };
+  for (const template of templates) worst = repeatAlliedReply(position, template, worst);
+  return worst;
+}
+
+function projectedAttritionVP(position) {
+  const end = previewPosition(position, "ap");
+  attrition(end);
+  return end.vp + Number(Boolean(end.players.ap.mo)) - Number(Boolean(end.players.cp.mo));
+}
+
+function amendSupplyOperations(board, style, ctx, base) {
+  if (base.mode !== "ops" || (board.turn === 1 && board.round === 1)) return base;
+  const armies = ctx.our.filter(isArmy);
+  const projected = previewOwnAction(board, base, style);
+  if (!projected) return base;
+  const isolated = armies.filter(u => !suppliedAt(board, u) && projected.pos[u] > 0 && !suppliedAt(projected, u));
+  const reply = forecastAlliedReply(projected, true, PLANNING_REPLY, true);
+  const baselineRisk = supplyRisk(armies, reply.state);
+  const threatenedLoss = baselineRisk - supplyRisk(armies, projected);
+  if (threatenedLoss < 2) return base;
+  const flexible = EARLY_STRATEGY === "rescue-and-guard" && board.turn < 3 && threatenedLoss >= 3;
+
+  const templates = supplyReplyTemplates(projected, reply, armies);
+  const threats = { orders: templates.flatMap(template => template.orders) };
+  const cutPoints = new Set(threats.orders.flatMap(order => order.path ?? [order.to]));
+  const threatened = armies.filter(u => templates.some(template => template.state.pos[u] > 0 &&
+    !suppliedAt(template.state, u)));
+  const budget = CARD[base.id]?.ops ?? 1;
+  const plans = corridorAmendments(board, base, projected, cutPoints);
+  for (const order of defenseMarches(board, ctx, style, threatened, threats, budget)) {
+    plans.push(...amendedOrders(board, base, order));
+  }
+  const candidates = [];
+  const cutoffVP = projected.vp - Number(board.round === 6);
+  for (const choice of distinctPlanningChoices(plans.map(items => ({ ...base, items })))) {
+    const next = previewOwnAction(board, choice, style, true);
+    if (!next || next.vp < cutoffVP) continue;
+    const redirectArmy = armies.some(u => next.pos[u] !== projected.pos[u]);
+    const redirects = count(ctx.our, u => next.pos[u] !== projected.pos[u]);
+    const expanded = redirectArmy || redirects > 2;
+    if (expanded && (!flexible || redirects > 3)) continue;
+    const restored = count(isolated, u => suppliedAt(next, u));
+    const provisional = replaySupplyThreats(next, templates);
+    const saved = baselineRisk - supplyRisk(armies, provisional.state);
+    if (saved < 2) continue;
+    candidates.push({ choice, next, restored, expanded,
+      rank: saved * 5 + restored + (provisional.state.vp - reply.state.vp) * 2.4 });
+  }
+  if (!candidates.length) return base;
+  const baseline = supplyDefenseAssessment(board, base, projected, reply);
+  const endVP = board.round === 6 ? projectedAttritionVP(reply.state) : null;
+  let baselineFollow;
+  let selected = base, best = baseline.value + 1;
+  for (const { choice, next, restored, expanded } of candidates.sort((a, b) => b.rank - a.rank).slice(0, 5)) {
+    const counter = replaySupplyThreats(next, templates, forecastAlliedReply(next, true, PLANNING_REPLY, true));
+    const assessment = supplyDefenseAssessment(board, choice, next, counter);
+    const saved = baselineRisk - assessment.risk;
+    if (saved < (expanded ? 3 : 2) || assessment.value <= best || assessment.heldVP < baseline.heldVP - .5) continue;
+    if (endVP !== null && projectedAttritionVP(counter.state) < endVP) continue;
+    if (board.round < 6) {
+      const round = board.round + 1;
+      baselineFollow ??= bestCentralFollowUp(reply.state, style, round);
+      const follow = bestCentralFollowUp(counter.state, style, round);
+      if (follow.heldVP < baselineFollow.heldVP - .25 || follow.value < baselineFollow.value) continue;
+    }
+    selected = { ...choice, why: restored >= 2 ? RESTORE_SUPPLY_REASON : HOLD_SUPPLY_REASON, plannedAttacks: true,
+      supplyAmendment: { kind: restored >= 2 ? "restore" : "guard", saved, restored },
+      ...(expanded ? { earlyStrategy: { kind: "guard", saved } } : {}) };
+    best = assessment.value;
+  }
+  return selected;
+}
+
+
+/*
+ * Compare final-round plans using the printed victory thresholds. The Allied
+ * cards here are possibilities inferred from public plays, never the live hand.
+ */
+const FINAL_PLANNER = "two-rounds";
+// First two rolls: 1/5, 2/3, 3/1, 4/6, 5/2, and 6/4.
+const FINAL_DICE = [39, 15, 27, 10, 2, 41];
+const FINAL_REPLY_SEARCH = { marches: 7, pairCandidates: 4, attacks: 2, ownCards: true };
+
+function finalScoreDistribution(position) {
+  const end = previewPosition(position, "ap");
+  attrition(end);
+  const vp = end.vp + Number(Boolean(end.players.ap.mo)) - Number(Boolean(end.players.cp.mo));
+  let scores = new Map([[vp, 1]]);
+  for (const p of ACTIVE) {
+    if (!SP[p].vp || !besieged(end, p)) continue;
+    const side = OTHER(SP[p].side);
+    if (!end.control[p] || end.control[p] === side) continue;
+    const falls = (6 - SP[p].fort) / 6;
+    const updated = new Map();
+    const add = (score, weight) => updated.set(score, (updated.get(score) ?? 0) + weight);
+    for (const [score, weight] of scores) {
+      add(score, weight * (1 - falls));
+      add(score + SIGN(side), weight * falls);
+    }
+    scores = updated;
+  }
+  return scores;
+}
+
+function scoreFinalDistribution(scores, shift = 0) {
+  let win = 0, nonLoss = 0, vp = 0;
+  for (const [score, weight] of scores) {
+    const value = score + shift;
+    if (value >= INTRO_CP_WIN) win += weight;
+    if (value >= INTRO_DRAW) nonLoss += weight;
+    vp += value * weight;
+  }
+  return { win, nonLoss, vp, harm: -(win * 12 + nonLoss * 5 + vp * .75) };
+}
+
+function possibleAlliedCards(board) {
+  const publicCards = board.players.ap;
+  const unavailable = new Set([...publicCards.removed, ...publicCards.ready, ...publicCards.history.map(play => play.id)]);
+  return DATA.decks.ap.filter(id => !unavailable.has(id));
+}
+
+function previewFinalAction(board, choice, style, seed) {
+  if (choice.mode !== "ops") return previewOwnAction(board, choice, style);
+  const s = previewOperations(board, "cp", choice.items, CARD[choice.id]?.ops ?? 1, true, seed);
+  if (!s) return null;
+  s.players.cp.hand = s.players.cp.hand.filter(id => id !== choice.id);
+  s.players.cp.last = "ops";
+  for (const order of choice.items.filter(order => order.kind === "attack")) {
+    if (!legalAttack(s, order.ids, order.to)) continue;
+    declareAttack(s, order.ids, order.to);
+    while (s.battle) answerBattle(s, botBattle(s));
+  }
+  return s;
+}
+
+function finalOperations(board, ops, candidates, orders) {
+  const required = orders.map(order => ({ ...order, score: order.score + 500 }));
+  for (const card of ops) {
+    const budget = CARD[card.id]?.ops ?? 1;
+    if (sum(orders.map(order => order.cost)) > budget) continue;
+    const picked = pickOperations([...required, ...candidates], budget, board);
+    if (!required.every(order => picked.items.includes(order))) continue;
+    return { ...card, items: picked.items, plannedAttacks: true };
+  }
+  return null;
+}
+
+function finalActionOptions(board, style, ctx, choices, candidates, base) {
+  const ops = choices.filter(choice => choice.mode === "ops").sort((a, b) => b.score - a.score);
+  const ordinary = [base, ...ops, ...choices.filter(choice => choice.mode === "event"),
+    maxBy(choices.filter(choice => choice.mode === "sr"), choice => choice.score)];
+  const gains = [];
+  for (const move of previewMarches(board, "cp")) {
+    const captured = move.path.filter(p => SP[p].vp && board.control[p] === "ap" && !activeFort(board, p));
+    if (captured.length) {
+      const score = movementValue(board, ctx, move.ids, move.path, style);
+      gains.push({ ...move, goal: captured.at(-1), rank: captured.length * 7 + score * .3, score });
+    }
+  }
+  for (const order of candidates.filter(order => order.kind === "attack")) {
+    const mandate = mandated(board, order.ids, order.to, targetDefenders(board, order.to));
+    if (mandate || SP[order.to].vp && board.control[order.to] === "ap") {
+      gains.push({ ...order, goal: order.to, rank: order.score / order.cost + (mandate ? 4 : 0) });
+    }
+  }
+  const objectives = [], used = new Set();
+  for (const order of gains.sort((a, b) => b.rank - a.rank)) {
+    const key = order.kind + "/" + order.goal;
+    if (used.has(key)) continue;
+    used.add(key);
+    objectives.push(order);
+    if (objectives.length === 7) break;
+  }
+  for (const order of objectives) ordinary.push(finalOperations(board, ops, candidates, [order]));
+  const leading = objectives.slice(0, 4);
+  for (let i = 0; i < leading.length; i++) {
+    for (let j = i + 1; j < leading.length; j++) {
+      if (leading[i].goal !== leading[j].goal) {
+        ordinary.push(finalOperations(board, ops, candidates, [leading[i], leading[j]]));
+      }
+    }
+  }
+  return distinctPlanningChoices(ordinary);
+}
+
+function assessFinalAction(board, choice, style, cards, seeds, thorough) {
+  const total = { win: 0, nonLoss: 0, vp: 0 };
+  const add = (result, weight) => {
+    total.win += result.win * weight;
+    total.nonLoss += result.nonLoss * weight;
+    total.vp += result.vp * weight;
+  };
+  const highOps = Math.max(1, ...cards.map(id => CARD[id].ops));
+  for (const [i, seed] of seeds.entries()) {
+    const after = previewFinalAction(board, choice, style, seed);
+    if (!after) return null;
+    const score = s => scoreFinalDistribution(finalScoreDistribution(s));
+    const settings = { ...FINAL_REPLY_SEARCH, assess: score, dice: FINAL_DICE[(i + 3) % FINAL_DICE.length] };
+    const severe = forecastAlliedReply(after, true, { ...settings, ops: highOps }, true);
+    const event = Math.max(0, ...cards.filter(id => eventChoices(after, id).length)
+      .map(id => Number(Boolean(CARD[id].star)) + Number(CARD[id].event === "rape_of_belgium")));
+    const eventWeight = event ? .16 : 0;
+    const shortWeight = thorough && highOps > 2 ? .26 : 0;
+    add(severe, (1 - eventWeight - shortWeight) / seeds.length);
+    if (shortWeight) {
+      add(forecastAlliedReply(after, true, { ...settings, ops: 2 }, true), shortWeight / seeds.length);
+    }
+    if (eventWeight) add(scoreFinalDistribution(finalScoreDistribution(after), -event), eventWeight / seeds.length);
+  }
+  return total;
+}
+
+function planFinalAction(board, style, ctx, choices, candidates, base) {
+  if (FINAL_PLANNER === "off" || board.turn !== 3 || board.vp < 8) return base;
+  if (board.round === 5 && FINAL_PLANNER === "two-rounds") {
+    return planPenultimateAction(board, style, ctx, choices, candidates, base);
+  }
+  if (board.round !== 6) return base;
+  const cards = possibleAlliedCards(board);
+  const options = finalActionOptions(board, style, ctx, choices, candidates, base);
+  const preliminary = [];
+  for (const choice of options) {
+    const result = assessFinalAction(board, choice, style, cards, [FORECAST_OWN_DICE], false);
+    if (result) preliminary.push({ choice, merit: finalMerit(result) });
+  }
+  const finalists = preliminary.filter(entry => entry.choice !== base)
+    .sort((a, b) => b.merit - a.merit).slice(0, 4);
+  if (!finalists.length) return base;
+  const normal = assessFinalAction(board, base, style, cards, FINAL_DICE, true);
+  if (!normal) return base;
+  let selected = base, high = finalMerit(normal) + .45;
+  for (const { choice } of finalists) {
+    const result = assessFinalAction(board, choice, style, cards, FINAL_DICE, true);
+    if (!result || finalMerit(result) <= high || result.win < normal.win - .01) continue;
+    if (result.nonLoss < normal.nonLoss - .12) continue;
+    if (result.win < normal.win + .06 && result.nonLoss < normal.nonLoss + .09) continue;
+    high = finalMerit(result);
+    selected = { ...choice, focus: base.focus, plannedAttacks: choice.mode === "ops",
+      why: "Play for the final victory score",
+      endgame: { projectedWin: result.win, oldProjectedWin: normal.win, finalVP: result.vp } };
+  }
+  return selected;
+}
+
+const finalMerit = result => result.win * 12 + result.nonLoss * 5 + result.vp * .75;
+
+function estimateClosingAction(position, style, cards) {
+  const next = previewPosition(position, "cp", true);
+  next.round = 6;
+  const { choices, candidates, ctx } = cardChoices(next, style);
+  const base = maxBy(choices, choice => choice.score);
+  const possible = finalActionOptions(next, style, ctx, choices, candidates, base);
+  const promising = possible.map(choice => {
+    const s = previewFinalAction(next, choice, style, FORECAST_OWN_DICE);
+    return { choice, merit: s ? finalMerit(scoreFinalDistribution(finalScoreDistribution(s))) : -Infinity };
+  }).sort((a, b) => b.merit - a.merit).slice(0, 4);
+  let best = null;
+  for (const { choice } of promising) {
+    const result = assessFinalAction(next, choice, style, cards, [FORECAST_OWN_DICE], false);
+    if (result && (!best || finalMerit(result) > finalMerit(best))) best = result;
+  }
+  return best ?? scoreFinalDistribution(finalScoreDistribution(next));
+}
+
+function planPenultimateAction(board, style, ctx, choices, candidates, base) {
+  const cards = possibleAlliedCards(board);
+  const options = finalActionOptions(board, style, ctx, choices, candidates, base);
+  const branches = options.map(choice => {
+    const after = previewFinalAction(board, choice, style, FORECAST_OWN_DICE);
+    if (!after) return null;
+    const reply = forecastAlliedReply(after, true, PLANNING_REPLY, true);
+    const { heldVP, value } = centralPlanningValue(reply.state);
+    return { choice, after, reply, rank: value, heldVP };
+  }).filter(Boolean);
+  const original = branches.find(branch => branch.choice === base);
+  if (!original) return base;
+  const alternatives = branches.filter(branch => branch.choice !== base && branch.heldVP >= original.heldVP - 1.5)
+    .sort((a, b) => b.rank - a.rank).slice(0, 3);
+  if (!alternatives.length) return base;
+
+  function evaluate({ after, reply }) {
+    const active = estimateClosingAction(reply.state, style, cards);
+    const quiet = reply.state === after ? active : estimateClosingAction(after, style, cards);
+    return Object.fromEntries(["win", "nonLoss", "vp"].map(key => [key, active[key] * .72 + quiet[key] * .28]));
+  }
+  const normal = evaluate(original);
+  let selected = base, high = finalMerit(normal) + .8;
+  for (const branch of alternatives) {
+    const result = evaluate(branch);
+    if (finalMerit(result) <= high || result.win < normal.win - .01 || result.nonLoss < normal.nonLoss - .12) continue;
+    if (result.win < normal.win + .12 && result.nonLoss < normal.nonLoss + .14) continue;
+    high = finalMerit(result);
+    selected = { ...branch.choice, focus: base.focus, plannedAttacks: branch.choice.mode === "ops",
+      why: "Set up the final victory attempt",
+      endgame: { projectedWin: result.win, oldProjectedWin: normal.win, finalVP: result.vp } };
+  }
+  return selected;
+}
+
+
+/* Look for a legal route back to armies already isolated by an Allied action. */
+const EARLY_STRATEGY = "rescue-and-guard";
+
+function supplyBottlenecks(board, isolated) {
+  const queue = isolated.map(u => board.pos[u]), seen = new Set(queue), bottlenecks = new Set();
+  for (let i = 0; i < queue.length; i++) {
+    for (const edge of ADJ[queue[i]]) {
+      const p = edge.to;
+      if (seen.has(p) || !edgeFor(edge, "ge")) continue;
+      seen.add(p);
+      if (ownsRoute(board, p, "cp")) queue.push(p);
+      else if (occupies(board, p, "ap") || board.control[p] === "ap") bottlenecks.add(p);
+    }
+  }
+  return bottlenecks;
+}
+
+function supplyRecoveryOrders(board, style, ctx, isolated, budget) {
+  const bottlenecks = supplyBottlenecks(board, isolated);
+  const marches = previewMarches(board, "cp").filter(order => order.path.some(p => bottlenecks.has(p)));
+  const attacks = attackCandidates(board, ctx, style, true).filter(order => bottlenecks.has(order.to));
+  const scored = [];
+  for (const order of [...marches, ...attacks]) {
+    if (order.cost > budget) continue;
+    const after = previewOperations(board, "cp", [order], budget, true);
+    if (!after || order.kind === "attack" && !previewBattle(after, order, FORECAST_OWN_DICE)) continue;
+    const restored = isolated.filter(u => suppliedAt(after, u));
+    if (!restored.length) continue;
+    const score = order.score ?? movementValue(board, ctx, order.ids, order.path, style);
+    const rank = restored.length * 6 + (after.vp - board.vp) * 2 - order.cost * .7 + Math.min(score, 10) * .15;
+    scored.push({ order: { ...order, score }, restored, rank });
+  }
+  const seen = new Set();
+  return scored.sort((a, b) => b.rank - a.rank).filter(({ order, restored }) => {
+    const key = [order.kind, order.to, order.origins.join(","), restored.join(",")].join("/");
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function supplyRecoveryPlans(board, ops, candidates, ranked) {
+  const budgetOf = choice => CARD[choice.id]?.ops ?? 1;
+  const cheap = [...ops].sort((a, b) => budgetOf(a) - budgetOf(b) || b.score - a.score);
+  const orders = ranked.slice(0, 8);
+  const plans = [];
+  for (const { order } of orders) {
+    const card = cheap.find(choice => budgetOf(choice) >= order.cost);
+    if (!card) continue;
+    plans.push({ ...card, items: [order], plannedAttacks: true });
+    plans.push(finalOperations(board, ops, candidates, [order]));
+  }
+  for (let i = 0; i < Math.min(5, orders.length); i++) {
+    for (let j = i + 1; j < Math.min(5, orders.length); j++) {
+      if (orders[j].restored.every(u => orders[i].restored.includes(u)) ||
+          orders[i].restored.every(u => orders[j].restored.includes(u))) continue;
+      plans.push(finalOperations(board, ops, candidates, [orders[i].order, orders[j].order]));
+    }
+  }
+  return distinctPlanningChoices(plans);
+}
+
+function recoverArmySupply(board, style, ctx, choices, candidates, base) {
+  if (EARLY_STRATEGY === "off" || board.turn >= 3) return base;
+  const isolated = ctx.oos.filter(isArmy);
+  if (isolated.length < 2) return base;
+  const projected = previewOwnAction(board, base, style);
+  if (!projected) return base;
+  const ops = choices.filter(choice => choice.mode === "ops").sort((a, b) => b.score - a.score);
+  const budget = Math.max(1, ...ops.map(choice => CARD[choice.id]?.ops ?? 1));
+  const ranked = supplyRecoveryOrders(board, style, ctx, isolated, budget);
+  if (!ranked.length) return base;
+
+  const oldReply = forecastAlliedReply(projected, true, PLANNING_REPLY, true);
+  const supplied = s => count(isolated, u => suppliedAt(s, u));
+  const oldRestored = supplied(oldReply.state);
+  if (isolated.length - oldRestored < 2) return base;
+  const reference = supplyDefenseAssessment(board, base, projected, oldReply);
+  const templates = supplyReplyTemplates(projected, oldReply, ctx.our.filter(isArmy));
+  const minimumVP = projected.vp - 1;
+  const plans = [];
+  for (const choice of supplyRecoveryPlans(board, ops, candidates, ranked)) {
+    const after = previewOwnAction(board, choice, style, true);
+    if (!after || supplied(after) < oldRestored + 2 || after.vp < minimumVP) continue;
+    const replay = replaySupplyThreats(after, templates);
+    const rescued = supplied(replay.state);
+    if (rescued < oldRestored + 2) continue;
+    plans.push({ choice, after, rank: rescued * 5 + (replay.state.vp - oldReply.state.vp) * 2 });
+  }
+  let selected = base, best = reference.value + 1;
+  for (const { choice, after } of plans.sort((a, b) => b.rank - a.rank).slice(0, 5)) {
+    const reply = replaySupplyThreats(after, templates, forecastAlliedReply(after, true, PLANNING_REPLY, true));
+    const outcome = supplyDefenseAssessment(board, choice, after, reply);
+    const restored = supplied(reply.state) - oldRestored;
+    if (restored < 2 || outcome.risk >= reference.risk || outcome.heldVP < reference.heldVP - .7 || outcome.value <= best) continue;
+    if (board.round === 6 && projectedAttritionVP(reply.state) < projectedAttritionVP(oldReply.state)) continue;
+    if (choice.items.some(order => order.kind === "attack")) {
+      const weaker = previewFinalAction(board, choice, style, 15);
+      if (!weaker || supplied(weaker) < oldRestored + 2) continue;
+    }
+    selected = { ...choice, focus: base.focus, why: "Reopen supply to isolated armies", plannedAttacks: true,
+      earlyStrategy: { kind: "rescue", restored } };
+    best = outcome.value;
+  }
+  return selected;
+}
+
+
+const canvas = document.getElementById("map");
+const ctx2d = canvas.getContext("2d");
+const mapBounds = {
+  west:[125,480,1140,1200], east:[1215,130,2440,1000], south:[1175,738,2085,1460],
+  near:[2100,940,3080,1640], all:[125,95,3090,1665]
+};
+const mapNames={west:"Western Front",east:"Eastern Front",south:"Balkans",near:"Near East",all:"Europe and Near East"};
+const view={region:"west",w:0,h:0,k:1,x:0,y:0,selected:0,dirty:true};
+const mapColors={ap:"#3d6b60",cp:"#a75a43",neutral:"#8b8c7c"};
+const cityLabels = ["London","Paris","Verdun","Metz","Essen","Berlin","Breslau","Vienna","Budapest","Belgrade","Warsaw","Kiev","Moscow","Petrograd","Rome","Constantinople","Cairo","Basra","Riga","Antwerp","Brussels"];
+const major = new Set(cityLabels.map(n=>CITY[n]));
+const nationLabels = [
+  [360,918,"FRANCE"],[862,466,"GERMANY"],[1860,293,"RUSSIAN EMPIRE"],
+  [1270,949,"AUSTRIA–HUNGARY"],[1028,1277,"ITALY"],[1693,1235,"SERBIA"],
+  [2200,1246,"OTTOMAN EMPIRE"],[2825,1398,"PERSIA"]
+];
+function screen(p) { return [view.x+SP[p].x*view.k,view.y+SP[p].y*view.k]; }
+function fitMap(region=view.region) {
+  view.region=region;
+  const [left,top,right,bottom]=mapBounds[region];
+  const border=view.w<520?10:22;
+  view.k=Math.min((view.w-2*border)/(right-left),(view.h-2*border)/(bottom-top));
+  view.x=view.w/2-(right+left)*view.k/2;
+  view.y=view.h/2-(top+bottom)*view.k/2;
+  document.getElementById("map-label").textContent=mapNames[region];
+  for (const b of document.querySelectorAll('[data-do="region"]')) b.setAttribute("aria-pressed",String(b.dataset.value===region));
+  paintMap();
+}
+function zoomMap(scale,x=view.w/2,y=view.h/2) {
+  const k=capped(view.k*scale,.13,3.1);
+  view.x=x+(view.x-x)*k/view.k;
+  view.y=y+(view.y-y)*k/view.k;
+  view.k=k;
+  paintMap();
+}
+function centerMap(p) {
+  if (view.k<.48) view.k=.55;
+  view.x=view.w/2-SP[p].x*view.k;
+  view.y=view.h/2-SP[p].y*view.k;
+  paintMap();
+}
+function labelMap(str,x,y,style="#565b52") {
+  ctx2d.fillStyle=style;
+  ctx2d.fillText(str,x,y);
+}
+function drawCircle(x,y,r) {
+  ctx2d.beginPath();
+  ctx2d.arc(x,y,r,0,Math.PI*2);
+}
+function drawMarker(p,x,y) {
+  const st=SP[p], r=capped(view.k*9.5,2.7,9);
+  const ids=stack(game,p);
+  const color=mapColors[game.control[p]??"neutral"];
+  const chosen=view.selected===p, hint=mapHints.has(p), marker=game.action?.marks[p]?.mode;
+  if (chosen||hint||marker) {
+    drawCircle(x,y,r+4.6);
+    ctx2d.fillStyle=chosen?"#f3cc64":hint?"#d4e5b9":"#edcabc";
+    ctx2d.fill();
+    ctx2d.lineWidth=1.2;
+    ctx2d.strokeStyle=chosen?"#87532d":hint?"#73915e":"#ad6d4c";
+    ctx2d.stroke();
+  }
+  if (activeFort(game,p)) {
+    ctx2d.lineWidth=1.15;
+    ctx2d.strokeStyle="#60554a";
+    drawCircle(x,y,r+2.2);
+    ctx2d.stroke();
+  }
+  if (st.vp) {
+    ctx2d.fillStyle=st.active?"#fff1be":"#e0dac7";
+    ctx2d.strokeStyle=color;
+    ctx2d.lineWidth=1.45;
+    ctx2d.fillRect(x-r,y-r,r*2,r*2);
+    ctx2d.strokeRect(x-r,y-r,r*2,r*2);
+  } else {
+    drawCircle(x,y,r);
+    ctx2d.fillStyle=st.active?"#f9f6e8":"#dddccd";
+    ctx2d.fill();
+    ctx2d.lineWidth=st.active?1.35:.7;
+    ctx2d.strokeStyle=color;
+    ctx2d.stroke();
+  }
+  if (st.supply) {
+    ctx2d.strokeStyle=color;
+    ctx2d.lineWidth=1.1;
+    ctx2d.beginPath();ctx2d.moveTo(x-2.1,y);ctx2d.lineTo(x+2.1,y);ctx2d.moveTo(x,y-2.1);ctx2d.lineTo(x,y+2.1);ctx2d.stroke();
+  }
+  if (ids.length) {
+    const unitSide=UN[ids[0]].side;
+    const broken=document.getElementById("supply-toggle").checked&&ids.some(u=>!suppliedAt(game,u));
+    const k=capped(view.k,.33,.85);
+    const w=10+ids.length*4*k,h=7+3*k,ux=x+r+1,uy=y-h/2;
+    ctx2d.fillStyle=broken?"#d29242":mapColors[unitSide];
+    if (ctx2d.roundRect) { ctx2d.beginPath();ctx2d.roundRect(ux,uy,w,h,2);ctx2d.fill(); }
+    else ctx2d.fillRect(ux,uy,w,h);
+    ctx2d.fillStyle="#fff7dd";
+    for (let i=0;i<ids.length;i++) {
+      const u=ids[i], sz=isArmy(u)?2.2:1.25;
+      ctx2d.fillRect(ux+4+i*4*k,uy+h/2-sz/2,sz,sz);
+    }
+  }
+  if (game.trench[p]&&view.k>.35) {
+    ctx2d.strokeStyle="#655b49"; ctx2d.lineWidth=1;
+    for (let i=0;i<game.trench[p].level;i++) {
+      ctx2d.beginPath();ctx2d.moveTo(x-r,y+r+3+i*2);ctx2d.lineTo(x+r,y+r+3+i*2);ctx2d.stroke();
+    }
+  }
+  return r;
+}
+function paintMap() {
+  if (!game||!view.w) return;
+  const c=ctx2d, dpi=canvas.width/view.w;
+  c.setTransform(dpi,0,0,dpi,0,0);
+  const gradient=c.createLinearGradient(0,0,view.w,view.h);
+  gradient.addColorStop(0,"#ebe8db");gradient.addColorStop(1,"#dddccf");
+  c.fillStyle=gradient;c.fillRect(0,0,view.w,view.h);
+  const step=Math.max(32,100*view.k);
+  c.lineWidth=.7;c.strokeStyle="#727e6c1e";c.beginPath();
+  for (let x=(view.x%step+step)%step;x<view.w;x+=step) { c.moveTo(x,0);c.lineTo(x,view.h); }
+  for (let y=(view.y%step+step)%step;y<view.h;y+=step) { c.moveTo(0,y);c.lineTo(view.w,y); }
+  c.stroke();
+  c.font='600 '+capped(view.k*18,10,18)+'px Georgia, serif';
+  c.textAlign="center";
+  for (const [x,y,name] of nationLabels) {
+    labelMap(name,view.x+x*view.k,view.y+y*view.k,"#5d635443");
+  }
+  const visible = new Set(DATA.spaces.filter(p=>{
+    const [x,y]=screen(p.id);
+    return x>=-65&&x<=view.w+65&&y>=-60&&y<=view.h+60;
+  }).map(p=>p.id));
+  for (const [a,b,nations] of DATA.edges) {
+    if (!visible.has(a)&&!visible.has(b)) continue;
+    const [x,y]=screen(a),[u,v]=screen(b), active=SP[a].active&&SP[b].active;
+    c.strokeStyle=!active?"#8b8c7954":game.control[a]===game.control[b]?(game.control[a]==="cp"?"#985b4759":"#58797063"):"#5c625d77";
+    c.lineWidth=active?1.1:.75;
+    c.setLineDash(nations?[3,3]:[]);
+    c.beginPath(); c.moveTo(x,y);c.lineTo(u,v);c.stroke();
+  }
+  c.setLineDash([]);
+  if (mapPath.length) {
+    const coords=mapPath.map(screen);
+    c.strokeStyle="#92613b";c.lineWidth=3.3;c.beginPath();c.moveTo(...coords[0]);
+    for (const p of coords.slice(1)) c.lineTo(...p);
+    c.stroke();
+  }
+  const textSize=capped(8+view.k*3,8.8,12);
+  c.textAlign="center";c.textBaseline="top";
+  const labels=[];
+  for (const p of visible) {
+    const [x,y]=screen(p);
+    const radius=drawMarker(p,x,y);
+    const strong=major.has(p)||view.selected===p||mapHints.has(p);
+    if (view.k>.62||strong||((SP[p].vp||stack(game,p).length)&&view.k>.35)) {
+      labels.push({p,x,y:y+radius+4,strong});
+    }
+  }
+  labels.sort((a,b)=>Number(b.strong)-Number(a.strong));
+  const occupied=[];
+  for (const l of labels) {
+    c.font=`${l.strong?700:550} ${textSize}px Inter, Arial, sans-serif`;
+    const name=SP[l.p].name,width=c.measureText(name).width;
+    const rect=[l.x-width/2-1,l.y-1,l.x+width/2+1,l.y+textSize];
+    if (occupied.some(a=>a[0]<rect[2]&&a[2]>rect[0]&&a[1]<rect[3]&&a[3]>rect[1])) continue;
+    occupied.push(rect);
+    c.lineWidth=2.5;c.strokeStyle="#eeeae0de";c.strokeText(name,l.x,l.y);
+    labelMap(name,l.x,l.y,l.strong?"#27312b":"#4b5147");
+  }
+  c.textBaseline="alphabetic";
+}
+new ResizeObserver(()=>{
+  const rect=canvas.getBoundingClientRect(), dpr=Math.min(2,devicePixelRatio||1);
+  view.w=rect.width;view.h=rect.height;
+  canvas.width=Math.round(rect.width*dpr);
+  canvas.height=Math.round(rect.height*dpr);
+  fitMap();
+}).observe(canvas);
+canvas.addEventListener("wheel",event=>{
+  event.preventDefault();
+  const rect=canvas.getBoundingClientRect();
+  zoomMap(Math.exp(-event.deltaY*.0014),event.clientX-rect.left,event.clientY-rect.top);
+},{passive:false});
+let drag=null;
+canvas.addEventListener("pointerdown",event=>{
+  if (!event.isPrimary || event.button!==0) return;
+  canvas.setPointerCapture(event.pointerId);
+  drag={x:event.clientX,y:event.clientY,vx:view.x,vy:view.y,moved:false};
+});
+canvas.addEventListener("pointermove",event=>{
+  if (!drag||!event.isPrimary) return;
+  const dx=event.clientX-drag.x,dy=event.clientY-drag.y;
+  if (Math.hypot(dx,dy)>5) drag.moved=true;
+  if (!drag.moved) return;
+  view.x=drag.vx+dx;view.y=drag.vy+dy;paintMap();
+});
+canvas.addEventListener("pointerup",event=>{
+  if (!drag||!event.isPrimary) return;
+  if (!drag.moved) {
+    const rect=canvas.getBoundingClientRect(),x=event.clientX-rect.left,y=event.clientY-rect.top;
+    let nearest=0,dist=view.w<700?19:16;
+    for (const p of DATA.spaces) {
+      const [a,b]=screen(p.id), d=Math.hypot(a-x,b-y);
+      if (d<dist) { nearest=p.id;dist=d; }
+    }
+    if (nearest) selectSpace(nearest);
+  }
+  drag=null;
+});
+canvas.addEventListener("pointercancel",()=>{drag=null;});
+
+
+const el = id => document.getElementById(id);
+const esc = x => String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+const SAVE_KEY = "pog-1914-save-v1";
+const defaultSeed=1914;
+let game;
+let selected=0, card=null, moving=[], destination=0, routeIndex=0, srUnit=null, attacking=[], tab="hand";
+let mapHints=new Set(), mapPath=[], paused=false, notice="", task=null, autoTactics=false;
+const modeNames={ops:"Operations",sr:"Strategic Redeployment",rp:"Replacements",event:"Event"};
+function button(action,label,options={}) {
+  const {value="",className="",disabled=false,active=false,title=""}=options;
+  return `<button type="button" data-do="${action}" data-value="${esc(value)}" class="${esc(className)}" ${disabled?"disabled":""} ${active?'data-active="true" aria-pressed="true"':""} ${title?`title="${esc(title)}"`:""}>${esc(label)}</button>`;
+}
+const title = (label,heading,body="") => `<div class="kicker">${esc(label)}</div><h2>${esc(heading)}</h2>${body?`<p>${esc(body)}</p>`:""}`;
+const buttonRow = (...buttons) => `<div class="button-row">${buttons.join("")}</div>`;
+const choiceList = (buttons,scroll=false) => `<div class="choice-list${scroll?" scroll":""}">${buttons.join("")}</div>`;
+const ownTurn = () => game.side===game.human;
+const whoPlays = side => side===game.human?"You":"AI";
+const vpHint = () => game.vp<=10?"Allied lead":game.vp>=14?"Central lead":"Draw range";
+const capName = n => NATION[n]??n;
+function pendingDecision() { return game.phase==="battle"?battleDecision(game):null; }
+function actedByBot() {
+  if (game.phase==="over") return false;
+  const d=pendingDecision();
+  return d ? d.side!==game.human||autoTactics||automaticBattle(game) : !ownTurn();
+}
+function resetSelection() {
+  card=null;
+  moving=[];
+  destination=0;
+  routeIndex=0;
+  srUnit=null;
+  attacking=[];
+  notice="";
+}
+function renderScore() {
+  const b=pendingDecision(), active=b?.side??game.side;
+  const faction = side => {
+    const p=game.players[side], tag=whoPlays(side), made=p.mo?capName(p.mo):"None / made";
+    return `<div class="faction ${side} ${active===side?"active":""}">
+      <div class="faction-name">${SIDE[side]} <span class="tag">${tag}</span></div>
+      <div class="meta">${p.hand.length} in hand · ${p.ws} War Status</div>
+      <div class="meta">Mandate · ${esc(made)}</div>
+    </div>`;
+  };
+  el("scoreboard").innerHTML=faction("cp")+
+    `<div class="round-box"><div><strong>${TURNS[game.turn]}</strong><small>${game.result?"Final score":`Turn ${game.turn}/3 · Round ${game.round}/6`}</small></div>
+    <div class="vp" title="${vpHint()}"><b>${game.vp}</b><small>CP VP</small></div></div>`+faction("ap");
+}
+function unitRow(u,{action="",active=false}={}) {
+  const blocked=!suppliedAt(game,u), name=UN[u].name, value=stats(game,u).join("–");
+  const detail=`${game.steps[u]===1?"Reduced · ":""}${blocked?"Out of supply":UN[u].kind==="army"?"Army":"Corps"}`;
+  const content=`<span><b>${esc(name)}</b> <small>${esc(detail)}</small></span><span class="factor">${value}</span>`;
+  const classes=`unit ${UN[u].side}${blocked?" blocked":""}`;
+  return action?`<button type="button" class="${classes}" data-do="${action}" data-value="${u}" aria-pressed="${active}" data-active="${active}">${content}</button>`:`<div class="${classes}">${content}</div>`;
+}
+function renderSpace() {
+  if (!selected) {
+    el("space-info").innerHTML="<h3>Map intelligence</h3><p>Select any space to inspect its terrain, occupants and supply.</p>";
+    return;
+  }
+  const p=SP[selected], t=game.trench[selected], ctrl=game.control[selected];
+  const tags=[ctrl?SIDE[ctrl]:"Neutral",p.terrain?cap(p.terrain):"Clear",p.vp?"Victory point":"",p.port?"Port":"",p.supply?"Supply source":"",
+    activeFort(game,selected)?`Fort ${p.fort}${besieged(game,selected)?" · besieged":""}`:"",t?`Trench ${t.level}`:""].filter(Boolean);
+  el("space-info").innerHTML=`<div class="kicker">${esc(capName(p.nation))}</div><h2>${esc(p.name)}</h2><div class="badge-row">${tags.map(x=>`<span>${esc(x)}</span>`).join("")}</div>
+    ${stack(game,selected).map(u=>unitRow(u)).join("")}
+    <p class="mini">Connections · ${ADJ[selected].map(e=>point(e.to)+(e.nations?` (${e.nations.join("/").toUpperCase()})`:"")).map(esc).join(", ")}</p>`;
+}
+function cap(text) { return text.charAt(0).toUpperCase()+text.slice(1); }
+function renderCardPhase() {
+  const id=game.players[game.human].hand.includes(card)?card:null, c=CARD[id];
+  if (!c) return title("Your action","Choose a card","Select a strategy card in your hand, or take one free Operation.")+
+    buttonRow(button("use","Automatic operation · 1 OP",{value:"ops",className:"primary"}));
+  const modes=legalModes(game,id), replacements=Object.entries(c.rp).map(([n,v])=>n.toUpperCase()+" "+v).join(" · ");
+  const body=title("Your action",c.name,c.cc?`Combat card. ${cardDescription(id)}`:cardDescription(id));
+  return body+`<p class="mini dim">Replacements · ${esc(replacements||"none")}</p>`+
+    `<div class="mode-row">${button("use",`Operations · ${c.ops}`,{value:"ops",className:"primary"})}
+    ${button("use",`Redeploy · ${c.sr}`,{value:"sr",disabled:!modes.includes("sr")})}
+    ${button("use","Replacements",{value:"rp",disabled:!modes.includes("rp")})}
+    ${button("use","Play event",{value:"event",disabled:!modes.includes("event"),title:c.cc?"Play in eligible combat":"Event prerequisites apply"})}</div>`+
+    buttonRow(button("clear-card","Use the 1 OP order"));
+}
+function renderActivate() {
+  const a=game.action, available=a.budget-a.spent, p=selected;
+  const marks=Object.entries(a.marks).map(([n,m])=>button("focus",`${point(+n)} · ${m.mode}`,{value:n}));
+  const eligible=p&&occupies(game,p,game.side);
+  for (const q of unique(onMap(game,game.side).map(u=>game.pos[u]))) {
+    if (canMark(game,q,"move")||canMark(game,q,"attack")) mapHints.add(q);
+  }
+  return title("Operations",`${available} of ${a.budget} OPs available`,eligible?
+    `${point(p)} · ${activationPrice(game,p)} OP${activationPrice(game,p)===1?"":"s"} to activate.`:
+    "Select a friendly space on the map and assign Move or Attack.")+
+    (eligible?buttonRow(button("mark","Move",{value:"move",disabled:!canMark(game,p,"move"),active:a.marks[p]?.mode==="move"}),
+      button("mark","Attack",{value:"attack",disabled:!canMark(game,p,"attack"),active:a.marks[p]?.mode==="attack"})):"")+
+    (marks.length?`<div class="ready-list">${marks.join("")}</div>`:"")+
+    buttonRow(button("commit-ops","Confirm activations",{className:"primary"}));
+}
+function renderMove() {
+  const a=game.action;
+  const origins=Object.keys(a.marks).map(Number).filter(p=>a.marks[p].mode==="move"&&a.marks[p].ids.some(u=>eligibleMove(game,u)));
+  origins.forEach(p=>mapHints.add(p));
+  const from=moving.length?game.pos[moving[0]]:selected;
+  moving=moving.filter(u=>eligibleMove(game,u)&&game.pos[u]===from);
+  const eligible=origins.includes(from)?stack(game,from).filter(u=>eligibleMove(game,u)):[];
+  const destinations=marchPaths(game,moving,true);
+  for (const to of destinations.keys()) mapHints.add(to);
+  const paths=destination&&destinations.has(destination)?alternativeRoutes(game,moving,destination):[];
+  const chosen=paths[routeIndex]??paths[0];
+  if (chosen) mapPath=[from,...chosen];
+  const stackButtons=eligible.map(u=>unitRow(u,{action:"move-unit",active:moving.includes(u)}));
+  const diggers=eligible.filter(u=>trenchPossible(game,u));
+  const over=ACTIVE.filter(p=>stack(game,p).length>3);
+  return title("Operations","Move activated units",moving.length?
+    `${moving.length} selected at ${point(from)}. Choose a highlighted destination.`:
+    "Select an activated space or formation to move.")+
+    (origins.length?`<div class="ready-list">${origins.map(p=>button("focus",point(p),{value:p,active:p===from})).join("")}</div>`:"")+
+    stackButtons.join("")+
+    (chosen?`<p class="mini">${esc(chosen.map(point).join(" → "))} · ${chosen.length} MP</p>`:"")+
+    (paths.length>1?`<label class="mini" for="route-pick">Route</label> <select id="route-pick">${paths.map((path,i)=>`<option value="${i}" ${i===routeIndex?"selected":""}>${esc(path.map(point).join(" → "))}</option>`).join("")}</select>`:"")+
+    buttonRow(chosen?button("march",`Move to ${point(destination)}`,{className:"primary"}):"",
+      ...diggers.map(u=>button("dig",`Entrench · ${UN[u].name}`,{value:u})),
+      moving.length?button("clear-move","Clear selection"):"",
+      button("end-move","Finish movement",{className:chosen?"":"primary",disabled:over.length>0}))+
+    (over.length?`<div class="notice">Reduce stacks to three units at ${over.map(point).map(esc).join(", ")}.</div>`:"");
+}
+function targetsNow() {
+  const a=game.action;
+  return unique(Object.keys(a.marks).map(Number).filter(p=>a.marks[p].mode==="attack").flatMap(p=>[p,...ADJ[p].map(e=>e.to)])).filter(p=>
+    SP[p].active&&!a.targets.includes(p)&&(defenderFort(game,p)||targetDefenders(game,p).some(u=>!a.retreated.includes(u)))&&possibleAttackers(game,p).length);
+}
+function initialAttackers(p) {
+  const all=possibleAttackers(game,p);
+  const groups=[all,...unique(all.map(nat)).map(n=>all.filter(u=>nat(u)===n)),
+    ...unique(all.map(u=>game.pos[u])).map(q=>all.filter(u=>game.pos[u]===q))];
+  return groups.find(ids=>legalAttack(game,ids,p))??[];
+}
+function renderAttack() {
+  const targets=targetsNow();
+  targets.forEach(p=>mapHints.add(p));
+  const available=targets.includes(selected)?possibleAttackers(game,selected):[];
+  const legal=legalAttack(game,attacking,selected);
+  return title(game.action.id==="C1"&&game.action.mode==="event"?"Guns of August":"Operations","Resolve attacks",
+    available.length?`Target · ${point(selected)}. Select the units taking part.`:
+      targets.length?"Select a highlighted defender or enemy fort.":"There are no remaining targets for the activated units.")+
+    (targets.length?`<div class="ready-list">${targets.map(p=>button("focus",point(p),{value:p,active:p===selected})).join("")}</div>`:"")+
+    available.map(u=>unitRow(u,{action:"attack-unit",active:attacking.includes(u)})).join("")+
+    buttonRow(available.length?button("attack",`Attack ${point(selected)}`,{className:"primary",disabled:!legal}):"",
+      button("end-action","Finish action",{className:available.length?"":"primary"}));
+}
+function renderEvent() {
+  const c=CARD[game.action.id], options=eventChoices(game,c.id);
+  for (const option of options) {
+    if (option.p) mapHints.add(option.p);
+    option.placements?.forEach(([,p])=>mapHints.add(p));
+  }
+  return title("Event",c.name,cardDescription(c.id))+
+    choiceList(options.map((o,i)=>button("event-choice",o.label,{value:i,className:options.length===1?"primary":""})),options.length>7);
+}
+function renderSR() {
+  const a=game.action, budget=a.budget-a.spent, choose=srUnit===null?[]:srDestinations(game,srUnit,true);
+  const selectedUnits=selected?stack(game,selected).filter(u=>canSR(game,u)):[];
+  const reserve=UN.filter(u=>game.pos[u.id]===0&&canSR(game,u.id));
+  for (const u of onMap(game,game.side).filter(u=>canSR(game,u))) mapHints.add(game.pos[u]);
+  for (const p of choose) if (p) mapHints.add(p);
+  const over=ACTIVE.some(p=>stack(game,p).length>3);
+  const selectReserve=reserve.length?`<label class="mini" for="reserve-select">Reserve corps</label>
+    <select id="reserve-select"><option value="">Select a corps…</option>${reserve.map(u=>`<option value="${u.id}" ${srUnit===u.id?"selected":""}>${esc(u.name)}${game.steps[u.id]===1?" (reduced)":""}</option>`).join("")}</select>`:"";
+  return title("Strategic Redeployment",`${budget} of ${a.budget} SR available`,
+    srUnit!==null?`${UN[srUnit].name} · ${point(game.pos[srUnit])} · ${srCost(srUnit)} SR. Choose a highlighted destination.`:
+      "Select a unit on the map or choose a corps in reserve.")+
+    selectedUnits.map(u=>unitRow(u,{action:"sr-unit",active:srUnit===u})).join("")+selectReserve+
+    buttonRow(choose.includes(destination)&&destination>0?button("redeploy",`Redeploy to ${point(destination)}`,{value:destination,className:"primary"}):"",
+      choose.includes(0)?button("redeploy","Send to reserve",{value:0}):"",
+      srUnit!==null?button("clear-sr","Clear selection"):"",
+      button("end-action","Finish redeployment",{disabled:over}))+
+    (over?'<div class="notice">Reduce each stack to three units before finishing.</div>':"");
+}
+function renderBattle() {
+  const d=pendingDecision(), b=game.battle;
+  if (d.side!==game.human||autoTactics||automaticBattle(game)) {
+    return title("Combat",point(b.p),`${SIDE[d.side]} is resolving ${d.kind==="cards"?"combat cards":d.kind}.`);
+  }
+  mapHints.add(b.p);
+  if (d.opts) for (const o of d.opts) if (o.path) mapHints.add(o.path.at(-1));
+  const desc=title(`Combat · ${point(b.p)}`,d.title);
+  if (d.kind==="cards") {
+    return desc+choiceList(d.cards.map(id=>`<label><input type="checkbox" class="battle-card" value="${esc(id)}"><span><b>${esc(CARD[id].name)}</b><br>${esc(cardDescription(id))}</span></label>`))+
+      buttonRow(button("battle-cards","Confirm combat cards",{className:"primary"}),button("battle-suggest","Use suggested order"));
+  }
+  return desc+choiceList(d.opts.map((o,i)=>button("battle-choice",o.label,{value:i})),d.opts.length>6)+
+    buttonRow(button("battle-suggest","Use suggested order",{className:"primary"}));
+}
+function renderRebuild() {
+  const choices=replacementChoices(game,game.side), bank=Object.entries(game.players[game.side].rp).filter(([,n])=>n).map(([n,v])=>n.toUpperCase()+" "+v/2).join(" · ");
+  return title("End of turn","Spend replacements",bank||"No replacement points available.")+
+    choiceList(choices.map((o,i)=>button("replace",`${o.rebuild?"Rebuild":"Restore"} ${UN[o.u].name} · ${point(o.dest)} · ${o.cost/2} RP`,{value:i})),choices.length>6)+
+    buttonRow(button("end-rebuild","Finish replacements",{className:"primary"}));
+}
+function renderDraw() {
+  const cc=game.players[game.side].hand.filter(id=>CARD[id].cc);
+  return title("End of turn","Refresh your hand","You may discard any retained combat cards before drawing up to seven.")+
+    choiceList(cc.map(id=>`<label><input class="discard-card" type="checkbox" value="${esc(id)}">${esc(CARD[id].name)}</label>`))+
+    buttonRow(button("draw","Draw cards",{className:"primary"}));
+}
+function renderCommand() {
+  mapHints=new Set();mapPath=[];
+  const s=game, modes={
+    card:renderCardPhase,activate:renderActivate,move:renderMove,attack:renderAttack,event:renderEvent,
+    sr:renderSR,battle:renderBattle,rebuild:renderRebuild,draw:renderDraw
+  };
+  let html;
+  if (s.phase==="over") {
+    const winner=s.result.winner;
+    html=title("Scenario complete",winner==="draw"?"Draw":`${SIDE[winner]} win`,`${s.result.vp} VP${s.result.automatic?" · Automatic victory":""}. ${SCORING}`)+
+      buttonRow(button("new","New game",{className:"primary"}),button("tab","War diary",{value:"log"}));
+  } else if (s.phase==="battle") html=renderBattle();
+  else if (!ownTurn()) {
+    html=title("Computer opponent",SIDE[s.side],paused?`Paused · ${phaseName[s.phase]}`:`${phaseName[s.phase]} in progress.`);
+  } else html=modes[s.phase]();
+  if (s.human==="watch"&&s.phase!=="over") html+=buttonRow(button("pause",paused?"Resume":"Pause",{className:"primary"}));
+  if (notice) html+=`<div class="notice" role="status">${esc(notice)}</div>`;
+  el("command").innerHTML=html;
+}
+function renderHand() {
+  for (const b of document.querySelectorAll('.tabs [data-do="tab"]')) b.setAttribute("aria-pressed",String(b.dataset.value===tab));
+  el("hand-status").textContent=game.human==="watch"?"Spectator":game.phase==="card"&&ownTurn()?"Select a card to see its uses":SIDE[game.human];
+  if (tab==="log") {
+    el("tray").innerHTML=`<div class="diary" tabindex="0" aria-label="War diary">${game.log.map(e=>`<div class="diary-row ${esc(e.type)}"><small>T${e.turn} · R${e.round} · ${e.side==="cp"?"CP":"AP"}</small><span>${esc(e.text)}</span></div>`).join("")}</div>`;
+    const log=el("tray").firstElementChild;log.scrollTop=log.scrollHeight;
+    return;
+  }
+  if (tab==="forces") {
+    el("tray").innerHTML=`<div class="reserve-grid">${SIDES.map(side=>{
+      const list=UN.filter(u=>u.side===side&&game.pos[u.id]===0);
+      const reserve=unique(list.map(u=>u.name)).map(name=>`${name} ×${count(list,u=>u.name===name)}`).join(" · ");
+      const lost=UN.filter(u=>u.side===side&&game.pos[u.id]===DEAD).map(u=>u.name).join(", ");
+      const removed=UN.filter(u=>u.side===side&&game.pos[u.id]===REMOVED).map(u=>u.name).join(", ");
+      return `<section><h3>${SIDE[side]}</h3><p>Reserve · ${esc(reserve||"empty")}</p><p>Eliminated · ${esc(lost||"none")}</p><p>Permanently removed · ${esc(removed||"none")}</p></section>`;
+    }).join("")}</div>`;
+    return;
+  }
+  if (game.human==="watch") {
+    el("tray").innerHTML='<p class="empty">Strategy hands are concealed. Played cards appear in the War diary.</p>';
+    return;
+  }
+  const p=game.players[game.human];
+  if (!p.hand.length) {
+    el("tray").innerHTML='<p class="empty">Your hand is empty. The automatic 1 OP order is available on your action.</p>';
+    return;
+  }
+  const scrolled=el("tray").firstElementChild?.scrollLeft??0;
+  el("tray").innerHTML=`<div class="cards">${p.hand.map(id=>{
+    const c=CARD[id];
+    return `<button type="button" class="strategy" data-do="card" data-value="${id}" data-active="${id===card}" aria-pressed="${id===card}" ${!ownTurn()||game.phase!=="card"?"disabled":""}>
+      <span class="cap"><b>${id}</b><span>${c.cc?"Combat":c.star?"Event ★":"Event"}</span></span>
+      <span class="title">${esc(c.name)}</span><span class="counts"><b>${c.ops} OPS</b> · ${c.sr} SR</span></button>`;
+  }).join("")}</div>`;
+  el("tray").firstElementChild.scrollLeft=scrolled;
+}
+function renderDispatch() {
+  const latest=game.log.slice(-3);
+  el("dispatch").innerHTML="<h3>Latest reports</h3>"+latest.map(e=>`<p>${esc(e.text)}</p>`).join("");
+  el("seed-label").textContent=`Seed ${game.seed} · v${VERSION}`;
+}
+function render() {
+  view.selected=selected;
+  renderScore();
+  renderCommand();
+  renderSpace();
+  renderHand();
+  renderDispatch();
+  paintMap();
+  queueBot();
+}
+function saveEnvelope() {
+  return {format:SAVE_KEY,autoTactics,game};
+}
+function autosave() {
+  try { localStorage.setItem(SAVE_KEY,JSON.stringify(saveEnvelope())); } catch (_) { /* Portable Save remains available. */ }
+}
+function validatedSave(data) {
+  check(data?.format===SAVE_KEY && [VERSION,"1.6.0","1.5.0","1.4.0","1.3.0","1.2.0","1.1.0","1.0.0"].includes(data.game?.version),"This file is not a compatible 1914 Solo save.");
+  const s=data.game;
+  const ints=(a,len,lo,hi)=>Array.isArray(a)&&a.length===len&&a.every(x=>Number.isInteger(x)&&x>=lo&&x<=hi);
+  const phase=has(phaseName,s.phase);
+  check(phase && SIDES.includes(s.side) && [...SIDES,"watch"].includes(s.human) && Number.isInteger(s.rev) &&
+    Number.isInteger(s.seed)&&Number.isInteger(s.rng)&&Number.isInteger(s.turn)&&s.turn>=1&&s.turn<=3&&
+    Number.isInteger(s.round)&&s.round>=1&&s.round<=6&&Number.isInteger(s.vp),"The save has an invalid turn state.");
+  check(ints(s.pos,UN.length,-3,SP.length-1)&&ints(s.steps,UN.length,1,2)&&
+    Array.isArray(s.control)&&s.control.length===SP.length&&s.control.every(x=>x===null||SIDES.includes(x))&&
+    Array.isArray(s.forts)&&s.forts.length===SP.length&&s.forts.every(x=>typeof x==="boolean")&&
+    Array.isArray(s.trench)&&s.trench.length===SP.length&&s.trench.every(x=>x===null||SIDES.includes(x?.side)&&[1,2].includes(x?.level)),
+    "The save has invalid board data.");
+  for (const side of SIDES) {
+    const p=s.players?.[side];
+    check(p&&["deck","hand","discard","ready","removed"].every(k=>Array.isArray(p[k])&&p[k].length<=14&&p[k].every(id=>has(CARD,id)&&CARD[id].side===side))&&
+      p.rp&&Array.isArray(p.history)&&Array.isArray(p.reinf)&&Number.isInteger(p.ws),"The save has invalid card data.");
+  }
+  check(Array.isArray(s.log)&&s.log.length<10000&&s.log.every(e=>SIDES.includes(e.side)&&typeof e.text==="string"&&e.text.length<3500)&&
+    s.events&&s.crossed&&(!s.battle||SP[s.battle.p])&&(!s.action||s.action.marks&&Array.isArray(s.action.moved))&&
+    (s.phase!=="over"||["ap","cp","draw"].includes(s.result?.winner)),"The save has invalid orders or reports.");
+  check(s.centralFocus===undefined||Number.isInteger(s.centralFocus)&&Boolean(SP[s.centralFocus]?.vp),
+    "The save has an invalid Central Powers objective.");
+  return {game:s.version===VERSION?s:{...s,version:VERSION},autoTactics:Boolean(data.autoTactics)};
+}
+function loadDefault() {
+  try {
+    const data=JSON.parse(localStorage.getItem(SAVE_KEY));
+    if (data) return validatedSave(data);
+  } catch (_) { /* Start a fresh game when browser storage is unavailable. */ }
+  return {game:freshGame(defaultSeed),autoTactics:false};
+}
+function downloadSave() {
+  const blob=new Blob([JSON.stringify(saveEnvelope(),null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob), a=document.createElement("a");
+  a.href=url;
+  a.download=`paths-of-glory-${game.seed}-T${game.turn}-R${game.round}.json`;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function resume(data) {
+  const saved=validatedSave(data);
+  clearTimeout(task);task=null;
+  game=saved.game;autoTactics=saved.autoTactics;paused=false;selected=0;
+  tab=game.human==="watch"?"log":"hand";
+  resetSelection();
+  autosave();render();
+}
+function openNew() {
+  el("seed").value=crypto.getRandomValues(new Uint32Array(1))[0];
+  el("new-dialog").showModal();
+}
+function chooseRegion(region) {
+  if (has(mapBounds,region)) fitMap(region);
+}
+function selectSpace(p) {
+  if (!SP[p]) return;
+  notice="";
+  if (ownTurn()&&game.phase==="move") {
+    const paths=marchPaths(game,moving,true);
+    if (paths.has(p)) { destination=p;routeIndex=0; }
+    else {
+      moving=stack(game,p).filter(u=>eligibleMove(game,u)&&stats(game,u)[2]>0);
+      destination=0;routeIndex=0;
+    }
+  }
+  if (ownTurn()&&game.phase==="attack"&&selected!==p) attacking=initialAttackers(p);
+  if (ownTurn()&&game.phase==="sr") {
+    if (srUnit!==null&&srDestinations(game,srUnit,true).includes(p)) destination=p;
+    else { srUnit=stack(game,p).find(u=>canSR(game,u))??null; destination=0; }
+  }
+  selected=p;render();
+}
+function focusSpace(p) {
+  selectSpace(p);
+  const [x,y]=screen(p);
+  if (x<20||x>view.w-20||y<20||y>view.h-20) centerMap(p);
+}
+function requireHuman(action) {
+  const battle=["battle-cards","battle-choice","battle-suggest"].includes(action);
+  check(battle?pendingDecision()?.side===game.human:ownTurn()&&game.phase!=="battle","The computer is handling this order.");
+}
+function handleOrder(action,v) {
+  requireHuman(action);
+  const before=clone(game);
+  try {
+    const p=+v;
+    if (action==="use") {
+      beginAction(game,card,v);
+      if (game.phase==="event"&&eventChoices(game,game.action.id).length===1) playEvent(game,0);
+      resetSelection();
+    } else if (action==="mark") mark(game,selected,v);
+    else if (action==="commit-ops") { beginMovement(game);moving=[]; }
+    else if (action==="move-unit") {
+      if (!eligibleMove(game,p)) return;
+      moving=moving.includes(p)?moving.filter(u=>u!==p):[...moving.filter(u=>game.pos[u]===game.pos[p]),p];
+      destination=0;routeIndex=0;
+    } else if (action==="clear-move") { moving=[];destination=0;routeIndex=0; }
+    else if (action==="march") {
+      const routes=alternativeRoutes(game,moving,destination);
+      march(game,moving,destination,routes[routeIndex]??routes[0]);
+      selected=destination;moving=[];destination=0;routeIndex=0;
+    } else if (action==="dig") { dig(game,p);moving=moving.filter(u=>u!==p);destination=0; }
+    else if (action==="end-move") { endMovement(game);attacking=initialAttackers(selected||CITY.Paris); }
+    else if (action==="attack-unit") attacking=attacking.includes(p)?attacking.filter(u=>u!==p):[...attacking,p];
+    else if (action==="attack") declareAttack(game,attacking,selected);
+    else if (action==="event-choice") playEvent(game,p);
+    else if (action==="sr-unit") { srUnit=p;destination=0; }
+    else if (action==="clear-sr") { srUnit=null;destination=0; }
+    else if (action==="redeploy") {
+      check(srUnit!==null,"Select a unit.");
+      redeploy(game,srUnit,p);srUnit=null;destination=0;
+    } else if (action==="end-action") { finishAction(game);resetSelection(); }
+    else if (action==="battle-cards") answerBattle(game,[...document.querySelectorAll(".battle-card:checked")].map(b=>b.value));
+    else if (action==="battle-choice") answerBattle(game,p);
+    else if (action==="battle-suggest") answerBattle(game,botBattle(game));
+    else if (action==="replace") replaceStep(game,replacementChoices(game,game.side)[p]);
+    else if (action==="end-rebuild") endRebuild(game);
+    else if (action==="draw") draw(game,[...document.querySelectorAll(".discard-card:checked")].map(b=>b.value));
+    notice="";autosave();
+  } catch (error) { game=before;notice=error.message; }
+}
+document.addEventListener("click",event=>{
+  const btn=event.target.closest("button[data-do]");
+  if (!btn||btn.disabled) return;
+  const a=btn.dataset.do,v=btn.dataset.value??"";
+  try {
+    if (a==="new") { openNew(); return; }
+    if (a==="help") { el("help-dialog").showModal(); return; }
+    if (a==="close") { btn.closest("dialog")?.close(); return; }
+    if (a==="save") { downloadSave(); return; }
+    if (a==="load") { el("import").click(); return; }
+    if (a==="region") { chooseRegion(v); return; }
+    if (a==="zoom") { if (v==="fit") fitMap(); else zoomMap(v==="in"?1.3:1/1.3); return; }
+    if (a==="focus") { focusSpace(+v); return; }
+    if (a==="tab") tab=v;
+    else if (a==="card") card=card===v?null:v;
+    else if (a==="clear-card") card=null;
+    else if (a==="pause") paused=!paused;
+    else handleOrder(a,v);
+    render();
+    if (a==="card"&&innerWidth<736) el("command").scrollIntoView({block:"nearest",behavior:"smooth"});
+  } catch (error) { notice=error.message;render(); }
+});
+el("map-search").addEventListener("submit",event=>{
+  event.preventDefault();
+  const val=el("space-search").value.trim().toLowerCase();
+  if (!val) return;
+  const p=DATA.spaces.find(p=>p.name.toLowerCase()===val)??DATA.spaces.find(p=>p.name.toLowerCase().includes(val));
+  if (p) { focusSpace(p.id);el("space-search").value=""; }
+  else { notice="No space matches that name.";render(); }
+});
+el("new-form").addEventListener("submit",event=>{
+  event.preventDefault();
+  const side=new FormData(event.currentTarget).get("side"), seed=Number(el("seed").value);
+  const s=freshGame(seed,side,side==="cp"?el("guns").checked:true);
+  el("new-dialog").close();
+  resume({format:SAVE_KEY,autoTactics:el("auto").checked,game:s});
+  fitMap();
+});
+el("new-form").addEventListener("change",event=>{
+  if (event.target.name==="side") el("guns").disabled=event.target.value!=="cp";
+});
+el("import").addEventListener("change",async event=>{
+  const file=event.target.files[0];
+  event.target.value="";
+  if (!file) return;
+  try {
+    check(file.size<3e6,"This save file is too large.");
+    resume(JSON.parse(await file.text()));
+  } catch (error) { notice=error.message;render(); }
+});
+document.addEventListener("change",event=>{
+  const t=event.target;
+  if (t.id==="reserve-select") { srUnit=t.value===""?null:Number(t.value);destination=0;render(); }
+  if (t.id==="route-pick") { routeIndex=Number(t.value);render(); }
+  if (t.id==="supply-toggle") paintMap();
+});
+function queueBot() {
+  if (task!==null||paused||!actedByBot()) return;
+  const delay=game.human==="watch"?45:game.phase==="card"?350:105;
+  task=setTimeout(()=>{
+    task=null;
+    if (paused||!actedByBot()) return;
+    const before=clone(game);
+    try {
+      botStep(game);
+      autosave();
+    } catch (error) {
+      game=before;
+      notice=`Play paused · ${error.message}`;
+      paused=true;
+    }
+    render();
+  },delay);
+}
+el("space-names").innerHTML=DATA.spaces.map(p=>`<option value="${esc(p.name)}"></option>`).join("");
+({game,autoTactics}=loadDefault());
+if (game.human==="watch") tab="log";
+selected=game.human==="ap"?CITY.Paris:CITY.Aachen;
+render();

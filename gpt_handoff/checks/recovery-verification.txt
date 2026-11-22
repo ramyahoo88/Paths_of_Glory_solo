@@ -1,0 +1,2 @@
+Both original hashes, byte-identical rebuilds, script parsing, Cluj drill, both 18-action UI flows, reload, Fall search, and card conservation passed.
+UI verification used a simulated DOM. Full games and real browser rendering were outside this recovery check.

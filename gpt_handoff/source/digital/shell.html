@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#202b28">
+<title>Paths of Glory · 1914 Solo</title>
+<style>/* @STYLE@ */</style>
+</head>
+<body>
+<header class="masthead">
+  <div class="mast-inner">
+    <div class="identity">
+      <div class="mark" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div><h1>Paths of Glory</h1><p>1914 · Solo edition</p></div>
+    </div>
+    <nav class="utilities" aria-label="Game controls">
+      <button data-do="new" class="new-button">New game</button>
+      <button data-do="save" title="Download a save file">Save</button>
+      <button data-do="load" title="Open a saved game">Load</button>
+      <button data-do="help">How to play</button>
+    </nav>
+  </div>
+</header>
+<main class="app">
+  <section class="scoreboard" id="scoreboard" aria-label="Game status"></section>
+  <div class="workspace">
+    <section class="map-panel surface" aria-label="Game board">
+      <div class="map-toolbar">
+        <div class="regions" aria-label="Map views">
+          <button data-do="region" data-value="west" aria-pressed="true">West</button>
+          <button data-do="region" data-value="east" aria-pressed="false">East</button>
+          <button data-do="region" data-value="south" aria-pressed="false">Balkans</button>
+          <button data-do="region" data-value="near" aria-pressed="false">Near East</button>
+          <button data-do="region" data-value="all" aria-pressed="false">Overview</button>
+        </div>
+        <form id="map-search" class="map-search">
+          <label class="sr-only" for="space-search">Find a space</label>
+          <input id="space-search" list="space-names" type="search" placeholder="Find a space…" autocomplete="off">
+          <datalist id="space-names"></datalist>
+        </form>
+      </div>
+      <div class="map-frame">
+        <canvas id="map" aria-label="Interactive point-to-point map. Use Find a space to select by name."></canvas>
+        <div class="zoom-tools" aria-label="Map tools">
+          <button data-do="zoom" data-value="in" title="Zoom in" aria-label="Zoom in">+</button>
+          <button data-do="zoom" data-value="out" title="Zoom out" aria-label="Zoom out">−</button>
+          <button data-do="zoom" data-value="fit" title="Fit map view" aria-label="Fit map view">⌖</button>
+        </div>
+        <div id="map-label" class="map-caption" aria-hidden="true">Western Front</div>
+      </div>
+      <footer class="map-footer">
+        <div class="legend" aria-label="Map legend">
+          <span><i class="dot ap"></i>Allied</span>
+          <span><i class="dot cp"></i>Central</span>
+          <span><i class="square"></i>VP</span>
+          <span><i class="ring"></i>Fort</span>
+          <span><i class="dot oos"></i>Out of supply</span>
+        </div>
+        <label class="switch"><input id="supply-toggle" type="checkbox" checked> Supply</label>
+      </footer>
+    </section>
+    <aside class="orders surface" aria-label="Orders and selected space">
+      <div class="orders-scroll">
+        <section id="command" class="command" aria-live="polite"></section>
+        <section id="space-info" class="space-info"></section>
+      </div>
+    </aside>
+    <section class="hand-panel surface" aria-label="Strategy cards and reports">
+      <div class="hand-head">
+        <div class="tabs" aria-label="Reports">
+          <button data-do="tab" data-value="hand" aria-pressed="true">Your hand</button>
+          <button data-do="tab" data-value="log" aria-pressed="false">War diary</button>
+          <button data-do="tab" data-value="forces" aria-pressed="false">Reserves</button>
+        </div>
+        <span id="hand-status"></span>
+      </div>
+      <div id="tray"></div>
+    </section>
+    <section id="dispatch" class="dispatch surface" aria-label="Latest reports"></section>
+  </div>
+  <footer class="foot"><span>Introductory Scenario · Classic setup</span><span id="seed-label"></span></footer>
+</main>
+<input type="file" id="import" accept=".json,application/json" hidden>
+<dialog id="new-dialog">
+  <form id="new-form" class="modal">
+    <div class="modal-title"><div><div class="kicker">August 1914</div><h2>New game</h2></div><button class="x" type="button" data-do="close" aria-label="Close">×</button></div>
+    <p>Play all three turns of the Introductory Scenario against the computer, or watch the two sides play.</p>
+    <fieldset class="side-picker"><legend>Play as</legend>
+      <label><input type="radio" name="side" value="cp" checked><span><b>Central Powers</b><small>Germany &amp; Austria-Hungary</small></span></label>
+      <label><input type="radio" name="side" value="ap"><span><b>Allies</b><small>France, Britain, Russia &amp; partners</small></span></label>
+      <label><input type="radio" name="side" value="watch"><span><b>Watch AI vs. AI</b><small>Both sides play automatically</small></span></label>
+    </fieldset>
+    <label class="seed-field" for="seed">Game seed</label>
+    <input id="seed" name="seed" type="number" min="0" max="4294967295" required>
+    <label class="check-line"><input id="guns" type="checkbox" checked> Put Guns of August in the Central Powers opening hand</label>
+    <label class="check-line"><input id="auto" type="checkbox"> Let the computer handle my combat reactions</label>
+    <p class="dim" id="new-warning">Starting a new game replaces the current browser autosave.</p>
+    <div class="button-row"><button type="button" data-do="close">Cancel</button><button class="primary" type="submit">Start game</button></div>
+  </form>
+</dialog>
+<dialog id="help-dialog">
+  <div class="modal help">
+    <div class="modal-title"><div><div class="kicker">Player reference</div><h2>How to play</h2></div><button class="x" data-do="close" aria-label="Close">×</button></div>
+    <p>Each turn has six action rounds. Central Powers plays first in every round. The opposing computer chooses its cards, orders and combat reactions from its own hand and the public board.</p>
+    <ol>
+      <li><b>Choose a card.</b> Click a card in your hand, then choose Operations, Strategic Redeployment, Replacements or its Event. The 1 OP order keeps your hand intact.</li>
+      <li><b>Issue orders.</b> For Operations, select spaces on the map and assign Move or Attack. Confirm activations before moving. Select counters to move together, then choose a destination. For combat, select a target and choose its attacking units.</li>
+      <li><b>Resolve combat.</b> The game rolls dice. Select your own eligible combat cards, losses, retreats and advances when prompted, or use the suggested order. You can enable automatic combat reactions when you start a game.</li>
+      <li><b>Keep supply open.</b> Orange unit markers indicate broken supply. Reconnect the route before turn-end attrition. Ports, forts and dashed national connections affect supply.</li>
+      <li><b>Check the score.</b> Allies win at 10 VP or fewer, Central Powers at 14 VP or more, and 11–13 VP is a draw. The game also checks for automatic victory at 0 or 20 VP at the War Status Phase.</li>
+    </ol>
+    <h3>Save and resume</h3><p>The app attempts to autosave in this browser. Use Save for a portable JSON file and Load to resume from it. On the map, drag to pan and scroll or use +/− to zoom.</p>
+    <h3>Central Powers AI</h3>
+    <p>In the early rounds of August and September, the AI can preview an Allied reply and its own next action. The War diary shows a possible follow-up when the AI selects one. The AI checks the board again after the actual Allied play.</p>
+    <h3>Rules and credits</h3>
+    <p>This independent fan implementation covers the three-turn Introductory Scenario with the classic setup and Mobilization decks. Ted Raicer designed <i>Paths of Glory</i>, published by GMT Games. The map and interface are original schematics. The app uses rule, card and board facts from the references below.</p>
+    <p>For a new siege, assemble the required force before entering an enemy fort. The app checks siege strength as each group enters.</p>
+    <p class="credits"><a href="https://gmtwebsiteassets.s3.us-west-2.amazonaws.com/nnpg/PoG-DeluxeRules2022Final.pdf" target="_blank" rel="noopener">GMT living rules</a> · <a href="https://www.gmtgames.com/living_rules/pog_charts.pdf" target="_blank" rel="noopener">GMT tables</a> · <a href="https://www.gmtgames.com/nnpg/pog_cardlist.html" target="_blank" rel="noopener">GMT card manifest</a> · <a href="https://github.com/rally-the-troops/paths-of-glory" target="_blank" rel="noopener">Board data reference</a></p>
+    <div class="button-row"><button class="primary" data-do="close">Return to game</button></div>
+  </div>
+</dialog>
+<noscript>This offline game requires JavaScript. Open the downloaded HTML in a browser with JavaScript enabled.</noscript>
+<script>/* @SCRIPTS@ */</script>
+</body>
+</html>
