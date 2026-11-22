@@ -7,7 +7,8 @@ d = sys.argv[1]
 def load(name):
     out = []
     for f in sorted(glob.glob(os.path.join(d, name))):
-        out += json.load(open(f))['games']
+        data = json.load(open(f))
+        if isinstance(data, dict) and 'games' in data: out += data['games']  # skips digest.json
     return out
 
 def wins(games, side):
@@ -43,6 +44,35 @@ print('|---|---|---|---|---|---|')
 for label, n, ap, cp, errs, mt, kinds in rows:
     k = ', '.join(f'{a} {b}' for a, b in sorted(kinds.items(), key=lambda x: -x[1]))
     print(f'| {label} | {n} | {ap} ({ap/n:.0%}) | {cp} ({cp/n:.0%}) | {mt:.1f} | {k} |')
+
+# Run health: every game in every file, so clean-run claims can be checked
+ALL = load('*.json')
+if ALL:
+    inc = [g for g in ALL if g.get('err') or not g.get('result')]
+    exc = sum(len(g.get('exceptions', [])) for g in ALL)
+    viol = Counter(); fb = Counter(); undo = 0
+    for g in ALL:
+        for side in ('ap', 'cp'):
+            s_ = g['stats'][side]
+            undo += s_.get('undos', 0) or 0
+            for k, v in (s_.get('fallback') or {}).items():
+                if k.startswith('viol:'): viol[k.split(':')[2]] += v
+                elif k.startswith('illegal:'): fb['rejected bot proposal (' + k.split(':')[1] + ')'] += v
+                else: fb['engine default: ' + k] += v
+    print()
+    print('**Run health** (all games above)')
+    print('| Check | Count |')
+    print('|---|---|')
+    print(f'| Games | {len(ALL)} |')
+    print(f'| Unfinished games or harness errors | {len(inc)} |')
+    print(f'| Decision exceptions replaced by the engine\'s first legal action | {exc} |')
+    resets = sum((g['stats'][x].get('violations') or 0) for g in ALL for x in ('ap', 'cp'))
+    hit = sum(1 for g in ALL if any(g['stats'][x].get('violations') for x in ('ap', 'cp')))
+    print(f'| Rule-violation resets (' + (', '.join(f'{k} {v}' for k, v in viol.most_common()) or 'none') + f'); games affected: {hit} | {resets} |')
+    print(f'| Undo of a dead-end step | {undo} |')
+    print(f'| Choices left to the engine default or rejected bot proposals | {sum(fb.values())} |')
+    for k, v in fb.most_common(12): print(f'| &nbsp;&nbsp;{k} | {v} |')
+    digest['health'] = dict(games=len(ALL), incomplete=len(inc), exceptions=exc, violations=dict(viol), undos=undo, fallback=dict(fb))
 
 # Self-play details
 G = load('self_*.json')

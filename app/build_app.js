@@ -8,7 +8,7 @@ const B = require(path.join(root, 'sim/board.js'))
 const R = require(path.join(root, 'engine/rules.js'))
 const POLICY = require(path.join(root, 'research/event_policy.json'))
 const EP = require(path.join(root, 'sim/events.js'))
-const VERSION = process.env.GS_VERSION || '0.7.1'
+const VERSION = process.env.GS_VERSION || '0.7.2'
 
 const FN = { WEST: 'West', EAST: 'East', ITALY: 'Italy', BALKANS: 'Balkans', NEAREAST: 'Near East' }
 const objectives = {}
@@ -25,7 +25,7 @@ for (const side of ['cp', 'ap']) events[side] = POLICY.filter(e => e.side === si
 })
 const DATA = {
   version: VERSION, deck: makeDeck(), frontTable, objectives, events, stance: STANCE_MIN_EDGE,
-  army: B.expectedTable(R.__api.fire_table.army).map(x => +x.toFixed(2)), corps: B.expectedTable(R.__api.fire_table.corps).map(x => +x.toFixed(2)),
+  army: B.printedExpectedTable(R.__api.fire_table.army), corps: B.printedExpectedTable(R.__api.fire_table.corps),
   armyCols: R.__api.fire_table.army.map(c => c.factors), corpsCols: R.__api.fire_table.corps.map(c => c.factors),
 }
 
@@ -90,7 +90,7 @@ td, th { border-bottom:1px solid #e2d7bb; padding:4px; text-align:left; vertical
 <div style="display:grid; gap:12px; align-content:start">
 <section><h2>Edge calculator</h2>
 <div class="row"><label>Bot CF</label><input type="number" id="acf" value="8" min="0"><label><input type="checkbox" id="aarmy" checked> army attacking</label></div>
-<div class="row"><label>Defender CF</label><input type="number" id="dcf" value="4" min="0"><label><input type="checkbox" id="darmy" checked> army defending</label><label>fort <input type="number" id="fort" value="0" min="0" max="3"></label></div>
+<div class="row"><label>Defender CF</label><input type="number" id="dcf" value="4" min="0"><label><input type="checkbox" id="darmy" checked> army defending</label><label>fort <input type="number" id="fort" value="0" min="0" max="3"></label><label><input type="checkbox" id="dunits" checked> units in the space (untick for an empty fort)</label></div>
 <div class="row"><label>Terrain</label><select id="terr"><option value="0">clear/forest/desert</option><option value="1">mountain or swamp</option></select><label>Trench <select id="tr"><option>0</option><option>1</option><option>2</option></select></label></div>
 <div class="row"><label>Bonuses</label>
 <label><input type="checkbox" id="bobj"> Objective (+1)</label><label><input type="checkbox" id="bnear"> else within 2 of it (+0.4)</label><label><input type="checkbox" id="bvp"> VP (+0.5)</label><label><input type="checkbox" id="boos"> defender OOS (+0.5)</label></div>
@@ -132,15 +132,17 @@ function col(cols, cf, sh) { let i = 1; while (i < cols.length && cols[i] <= cf)
 function renderEdge() {
   const acf = +$('acf').value || 0, dcf = (+$('dcf').value || 0) + (+$('fort').value || 0);
   const aA = $('aarmy').checked, dA = $('darmy').checked, tr = +$('tr').value, terr = +$('terr').value;
-  const ash = -terr - tr, dsh = tr > 0 && (+$('dcf').value || 0) > 0 ? 1 : 0;
-  const ac = col(aA ? D.armyCols : D.corpsCols, acf, ash), dc = col(dA ? D.armyCols : D.corpsCols, dcf, dsh);
-  const eA = (aA ? D.army : D.corps)[ac], eD = dcf > 0 ? (dA ? D.army : D.corps)[dc] : 0;
-  const edge = eA - eD;
+  // A target always has defending units or a fort, so the defender always fires, even at 0 CF (the Corps table's 0 column).
+  // The trench shifts apply only when defending units are present (not for an empty fort).
+  const units = $('dunits').checked, ash = -terr - (units ? tr : 0), dsh = units && tr > 0 ? 1 : 0;
+  const ac = col(aA ? D.armyCols : D.corpsCols, acf, ash), dc = col(dA && units ? D.armyCols : D.corpsCols, dcf, dsh);
+  const eA = (aA ? D.army : D.corps)[ac], eD = (dA && units ? D.army : D.corps)[dc];
+  const edge = Math.round((eA - eD) * 10) / 10;
   const bonus = ($('bobj').checked ? 1 : ($('bnear').checked ? 0.4 : 0)) + ($('bvp').checked ? 0.5 : 0) + ($('boos').checked ? 0.5 : 0) + (+$('bmo').value) + (+$('bfront').value);
   const score = edge + bonus;
   const c = S.cur ? cardById(S.cur) : null, need = c ? D.stance[c.stance] + (S.side === 'ap' ? 1 : 0) : null;
-  const verdict = need === null ? '' : (score >= need ? '<span class="ok"> — attack (needs ' + need + ')</span>' : '<span class="no"> — too weak (needs ' + need + ')</span>');
-  $('edge').innerHTML = 'Bot ' + eA.toFixed(2) + ' − defender ' + eD.toFixed(2) + ' = Edge ' + (edge >= 0 ? '+' : '') + edge.toFixed(2) + '<br>Score ' + (score >= 0 ? '+' : '') + score.toFixed(2) + verdict;
+  const verdict = need === null ? '' : (score >= need - 1e-9 ? '<span class="ok"> — attack (needs ' + need + ')</span>' : '<span class="no"> — too weak (needs ' + need + ')</span>');
+  $('edge').innerHTML = 'Bot ' + eA.toFixed(1) + ' − defender ' + eD.toFixed(1) + ' = Edge ' + (edge >= 0 ? '+' : '') + edge.toFixed(1) + '<br>Score ' + (score >= 0 ? '+' : '') + score.toFixed(2) + verdict;
 }
 function renderTabs() {
   const o = D.objectives[S.side];
@@ -154,7 +156,7 @@ $('draw').onclick = () => { if (!S.deck.length) { S.deck = shuffle(S.discard); S
 $('undo').onclick = () => { const h = S.hist.pop(); if (h) { const x = JSON.parse(h); S.deck = x.deck; S.discard = x.discard; S.cur = x.cur } render() };
 $('side').onchange = e => { S.side = e.target.value; render() };
 $('lvl').onchange = e => { S.lvl = e.target.value; render() };
-for (const id of ['acf','dcf','fort','aarmy','darmy','terr','tr','bobj','bnear','bvp','boos','bmo','bfront']) $(id).oninput = renderEdge;
+for (const id of ['acf','dcf','fort','aarmy','darmy','dunits','terr','tr','bobj','bnear','bvp','boos','bmo','bfront']) { $(id).oninput = renderEdge; $(id).onchange = renderEdge }
 $('evq').oninput = renderTabs;
 document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x === b)); for (const t of ['obj','front','ev']) $('t-' + t).classList.toggle('hidden', t !== b.dataset.t) });
 load(); if (!S.deck.length && !S.discard.length) reset(); render();

@@ -75,6 +75,8 @@ for (const side in OBJ) for (const f in OBJ[side]) OBJ[side][f] = OBJ[side][f].m
 
 // Fire tables: expected hits per column (printed on the reference card).
 function expectedTable(tbl) { return tbl.map(c => c.result.reduce((a, b) => a + b, 0) / 6) }
+// The values printed on the Edge table: expected hits rounded to one decimal. Paper, Companion and simulator all use these.
+function printedExpectedTable(tbl) { return expectedTable(tbl).map(x => Math.round(x * 10) / 10) }
 
 const CAPITALS = { cp: ['Berlin', 'Vienna', 'Constantinople', 'Sofia'].map(S), ap: ['Paris', 'London', 'Petrograd', 'Rome', 'Belgrade', 'Bucharest'].map(S) }
 
@@ -82,4 +84,4 @@ const CAPITALS = { cp: ['Berlin', 'Vienna', 'Constantinople', 'Sofia'].map(S), a
 const Y = require('./coords_y.json')
 function ycoord(s) { return Y[s] !== undefined ? Y[s] : 9999 }
 
-module.exports = { data, N, S, byName, adj, dist, FRONT, FRONTS, OBJ, expectedTable, CAPITALS, ycoord }
+module.exports = { data, N, S, byName, adj, dist, FRONT, FRONTS, OBJ, expectedTable, printedExpectedTable, CAPITALS, ycoord }

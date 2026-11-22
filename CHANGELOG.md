@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.7.2 — 22 Nov 2026
+
+Fixes for the five findings of the independent v0.7.1 review (`audits/general-staff-v0.7.1/`). There is no new strategy. Response: [`audits/general-staff-v0.7.1/Response.md`](audits/general-staff-v0.7.1/Response.md).
+
+* **MO credit (GS-01).** The MO bonus and the forced round-5 attack count only if the attackers actually chosen would satisfy the MO. At resolution the MO is checked again, and an attack that no longer meets it is judged like any other. Rules §4 and §5.4 now say this.
+* **Calculator (GS-02).** In the Companion, a 0-CF defender still fires (Corps 0 column). A new box handles an empty fort.
+* **One precision (GS-03).** Paper, Companion and simulator all use the Edge table's printed one-decimal values; a Score equal to the threshold meets it.
+* **Evaluation honesty (GS-04).** Decision exceptions, engine-default sub-choices, rejected proposals, rule-violation resets and step-cap exits are recorded. `STRICT=1` stops a game at the first exception, and the summary prints a run-health table.
+* **Setup (GS-05).** The tracked `engine` symlink is gone, and setup copes with a stale link.
+* Tried and not adopted: taking an MO target's mandated-nation spaces first. It made no difference.
+* Testing: paired tests against the v0.7 reference showed no change beyond noise. Allies 66–68% (v0.7.1: 66–67%); CP 32–45% (v0.7.1: 37–40%), with the two seed sets moving in opposite directions. Strict self-play over 600 games: **Allies 67% / CP 33%**, no exceptions and no unfinished games. Missed MOs fell slightly: Allies 3.4 → 3.1, CP 1.4 → 1.3 per game.
+
 ## v0.7.1 — 22 Nov 2026
 
 Rules clarifications from a third independent review, and a test harness that now follows every printed move tie-break. No rule of play changed.

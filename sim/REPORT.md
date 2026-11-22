@@ -1,10 +1,10 @@
 # General Staff — simulation report
 
-*Covers General Staff **v0.7**, with a check of the **v0.7.1** clarifications (rules: [`bot/General_Staff_Rules.md`](../bot/General_Staff_Rules.md)). Written 22 November 2026.*
+*Covers General Staff **v0.7**, with checks of **v0.7.1** and **v0.7.2** (rules: [`bot/General_Staff_Rules.md`](../bot/General_Staff_Rules.md)). Written 22 November 2026.*
 
 ## Summary
 
-* **v0.7.1 (current).** The test harness now follows the printed Capture tie-break, which made the Allied bot about seven points stronger; the CP bot is unchanged. Self-play over 600 games is now **68% Allies / 32% CP**, with no errors (see *v0.7.1 check*). The rest of this summary describes v0.7.
+* **v0.7.2 (current).** v0.7.2 fixes the five findings of an independent review: MO credit, a Companion error, one shared Edge-table precision, evaluation honesty and engine setup. Strict self-play over 600 games is **67% Allies / 33% CP**, with no exceptions and no unfinished games (see *v0.7.2: review fixes*). v0.7.1 had made the Allied bot about seven points stronger by following the printed Capture tie-break. The rest of this summary describes v0.7.
 * In **200 self-play campaigns** (bot against bot), the Allied bot won **62%** and the Central Powers bot **38%**. Mean VP stayed between 8 and 12 all war.
 * Against a **random** player and against a **naive** one-attack, no-events bot, General Staff won **every** game on both sides: 260 of 260.
 * About **27,000 further campaigns** compared design alternatives in paired tests. They settled the main choices:
@@ -29,6 +29,39 @@
 * **Naive**: the same machinery with the main features off. It plays only forced events and makes one attack per action round. It does not advance, move, use SR or fill crisis spaces, and it checks every target. This is roughly a first-draft "one order per round" bot.
 
 **Design comparisons.** A candidate bot played one side against a frozen reference bot on the other side, on the same seeds: 120 or 150 per side. At those sizes the standard error of a win rate near 50% is about ±4 points. Only differences of about 10 points or more were treated as real. When a change made no difference, the simpler procedure was kept.
+
+## v0.7.2: review fixes
+
+An independent review of v0.7.1 ([`audits/general-staff-v0.7.1/`](../audits/general-staff-v0.7.1/)) reported five problems:
+
+* MO credit kept after the mandated nation's units were dropped from an attack;
+* a Companion error with 0-CF defenders;
+* three different expected-hit precisions;
+* an evaluator that hid decision exceptions;
+* a machine-specific engine link.
+
+All five are fixed ([response](../audits/general-staff-v0.7.1/Response.md)). The simulator, the Companion and the printed sheet now share one Edge table, the printed one-decimal values. Evaluation now uses strict mode and reports run health.
+
+| Test | v0.7.1 | v0.7.2 |
+|---|---|---|
+| Allied bot against the v0.7 CP reference, seeds 6001–6300 / 7001–7300 | 67% / 66% | 66% / 68% |
+| CP bot against the v0.7 Allied reference, seeds 6001–6300 / 7001–7300 | 40% / 37% | 45% / 32% |
+| Self-play, seeds 10001–10300 and 20001–20300 (600 games) | Allies 68% / CP 32% | **Allies 67% / CP 33%** |
+| Mandated offensives missed per game (self-play) | Allies 3.4, CP 1.4 | Allies 3.1, CP 1.3 |
+| Against random and naive opponents (140 games) | won all 140 | won all 140 |
+
+No change is larger than noise; the CP seed sets moved in opposite directions. The review's MO reproduction script now finds no affected plans (v0.7.1: five). Taking an MO target's mandated-nation spaces first was also tried; it made no difference (Allies 68% vs 68%, CP 32% vs 32%) and was not adopted.
+
+**Run health, strict mode** (all 740 v0.7.2 evaluation games; `STRICT=1` stops a game at its first decision exception):
+
+| Check | Count |
+|---|---|
+| Unfinished games or harness errors | 0 |
+| Decision exceptions | 0 |
+| Rule-violation resets (an overstacking move undone and the round replanned with attacks only) | 67, in 32 of the 740 games |
+| Choices left to the engine's default | about 14 per game: placing entering neutral units 7.4, War in Africa 2.6, Salonika 1.2, Withdrawal 1.9, Landwehr 0.9, others under 0.3 |
+
+The engine-default choices are event and entry sub-choices that the booklet covers with "front order, then the Tie" (§9, *Other choices*). The simulator never tested those rules; it took the engine's first option. They are counted now and remain a known limit.
 
 ## v0.7.1 check
 
@@ -190,7 +223,8 @@ These are counts, not clock times. Table time has not been measured.
 * **The Allied bot misses mandated offensives** about 3.3 times a game, often because no British or Italian unit is in contact with a valid target. Moving those units into contact (MO preparation) made no difference in testing, so it was left out.
 * **Events are played by priority and legality, with a few situational adjustments.** The finer timing advice in [`research/event_policy.md`](../research/event_policy.md) is research, not part of the procedure.
 * **The tests used Rally the Troops' rules implementation.** Any difference between it and your printed rules would affect these results.
-* **Some sub-choices took the engine's first legal option**: where to place an event trench, entering neutral units, and some event follow-ups. At the table the rules say to use front order and the Tie, so those choices were never tested.
+* **Some sub-choices took the engine's first legal option**: where to place an event trench, entering neutral units, and some event follow-ups (about 14 a game, counted in the v0.7.2 run-health table). At the table the rules say to use front order and the Tie, so those choices were never tested.
+* **Rule-violation resets.** In about one game in 23, a planned move would overstack. The harness then undoes the round and replans it with attacks only. A person at the table would just pick another space.
 
 ## What to watch for in playtesting
 
@@ -206,7 +240,7 @@ Reports like these are the most useful input for v0.8.
 
 ```sh
 cd sim && ./setup_engine.sh
-node final_eval.js self 100 5001 > self_a.json     # self-play
+STRICT=1 node final_eval.js self 100 5001 > self_a.json     # self-play; STRICT=1 stops a game on any decision exception
 node final_eval.js naive-ap 100 7001 > naive_ap.json
 python3 summarize.py .                              # tables above
 node ab.js ap 150 2001 <ref-bot-dir> '{"shortlist":3}'   # an A/B comparison

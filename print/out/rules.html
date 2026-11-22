@@ -4,7 +4,7 @@
   blockquote { margin: 6px 0; padding: 4px 10px; background: #f3eee0; border-left: 3px solid #8c2d1e; } code { font-size: 9pt; } li { margin: 2px 0; } hr { border: 0; border-top: 1px solid #bbb; margin: 14px 0; }</style><h1
 id="general-staff--a-card-driven-solo-opponent-for-paths-of-glory">General
 Staff — a card-driven solo opponent for <em>Paths of Glory</em></h1>
-<p><strong>Version 0.7.1 (playtest draft)</strong> · Unofficial fan
+<p><strong>Version 0.7.2 (playtest draft)</strong> · Unofficial fan
 material for GMT Games' <em>Paths of Glory</em> (Deluxe edition,
 Historical scenario / full campaign, the standard 110 strategy cards, no
 optional cards). You need the physical game. Strategy-card numbers below
@@ -217,11 +217,13 @@ once.</li>
 <li><strong>Resolve</strong> movement and then combat, as the rules
 require. Make the planned attacks in order. Before each one, work out
 its Edge again with the units now able to attack, and keep the bonuses
-from planning. Skip it if it is no longer possible, or if this new Score
-has fallen more than 0.5 below the Stance. Never skip an attack planned
-as an MO attack. Then units in spaces activated for combat that have not
-attacked may attack the target with the best Edge (no bonuses), if that
-Edge meets the Stance, one attack at a time.</li>
+from planning. If the units now able to attack would no longer satisfy
+the MO, drop the MO bonus: it is now an ordinary attack. Skip it if it
+is no longer possible, or if this new Score has fallen more than 0.5
+below the Stance. Never skip an attack that still satisfies the MO. Then
+units in spaces activated for combat that have not attacked may attack
+the target with the best Edge (no bonuses), if that Edge meets the
+Stance, one attack at a time.</li>
 </ol>
 <hr />
 <h2 id="5-attack-search">5. Attack Search</h2>
@@ -253,10 +255,13 @@ for a level-2 trench.</li>
 <li><strong>Defender column</strong>: the total defending CF plus the
 fort value (for an undestroyed fort the defender controls), on the Army
 table if any defender is an army. Shift one column right if the defender
-has a trench.</li>
+has a trench. A defender always fires: a unit with 0 CF uses the Corps
+table's 0 column, and an empty fort fires on the Corps table at its fort
+value.</li>
+<li>Trench shifts apply only when defending units are in the space.</li>
 </ul>
 <p>Read each column's <strong>expected hits</strong> from the Edge table
-(§10.4). Then:</p>
+(§10.4), using its one-decimal values exactly as printed. Then:</p>
 <blockquote>
 <p><strong>Edge</strong> = bot's expected hits − defender's expected
 hits</p>
@@ -301,8 +306,9 @@ Objective</td>
 <p>Consider the shortlisted targets from the highest Score down. For
 each, take its attacking spaces strongest first, skipping any whose
 activation cost no longer fits the OPS still unspent, and work out the
-Score again with only those units. Attack if it meets the Staff card's
-Stance:</p>
+Score again with only those units. The MO bonus counts only if those
+units would satisfy the MO. Attack if the Score meets the Staff card's
+Stance (a Score equal to the threshold meets it):</p>
 <table>
 <thead>
 <tr class="header">
@@ -329,8 +335,8 @@ Stance:</p>
 </tr>
 </tbody>
 </table>
-<p>From action round 5, the first attack that would satisfy the bot's
-unmet MO is made whatever its Score.</p>
+<p>From action round 5, the first attack whose chosen units would
+satisfy the bot's unmet MO is made whatever its Score.</p>
 <p>Each attacking space joins only one attack. The bot plans <strong>at
 most three attacks</strong> in one action round (the leftover attacks of
 §4 step 4 come on top).</p>

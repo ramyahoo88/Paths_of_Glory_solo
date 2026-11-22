@@ -25,7 +25,7 @@ th { background: #e8e2d0; }
 .small { font-size: 7.5pt; } .pb { page-break-before: always; } .rec td { height: 30px; } .rec th { font-size: 8pt; }
 ol, ul { margin: 2px 0 4px 16px; padding: 0; } li { margin: 1px 0; }
 </style><div class="ref">
-<h1>General Staff v0.7.1 &mdash; Reference</h1><h2>Bot action round &mdash; draw 1 Staff card, then take the first step that applies</h2>
+<h1>General Staff v0.7.2 &mdash; Reference</h1><h2>Bot action round &mdash; draw 1 Staff card, then take the first step that applies</h2>
 <ol>
 <li><b>Forced play</b> (Guns of August, CP turn 1 round 1).</li>
 <li><b>MO last chance</b>: rounds 5&ndash;6, MO unmet, the planned attacks include an MO attack &rarr; that Operation.</li>
@@ -41,10 +41,10 @@ ol, ul { margin: 2px 0 4px 16px; padding: 0; } li { margin: 1px 0; }
 <ol>
 <li>Targets: enemy-occupied spaces and unbesieged enemy forts the bot can legally attack.</li>
 <li>Shortlist: the 3 largest CF differences (CF of all bot units able to attack &minus; defending CF &minus; fort), plus Objectives and MO targets.</li>
-<li>Edge = bot's expected hits &minus; defender's (Edge table, after shifts). Score = Edge + bonuses (sheet 2). Rank by Score.</li>
-<li>From the top: take attacking spaces strongest first, skipping any the remaining OPS cannot pay; rescore; attack if Score &ge; Stance (CP: Assault 0, Press +0.75, Hold +1.5; Allies +1 more). From round 5 an MO attack is made at any Score.</li>
+<li>Edge = bot's expected hits &minus; defender's (Edge table values as printed, after shifts; a 0-CF defender still fires). Score = Edge + bonuses (sheet 2). Rank by Score.</li>
+<li>From the top: take attacking spaces strongest first, skipping any the remaining OPS cannot pay; rescore (MO bonus only if the chosen units satisfy the MO); attack if Score &ge; Stance (CP: Assault 0, Press +0.75, Hold +1.5; Allies +1 more). From round 5 an MO attack is made at any Score.</li>
 <li>Up to 3 attacks, each space once; leftover OPS go down the Move list.</li>
-<li>Resolving: recompute each Edge, keep the bonuses; skip if &gt;0.5 below the Stance (never an MO attack). Then unused attackers may hit the best Edge &ge; Stance.</li>
+<li>Resolving: recompute each Edge, keep the bonuses (drop the MO bonus if the MO is no longer met); skip if &gt;0.5 below the Stance (never an attack that still meets the MO). Then unused attackers may hit the best Edge &ge; Stance.</li>
 </ol>
 <h3>Card for Operations</h3>
 <ol><li>Whole plan (attacks + moves) costs 1 and &le;1 attack &rarr; Automatic Operation.</li><li>Else the lowest-OPS card that is enough for the attacks (or the first planned move), avoiding priority 6+; ties: lower priority, lower number. Combat cards count as priority 0. None enough: highest OPS, then replan.</li></ol>

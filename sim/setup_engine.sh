@@ -7,6 +7,8 @@ cd "$(dirname "$0")"
 REV=c58b0b4
 [ -d rtt-pog ] || git clone https://github.com/rally-the-troops/paths-of-glory rtt-pog
 (cd rtt-pog && git checkout -q $REV)
+# a stale link or file named engine (from an older checkout) would block mkdir
+[ -L ../engine ] && rm ../engine
 mkdir -p ../engine
 cp rtt-pog/data.js rtt-pog/lz4.js ../engine/
 cp rtt-pog/rules.js ../engine/rules.js

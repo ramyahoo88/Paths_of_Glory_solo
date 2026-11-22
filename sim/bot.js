@@ -7,8 +7,11 @@ const B = require('./board.js')
 const EP = require('./events.js')
 const data = B.data
 
-const ARMY_EXP = B.expectedTable(R.__api.fire_table.army)
-const CORPS_EXP = B.expectedTable(R.__api.fire_table.corps)
+// Edge uses the printed one-decimal expected hits (rules §10.4), so paper, Companion and simulator agree.
+const ARMY_EXP = B.printedExpectedTable(R.__api.fire_table.army)
+const CORPS_EXP = B.printedExpectedTable(R.__api.fire_table.corps)
+const EPS = 1e-9 // Score comparisons: a Score equal to the threshold meets it
+const ARMY_EXACT = B.expectedTable(R.__api.fire_table.army), CORPS_EXACT = B.expectedTable(R.__api.fire_table.corps) // opts.exactHits (experiment only)
 const ROLE = { ap: 'Allied Powers', cp: 'Central Powers' }
 
 // ---------------- Directive deck ----------------
@@ -156,11 +159,12 @@ class Bot {
     const aTbl = aArmy ? R.__api.fire_table.army : R.__api.fire_table.corps
     const dTbl = (dArmy) ? R.__api.fire_table.army : R.__api.fire_table.corps
     const aCol = colIndex(aTbl, acf, ash), dCol = colIndex(dTbl, dcf, dsh)
-    const eA = (aArmy ? ARMY_EXP : CORPS_EXP)[aCol]
-    const eD = defs.length || fort ? (dArmy ? ARMY_EXP : CORPS_EXP)[dCol] : 0
+    const AT = this.opts.exactHits ? ARMY_EXACT : ARMY_EXP, CT = this.opts.exactHits ? CORPS_EXACT : CORPS_EXP
+    const eA = (aArmy ? AT : CT)[aCol]
+    const eD = defs.length || fort ? (dArmy ? AT : CT)[dCol] : 0
     // defender steps available
     const dSteps = defs.reduce((a, p) => a + (A.is_unit_reduced(p) ? 1 : 2), 0) + (fort ? 1 : 0)
-    return { edge: eA - eD, eA, eD, dSteps, acf, dcf }
+    return { edge: this.opts.exactHits ? eA - eD : Math.round((eA - eD) * 10) / 10, eA, eD, dSteps, acf, dcf }
   }
 
   // ======== Operation planning ========
@@ -194,16 +198,25 @@ class Bot {
       evals++
       // choose spaces to activate greedily by CF until budget; recompute
       let chosen = [], cost = 0
-      for (const s of spaces) { const k = A.cost_to_activate(s, 'attack'); if (plan.cost + cost + k <= budget) { chosen.push(s); cost += k } }
+      let order = spaces
+      if (c.mo && this.opts.moSpacesFirst) {
+        // MO target: spaces holding units that can satisfy the MO come first, then strongest
+        const sat = s => A.satisfies_mo(mo, this.attackersFrom(A, s, c.target), this.enemyUnitsAt(A, c.target), c.target) ? 0 : 1
+        order = spaces.slice().sort((x, y) => sat(x) - sat(y))
+      }
+      for (const s of order) { const k = A.cost_to_activate(s, 'attack'); if (plan.cost + cost + k <= budget) { chosen.push(s); cost += k } }
       if (!chosen.length) continue
       const ps = chosen.flatMap(s => this.attackersFrom(A, s, c.target))
       if (!ps.length) continue
       const ev = this.evalAttack(A, ps, c.target)
-      const score = ev.edge + c.bonus
-      const forced = c.mo && roundNo >= (this.opts.moForce || 5) && !plan.attacks.some(a => a.mo)
-      if (score < minEdge && !forced) continue
+      // MO credit only if the units actually chosen satisfy the MO (rules §5.4: Score again with only those units)
+      const isMo = c.mo && (this.opts.moRecheck === false || A.satisfies_mo(mo, ps, this.enemyUnitsAt(A, c.target), c.target))
+      const bonus = c.bonus - (c.mo && !isMo ? c.moBonus : 0)
+      const score = ev.edge + bonus
+      const forced = isMo && roundNo >= (this.opts.moForce || 5) && !plan.attacks.some(a => a.mo)
+      if (score < minEdge - EPS && !forced) continue
       this.stats.checks++
-      plan.attacks.push({ target: c.target, spaces: chosen, cost, score, edge: ev.edge, mo: c.mo })
+      plan.attacks.push({ target: c.target, spaces: chosen, cost, score, edge: ev.edge, mo: isMo, moBonus: isMo ? c.moBonus : 0 })
       chosen.forEach(s => used.add(s)); plan.cost += cost
       if (plan.attacks.length >= (this.opts.maxAttacks || 3)) break
     }
@@ -251,17 +264,17 @@ class Bot {
         else if (obj && B.dist(t, obj) <= 2) bonus += 0.4
         if (data.spaces[t].vp) bonus += 0.5
         if (fi > 0) bonus -= 0.25 * fi // later fronts slightly less attractive
-        let isMo = false
+        let isMo = false, moBonus = 0
         if (mo && mo !== 'none' && !(A.game.events.french_mutiny > 0 && mo === 'fr')) {
           const allAtt = spaces.flatMap(x => this.attackersFrom(A, x.s, t))
-          if (A.satisfies_mo(mo, allAtt, defs, t)) { isMo = true; bonus += roundNo >= 5 ? 6.0 : roundNo >= 3 ? 2.5 : 1.0 }
+          if (A.satisfies_mo(mo, allAtt, defs, t)) { isMo = true; moBonus = roundNo >= 5 ? 6.0 : roundNo >= 3 ? 2.5 : 1.0; bonus += moBonus }
         }
         // enemy out of supply -> softer target
         if (defs.some(p => A.game.oos_pieces.includes(p))) bonus += 0.5
         // pre-evaluate with all spaces
         const ps = spaces.flatMap(x => this.attackersFrom(A, x.s, t))
         const ev = this.evalAttack(A, ps, t)
-        out.push({ target: t, spaces: spaces.map(x => x.s), bonus, pre: ev.edge + bonus, mo: isMo, front: f })
+        out.push({ target: t, spaces: spaces.map(x => x.s), bonus, moBonus, pre: ev.edge + bonus, mo: isMo, front: f })
       }
     }
     if (this.opts.targetMode === 'ordered' || this.opts.targetMode === 'grouped') {
@@ -830,7 +843,12 @@ class Bot {
         const ps = elig.filter(p => A.get_attackable_spaces([p]).includes(a.target))
         if (!ps.length) { a.done = true; continue }
         const ev = this.evalAttack(A, ps, a.target)
-        if (ev.edge + (a.score - a.edge) < this.minEdge() - 0.5 && !a.mo) { a.done = true; continue }
+        if (a.mo && this.opts.moRecheck !== false) {
+          const mo = A.game[this.side].mo
+          const still = mo && mo !== 'none' && A.satisfies_mo(mo, ps, this.enemyUnitsAt(A, a.target), a.target)
+          if (!still) { a.score -= a.moBonus || 0; a.mo = false } // no longer an MO attack: judge it like any other
+        }
+        if (ev.edge + (a.score - a.edge) < this.minEdge() - 0.5 - EPS && !a.mo) { a.done = true; continue }
         this.curAttack = a
         return ['piece', ps[0]]
       }
@@ -839,7 +857,7 @@ class Bot {
       for (const p of elig) for (const t of A.get_attackable_spaces([p])) {
         const ps = elig.filter(q => A.get_attackable_spaces([q]).includes(t))
         const ev = this.evalAttack(A, ps, t)
-        if (ev.edge >= this.minEdge() && (!best || ev.edge > best.edge)) best = { target: t, edge: ev.edge, score: ev.edge, p: ps[0] }
+        if (ev.edge >= this.minEdge() - EPS && (!best || ev.edge > best.edge)) best = { target: t, edge: ev.edge, score: ev.edge, p: ps[0] }
       }
       if (best) { this.curAttack = best; plan.attacks.push(best); return ['piece', best.p] }
       return acts.confirm_pass_attack ? ['confirm_pass_attack'] : acts.pass ? ['pass'] : null

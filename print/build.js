@@ -8,7 +8,7 @@ const B = require(path.join(root, 'sim/board.js'))
 const POLICY = require(path.join(root, 'research/event_policy.json'))
 const EP = require(path.join(root, 'sim/events.js'))
 const out = path.join(root, 'print/out'); fs.mkdirSync(out, { recursive: true })
-const VERSION = process.env.GS_VERSION || '0.7.1'
+const VERSION = process.env.GS_VERSION || '0.7.2'
 
 const STANCE = { A: ['Assault', 'CP 0 · Allies +1'], P: ['Press', 'CP +0.75 · Allies +1.75'], H: ['Hold', 'CP +1.5 · Allies +2.5'] }
 const PLAN = { O: ['Ops', 'Attack · Event · Logistics'], E: ['Event', 'Event · Attack · Logistics'], L: ['Logistics', 'Logistics · Attack · Event'] }
@@ -73,7 +73,7 @@ function objTable(side) {
 }
 function edgeTables() {
   const R = require(path.join(root, 'engine/rules.js'))
-  const a = B.expectedTable(R.__api.fire_table.army), c = B.expectedTable(R.__api.fire_table.corps)
+  const a = B.printedExpectedTable(R.__api.fire_table.army), c = B.printedExpectedTable(R.__api.fire_table.corps)
   const an = ['1', '2', '3', '4', '5', '6&ndash;8', '9&ndash;11', '12&ndash;14', '15', '16+'], cn = ['0', '1', '2', '3', '4', '5', '6', '7', '8+']
   return `<table><tr><th>Army column</th>${an.map(x => `<th>${x}</th>`).join('')}</tr><tr><th>Expected hits</th>${a.map(x => `<td>${x.toFixed(1)}</td>`).join('')}</tr></table>
   <table><tr><th>Corps column</th>${cn.map(x => `<th>${x}</th>`).join('')}</tr><tr><th>Expected hits</th>${c.map(x => `<td>${x.toFixed(1)}</td>`).join('')}</tr></table>`

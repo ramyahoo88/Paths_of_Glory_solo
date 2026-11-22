@@ -15,6 +15,7 @@ The bot plays by the same rules you do. It holds a hand of real strategy cards a
 | **Worked example**: narrated bot decisions for the first two turns of a game | [Sample turns](bot/Sample_Turns.md) |
 | **Simulation report** | [REPORT.md](sim/REPORT.md) |
 | **Changes** | [CHANGELOG.md](CHANGELOG.md) |
+| **Independent review** of v0.7.1 and the response | [audits/general-staff-v0.7.1](audits/general-staff-v0.7.1/) |
 
 Print the cards at 100% (US Letter), single-sided; the last sheet is backs. The reference sheets are seven pages: procedure, tables, a record sheet, and the event lists (which can stay in a sleeve).
 
@@ -22,8 +23,8 @@ Print the cards at 100% (US Letter), single-sided; the last sheet is backs. The 
 
 General Staff was developed and tested in about **30,000 simulated full campaigns** on the open-source **Rally the Troops** rules engine. The engine is used with GMT's permission on that site and is not included here. The final version:
 
-* plays both sides competently: in 600 self-play games of the current version (v0.7.1), the Allied bot won **68%** and the Central Powers bot **32%**;
-* beat a random player and a naive one-attack, no-events bot in every test game (**540 of 540** across v0.7 and v0.7.1);
+* plays both sides competently: in 600 strict self-play games of the current version (v0.7.2), the Allied bot won **67%** and the Central Powers bot **33%**, with no exceptions or unfinished games;
+* beat a random player and a naive one-attack, no-events bot in every test game (**680 of 680** across v0.7 to v0.7.2);
 * made only legal moves, and plays a recognisable war: Russia usually collapses in 1917 and the USA enters in most games;
 * has an optional difficulty handicap (starting VP), worth about five or six points of win rate per VP.
 
