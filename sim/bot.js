@@ -336,7 +336,8 @@ class Bot {
         if (!A.is_space_at_war(t)) continue
         if (!A.can_end_move(t, ps)) continue
         let v = 1.5 + (data.spaces[t].vp ? 2 : 0) + (obj && B.dist(t, obj) < B.dist(s, obj) ? 0.5 : 0)
-        if (!best || v > best.score) best = { from: s, to: t, kind: 'capture', score: v + frontBonus }
+        // VP space first, then nearer the Objective, then the Tie
+        if (this.opts.printedTies === false ? (!best || v > best.score) : (!best || v > best.v || (v === best.v && this.tie(t, best.to) < 0))) best = { from: s, to: t, kind: 'capture', score: v + frontBonus, v }
       }
       if (best) out.push(best)
       // (2) siege: adjacent enemy fort without units -> move in to besiege
@@ -398,7 +399,7 @@ class Bot {
     if (this.opts.fillAll) for (const t of this.threatened(A, 1, true)) if (!gaps.includes(t) && fronts.indexOf(B.FRONT[t]) === 0) gaps.push(t)
     for (const t of gaps) {
       let bestS = null, bd = 99
-      for (const [s, ps] of mySpaces) { const d = B.dist(s, t); if (d <= 3 && d < bd && !used.has(s) && (ps.length > 1 || !this.adjEnemy(A, s))) { bd = d; bestS = s } }
+      for (const [s, ps] of mySpaces) { const d = B.dist(s, t); if (d <= 3 && (d < bd || (this.opts.printedTies !== false && d === bd && bestS !== null && this.tie(s, bestS) < 0)) && !used.has(s) && (ps.length > 1 || !this.adjEnemy(A, s))) { bd = d; bestS = s } }
       const key = data.spaces[t].vp || data.spaces[t].fort || data.spaces[t].capital
       if (bestS) out.push({ from: bestS, to: t, kind: 'fill', score: (key ? 2.2 : 1.2) + (data.spaces[t].capital ? 1 : 0) + (this.enemyDist(A)[t] === 1 ? 0.8 : 0) })
     }

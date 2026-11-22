@@ -20,14 +20,14 @@ Print the cards at 100% (US Letter), single-sided; the last sheet is backs. The 
 
 ## How good is it?
 
-General Staff was developed and tested in about **28,000 simulated full campaigns** on the open-source **Rally the Troops** rules engine. The engine is used with GMT's permission on that site and is not included here. The final version:
+General Staff was developed and tested in about **30,000 simulated full campaigns** on the open-source **Rally the Troops** rules engine. The engine is used with GMT's permission on that site and is not included here. The final version:
 
-* is reasonably close to balanced against itself: in 600 self-play games of the current version, the Allied bot won **62%** and the Central Powers bot **38%**;
-* beat a random player and a naive one-attack, no-events bot in every test game (**400 of 400** across v0.7 and v0.7.1);
+* plays both sides competently: in 600 self-play games of the current version (v0.7.1), the Allied bot won **68%** and the Central Powers bot **32%**;
+* beat a random player and a naive one-attack, no-events bot in every test game (**540 of 540** across v0.7 and v0.7.1);
 * made only legal moves, and plays a recognisable war: Russia usually collapses in 1917 and the USA enters in most games;
 * has an optional difficulty handicap (starting VP), worth about six points of win rate per VP.
 
-Bot-versus-bot strength is not the same as strength against a person; **human playtesting is the next step.** See the [report](sim/REPORT.md) for the evidence behind each design decision and the known limits. In self-play the Allied bot is currently the stronger of the two, so for a harder game give the bot the Allies or use the VP handicap. The main known weakness is that both bots, and especially the Allies, miss some mandated offensives.
+Bot-versus-bot strength is not the same as strength against a person; **human playtesting is the next step.** See the [report](sim/REPORT.md) for the evidence behind each design decision and the known limits. In self-play the Allied bot is clearly the stronger of the two, so for a harder game give the bot the Allies; against the Central Powers bot, consider a one-VP handicap in its favour. The main known weakness is that both bots, and especially the Allies, miss some mandated offensives.
 
 ## For developers
 

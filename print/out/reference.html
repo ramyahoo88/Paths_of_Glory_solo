@@ -50,8 +50,8 @@ ol, ul { margin: 2px 0 4px 16px; padding: 0; } li { margin: 1px 0; }
 <ol><li>Whole plan (attacks + moves) costs 1 and &le;1 attack &rarr; Automatic Operation.</li><li>Else the lowest-OPS card that is enough for the attacks (or the first planned move), avoiding priority 6+; ties: lower priority, lower number. Combat cards count as priority 0. None enough: highest OPS, then replan.</li></ol>
 <h3>Move list (highest value first; ties: front order of the mover's space, Tie)</h3>
 <table><tr><th>Move</th><th>Value</th></tr>
-<tr><td><b>Capture</b> an adjacent empty enemy space (no enemy fort; legal to end there)</td><td>4 VP / 2</td></tr>
-<tr><td><b>Fill</b> a threatened space from the nearest stack within 3 (out of contact or 2+ units)</td><td>2, +1 crisis, +1 capital</td></tr>
+<tr><td><b>Capture</b> an adjacent empty enemy space (no enemy fort; legal to end there): VP first, then nearer the Objective, then Tie</td><td>4 VP / 2</td></tr>
+<tr><td><b>Fill</b> a threatened space from the nearest stack within 3 (Tie; out of contact or 2+ units)</td><td>2, +1 crisis, +1 capital</td></tr>
 <tr><td><b>Siege</b> an adjacent empty enemy fort (army, or corps &ge; fort)</td><td>3 VP / 2</td></tr>
 <tr><td><b>Forward</b>: rear stack toward the nearest contact space with &lt;3 units (distance + &frac12; its distance to the Objective)</td><td>army 1.5 (Allies 2.5) / 1</td></tr>
 <tr><td><b>Entrench</b> an army in contact (after an Entrench event)</td><td>1.5 Hold / 0.5</td></tr></table>

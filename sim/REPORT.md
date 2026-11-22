@@ -4,9 +4,10 @@
 
 ## Summary
 
+* **v0.7.1 (current).** The test harness now follows the printed Capture tie-break, which made the Allied bot about seven points stronger; the CP bot is unchanged. Self-play over 600 games is now **68% Allies / 32% CP**, with no errors (see *v0.7.1 check*). The rest of this summary describes v0.7.
 * In **200 self-play campaigns** (bot against bot), the Allied bot won **62%** and the Central Powers bot **38%**. Mean VP stayed between 8 and 12 all war.
 * Against a **random** player and against a **naive** one-attack, no-events bot, General Staff won **every** game on both sides: 260 of 260.
-* About **26,000 further campaigns** compared design alternatives in paired tests. They settled the main choices:
+* About **27,000 further campaigns** compared design alternatives in paired tests. They settled the main choices:
   * attack the best Score, not the first acceptable target;
   * advance after combat;
   * fill endangered spaces by movement, not SR;
@@ -31,18 +32,25 @@
 
 ## v0.7.1 check
 
-v0.7.1 changes no rule of play. It pins down tie-breaks that the booklet left open (RP and SR cards by lower card number, movement steps by the Tie, rebuilt armies by the Tie) and fixes three harness faults: a map lookup that sent the CP Balkans list's Salonika entry to an off-map box, event-granted operations that ignored the "attacks only" restriction after a rule-violation reset (this caused one stuck game in 300), and a safe exit for a stack left with no legal step.
+v0.7.1 changes no rule of play. It pins down tie-breaks that the booklet left open (RP and SR cards by lower card number, movement steps, Fill stacks and rebuilt armies by the Tie). It also fixes four harness faults:
 
-| Test | v0.7 | v0.7.1 |
+* the Capture choice compared scores wrongly, so the printed preference for a capture nearer the front's Objective was often ignored;
+* a map lookup sent the CP Balkans list's Salonika entry to an off-map box;
+* event-granted operations ignored the "attacks only" restriction after a rule-violation reset (one stuck game in 300);
+* a stack left with no legal step now has a safe exit.
+
+The harness now follows every printed tie-break for moves.
+
+| Test | Without the Capture/Fill fix | v0.7.1 |
 |---|---|---|
-| Self-play, seeds 20001–20300 | Allies 59% / CP 41% | Allies 65% / CP 35%, no errors |
-| Self-play, seeds 10001–10300 | Allies 63% / CP 37% | Allies 58% / CP 42%, no errors |
-| Self-play, both sets (600 games) | Allies 61% / CP 39% | Allies 62% / CP 38% |
-| CP bot against the v0.7 Allied reference, 600 paired games on three seed sets | 39% | 37.5% |
-| Allied bot against the v0.7 CP reference, 450 paired games on two seed sets | 60% | 58% |
+| Allied bot against the v0.7 CP reference, seeds 6001–6300 | 58–61% | **67%** |
+| Allied bot against the v0.7 CP reference, seeds 7001–7300 | 59% | **66%** |
+| CP bot against the v0.7 Allied reference, seeds 6001–6300 | 39–41% | 40% |
+| CP bot against the v0.7 Allied reference, seeds 7001–7300 | 35% | 37% |
+| Self-play, seeds 10001–10300 and 20001–20300 (600 games) | Allies 61–62% / CP 38–39% | **Allies 68% / CP 32%**, no errors |
 | Against random and naive opponents (140 games) | — | won all 140 |
 
-In the paired tests neither side changed by more than two points. On single sets of 300 seeds, self-play moved by about five points, but in opposite directions on the two sets; over all 600 games the balance is unchanged. Swings of this size are ordinary noise for 300 games, so all v0.7 figures in this report still apply.
+Following the printed Capture rule made the Allied bot about **seven points stronger** on two seed sets of 300 games, and left the CP bot unchanged (within two points). The other tie-break changes made no measurable difference on their own. Self-play balance therefore moved toward the Allies. The handicap figures below were measured on v0.7; the CP bot now needs about one VP more to break even against the Allied bot.
 
 ## Results for v0.7
 
@@ -182,7 +190,7 @@ These are counts, not clock times. Table time has not been measured.
 * **The Allied bot misses mandated offensives** about 3.3 times a game, often because no British or Italian unit is in contact with a valid target. Moving those units into contact (MO preparation) made no difference in testing, so it was left out.
 * **Events are played by priority and legality, with a few situational adjustments.** The finer timing advice in [`research/event_policy.md`](../research/event_policy.md) is research, not part of the procedure.
 * **The tests used Rally the Troops' rules implementation.** Any difference between it and your printed rules would affect these results.
-* **Some minor tie-breaks in the harness follow map-data order** rather than the Tie (which stack fills a space, which of two capture targets). Since v0.7.1, movement steps, rebuilt armies and RP/SR card choices follow the printed tie-breaks. **Some sub-choices took the engine's first legal option**: where to place an event trench, entering neutral units, and some event follow-ups. At the table the rules say to use front order and the Tie, so those choices were never tested.
+* **Some sub-choices took the engine's first legal option**: where to place an event trench, entering neutral units, and some event follow-ups. At the table the rules say to use front order and the Tie, so those choices were never tested.
 
 ## What to watch for in playtesting
 
