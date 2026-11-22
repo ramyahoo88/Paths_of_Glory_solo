@@ -6,7 +6,7 @@ General Staff can command **either side**; you play the other side normally. The
 
 You do the bot's physical work: move its counters, roll its dice and keep its hand. When the bot must choose between equal options, the Staff card's **Tie** decides.
 
-The optional **General Staff Companion** (an offline web page) draws Staff cards, works out Edge and Score, and lists the tables. Everything it does is also on the printed sheets.
+The optional **General Staff Companion** (an offline web page) draws Staff cards, works out Edge and Score, tracks the turn, round and MO, lists the tables, and can move a session to another device. Everything it decides is also on the printed sheets.
 
 ---
 

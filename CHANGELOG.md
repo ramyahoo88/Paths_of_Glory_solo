@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.7.6 — 22 Nov 2026
+
+Fixes for the comprehensive v0.7.5 audit (`audits/general-staff-v0.7.5-comprehensive/`). Response: [`audits/general-staff-v0.7.5-comprehensive/Response.md`](audits/general-staff-v0.7.5-comprehensive/Response.md).
+
+* **No step out of supply (C01).** Every movement step, the safety exit and the first-step planning check now require the moving units to be in supply where they arrive. This is judged by the engine on a copy of the game, so a capture that opens a route counts. If no nearer step qualifies, the stack stops; on the first step, the move is dropped. Printed in §6.
+* **Corps gather to besiege (C02).** The step capacity judges a fort on the whole group that will move, so two corps can enter a level-2 fort together. Moves are no longer planned through a space the same Operation activates for attack. The safety exit uses full step legality, and a pass-through is counted.
+* **Brusilov Offensive (C03).** Cancel trench effects on the first eligible Russian attack. Printed in §9, the summary and the event list.
+* **Tie and front order (C04).** Equal-CF attack origins use the Tie in planning and execution. Attrition, siege and entrenchment rolls go in front order, then the Tie. Remaining Move-list ties go by the destination's Tie. §9 now separates event-granted Operations from units an event lets attack outside a plan.
+* **Companion.**
+  * The commitment level is checked against an allowlist (C05).
+  * New **Next round** and **Next turn** buttons: Next turn clears the MO and RP boxes, Undo restores the tracker, and the round is limited to 1–6.
+  * **Export / Import** of a session through a text box, with the same validation as reload.
+  * 40 regression checks.
+* **Provenance (EV-01).** `sim/provenance.js` stamps every evaluation, paired and handicap output with the bot commit, an uncommitted-changes flag and the engine revision with the hook hash (`engine/VERSION.json`). The v0.7.5 files get a manifest of declared provenance with SHA-256s.
+* **Supply-policy check.** `final_eval.js` checks every movement step for units left out of supply; the run-health table reports the count.
+* New regressions: `sim/tests/movement.js` (C01, C02) and `sim/tests/priorities.js` (C03, C04), built on the audit's fixtures.
+* Testing (commit `8f71855`, clean worktree, every file stamped):
+  * Allied bot 92–94% and CP bot 53–56% against the v0.7 reference.
+  * Strict self-play 85% / 15% on 600 new seeds, with **every run-health count zero**: no resets, no supply breaches, no generic choices.
+  * About 5.5 VP evens a bot-versus-bot game.
+
 ## v0.7.5 — 22 Nov 2026
 
 Follow-ups from the v0.7.4 verification (`audits/general-staff-v0.7.4/`). Response: [`audits/general-staff-v0.7.4/Response.md`](audits/general-staff-v0.7.4/Response.md).

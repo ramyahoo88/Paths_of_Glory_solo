@@ -4,7 +4,7 @@ Raw outputs behind the figures in [`../REPORT.md`](../REPORT.md), kept so the su
 
 ## v0.7.6 (`v0.7.6/`), run-time provenance
 
-Every file was produced from a clean worktree of commit **`31c808a`** (the v0.7.6 code). The paired runs play against the v0.7 reference at **`bc8bef6`**. Every output carries a run-time stamp from `sim/provenance.js`: bot commit, an uncommitted-changes flag (false for all of these) and the engine revision with the hook hash. Every file also has one record per seed. Self-play records include `supplyBreaches`, the movement steps that left the moving units out of supply.
+Every file was produced from a clean worktree of commit **`8f71855`** (the v0.7.6 code). The paired runs play against the v0.7 reference at **`bc8bef6`**. Every output carries a run-time stamp from `sim/provenance.js`: bot commit, an uncommitted-changes flag (false for all of these) and the engine revision with the hook hash. Every file also has one record per seed. Self-play records include `supplyBreaches`, the movement steps that left the moving units out of supply.
 
 * `self_a`–`self_d.json`: strict self-play, 600 games, seeds 1090000–1090599 (a range not used before).
 * `naive_*.json` and `rnd_*.json`: 140 baseline games.

@@ -28,7 +28,7 @@ Use it to check your reading of the procedure: with the same hand (shown, with e
 
 **Turn 1, Allied bot, round 4.** Hand: British Reinforcements (BR 2) [4], Severe Weather [2], Russian Reinforcements (2 corps) [2], Entrench [3], French Reinforcements (FR 10) [3]. Staff card 3: front 1, Hold, plan Ops, tie North. Step: *Crisis*. Plays **Severe Weather** for Operations. Attacks: Sedan from Verdun (Edge +1.5). Moves: capture Lutsk → Lemberg.
 
-**Turn 1, Central Powers bot, round 5.** Hand: German Reinforcements (GE 10) [4], Von Francois [2], Entrench [3], Severe Weather [2]. Staff card 8: front 3, Press, plan Event, tie South. Step: *Plan: Attack*. Plays **German Reinforcements (GE 10)** for Operations. Attacks: Sedan from Metz + Brussels + Liege (Edge +3.8); Lemberg from Przemysl (Edge +2).
+**Turn 1, Central Powers bot, round 5.** Hand: German Reinforcements (GE 10) [4], Von Francois [2], Entrench [3], Severe Weather [2]. Staff card 8: front 3, Press, plan Event, tie South. Step: *Plan: Attack*. Plays **German Reinforcements (GE 10)** for Operations. Attacks: Sedan from Metz + Liege + Brussels (Edge +3.8); Lemberg from Tarnopol (Edge +2).
 
 **Turn 1, Allied bot, round 5.** Hand: British Reinforcements (BR 2) [4], Russian Reinforcements (2 corps) [2], Entrench [3], French Reinforcements (FR 10) [3]. Staff card 13: front 5, Assault, plan Logistics, tie North. Step: *Crisis*. Plays **Russian Reinforcements (2 corps)** for Operations. Attacks: Tarnopol from Dubno + Kamenets-Podolski (Edge +1.5).
 

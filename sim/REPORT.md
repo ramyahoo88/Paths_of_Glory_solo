@@ -1,10 +1,11 @@
 # General Staff — simulation report
 
-*Covers General Staff **v0.7**, with checks of **v0.7.1** to **v0.7.5** (rules: [`bot/General_Staff_Rules.md`](../bot/General_Staff_Rules.md)). Written 22 November 2026.*
+*Covers General Staff **v0.7**, with checks of **v0.7.1** to **v0.7.6** (rules: [`bot/General_Staff_Rules.md`](../bot/General_Staff_Rules.md)). Written 22 November 2026.*
 
 ## Summary
 
-* **v0.7.5 (current).** In v0.7.5, units leaving a siege keep a legal besieging force, and every headline figure comes from per-seed records of one pinned commit. Against the v0.7 reference the Allied bot wins 90–92% and the CP bot 49–59%. Strict self-play is **85% Allies / 15% CP**, with **no rule-violation resets** in 740 games (see *v0.7.5*).
+* **v0.7.6 (current).** v0.7.6 fixes the comprehensive v0.7.5 audit: supply-safe movement, corps gathering to besiege, Brusilov, Tie and front order, companion validation and provenance stamps. Against the v0.7 reference the Allied bot wins 92–94% and the CP bot 53–56%. Strict self-play is **85% Allies / 15% CP**, and every run-health count, including the new supply-policy check, is zero (see *v0.7.6*).
+* **v0.7.5.** In v0.7.5, units leaving a siege keep a legal besieging force, and every headline figure comes from per-seed records of one pinned commit. Against the v0.7 reference the Allied bot wins 90–92% and the CP bot 49–59%. Strict self-play is **85% Allies / 15% CP**, with **no rule-violation resets** in 740 games (see *v0.7.5*).
 * **v0.7.4.** v0.7.4 corrects the two issues left by the v0.7.3 re-audit: a Salonika corps in contact and the event Tie. 600 fresh strict self-play games: **85% Allies / 15% CP**, no exceptions, no choice left to the engine's default (see *v0.7.4: re-audit corrections*).
 * **v0.7.3.** v0.7.3 fixes the nine findings of a comprehensive audit. The simulator now follows the printed procedure in every choice it meets, including event choices and event-granted Operations. Both bots are much stronger against the v0.7 reference: Allies 90–95%, CP 49–56%. Strict self-play is **84% Allies / 16% CP**, with one rule-violation reset in 740 games (see *v0.7.3: comprehensive audit fixes*).
 * **v0.7.2.** v0.7.2 fixes the five findings of an independent review: MO credit, a Companion error, one shared Edge-table precision, evaluation honesty and engine setup. Strict self-play over 600 games is **67% Allies / 33% CP**, with no exceptions and no unfinished games (see *v0.7.2: review fixes*). v0.7.1 had made the Allied bot about seven points stronger by following the printed Capture tie-break. The rest of this summary describes v0.7.
@@ -32,6 +33,43 @@
 * **Naive**: the same machinery with the main features off. It plays only forced events and makes one attack per action round. It does not advance, move, use SR or fill crisis spaces, and it checks every target. This is roughly a first-draft "one order per round" bot.
 
 **Design comparisons.** A candidate bot played one side against a frozen reference bot on the other side, on the same seeds: 120 or 150 per side. At those sizes the standard error of a win rate near 50% is about ±4 points. Only differences of about 10 points or more were treated as real. When a change made no difference, the simpler procedure was kept.
+
+## v0.7.6: comprehensive v0.7.5 audit fixes
+
+The comprehensive v0.7.5 audit ([`audits/general-staff-v0.7.5-comprehensive/`](../audits/general-staff-v0.7.5-comprehensive/)) found five problems:
+
+* a first movement step that sent a Serbian army out of supply;
+* two corps that could not gather to besiege a fort;
+* no rule for Brusilov's trench cancellation;
+* Tie and front order not applied to equal attack origins and siege rolls;
+* a companion validation gap.
+
+It also repeated the handicap-provenance point. All are fixed ([response](../audits/general-staff-v0.7.5-comprehensive/Response.md)). Every figure below comes from a clean worktree of the v0.7.6 code (commit `8f71855`). Each output file carries a run-time stamp: the bot commit, uncommitted changes (none) and the engine revision. The paired runs play against the v0.7 reference at `bc8bef6`. The files are in [`results/v0.7.6/`](results/v0.7.6/).
+
+| Test | Result |
+|---|---|
+| Allied bot against the v0.7 reference, seeds 6001–6300 / 7001–7300 | **92% / 94%** |
+| CP bot against the v0.7 reference, seeds 6001–6300 / 7001–7300 | **53% / 56%** |
+| Strict self-play, seeds 1090000–1090599 (600 games, a range not used before) | Allies **85%** / CP **15%** |
+| Against random and naive opponents (140 games) | won all 140 |
+| Mandated offensives missed per game (self-play) | Allies 2.5, CP 1.0 |
+
+**Run health, strict mode** (740 games): every count is **zero**. That covers:
+
+* unfinished games, errors and exceptions;
+* rule-violation resets;
+* **movement steps that left units out of supply** (a new check, made on a copy of the game after every step);
+* abandoned moves and pass-throughs;
+* called-off attacks and Salonika safety transfers;
+* choices without a bot rule.
+
+**Handicap** (self-play, starting VP moved in the CP bot's favour, seeds 30001–30150):
+
+| Starting VP | 10 (normal) | 11 | 12 | 13 | 14 | 15 | 16 |
+|---|---|---|---|---|---|---|---|
+| Allied / CP wins | 83% / 17% | 81% / 19% | 78% / 22% | 75% / 25% | 67% / 33% | 55% / 45% | 43% / 57% |
+
+By interpolation, about **five and a half VP** evens a bot-versus-bot game. This is a coarse self-play calibration, not a human difficulty rating.
 
 ## v0.7.5: siege rule and complete per-game evidence
 

@@ -4,7 +4,7 @@
   blockquote { margin: 6px 0; padding: 4px 10px; background: #f3eee0; border-left: 3px solid #8c2d1e; } code { font-size: 9pt; } li { margin: 2px 0; } hr { border: 0; border-top: 1px solid #bbb; margin: 14px 0; }</style><h1
 id="general-staff--a-card-driven-solo-opponent-for-paths-of-glory">General
 Staff — a card-driven solo opponent for <em>Paths of Glory</em></h1>
-<p><strong>Version 0.7.5 (playtest draft)</strong> · Unofficial fan
+<p><strong>Version 0.7.6 (playtest draft)</strong> · Unofficial fan
 material for GMT Games' <em>Paths of Glory</em> (Deluxe edition,
 Historical scenario / full campaign, the standard 110 strategy cards, no
 optional cards). You need the physical game. Strategy-card numbers below
@@ -23,8 +23,9 @@ booklet. Dice are rolled only where the game rules call for them
 keep its hand. When the bot must choose between equal options, the Staff
 card's <strong>Tie</strong> decides.</p>
 <p>The optional <strong>General Staff Companion</strong> (an offline web
-page) draws Staff cards, works out Edge and Score, and lists the tables.
-Everything it does is also on the printed sheets.</p>
+page) draws Staff cards, works out Edge and Score, tracks the turn,
+round and MO, lists the tables, and can move a session to another
+device. Everything it decides is also on the printed sheets.</p>
 <hr />
 <h2 id="1-components-and-setup">1. Components and setup</h2>
 <p><strong>Staff cards (18).</strong> Print <code>staff_cards.pdf</code>
@@ -243,9 +244,10 @@ able to attack it, from one or more adjacent spaces.</p>
 one attack only where the rules allow it. In particular, when units of
 different nationalities attack from more than one space, one attacking
 space must hold units of every nationality taking part (12.1.11.1).
-Build the attacking group space by space, strongest space first, and
-skip a space whose units could not legally join the units already taken.
-The Score of a target (§5.3) always uses this group.</p>
+Build the attacking group space by space, strongest space first (equal
+CF: the Tie), and skip a space whose units could not legally join the
+units already taken. The Score of a target (§5.3) always uses this
+group.</p>
 <p>Make a <strong>shortlist</strong> across the whole map: the
 <strong>three</strong> targets with the largest <strong>CF
 difference</strong>, counting the CF of every bot unit able to attack
@@ -355,7 +357,8 @@ most three attacks</strong> in one action round (the leftover attacks of
 <h2 id="6-moves">6. Moves</h2>
 <p>The <strong>Move list</strong> holds every move below that the bot
 could make, ranked by <strong>Move value</strong> (highest first; ties
-by the front order of the moving stack's space, then the Tie).</p>
+by the front order of the moving stack's space, then the Tie for that
+space, then the Tie for the destination).</p>
 <table>
 <thead>
 <tr class="header">
@@ -413,11 +416,18 @@ fort keep a legal besieging force behind (an army, or as many corps as
 the fort's level, 15.2.4): skip any unit whose departure would leave
 less. If no unit can take a step, or none may leave a siege, drop the
 move. At each step, enter the adjacent space nearest the destination
-(ties: the Tie) that the stack may legally enter and end its move in,
-that holds no enemy unit, that would not overstack, and that is not an
-enemy fort the stack cannot besiege. Stop if no such space is nearer the
-destination than the stack is, or if the next space would be out of
-supply.</p>
+(ties: the Tie) that meets all of these:</p>
+<ul>
+<li>the stack may legally enter it and end its move there;</li>
+<li>it holds no enemy unit and would not overstack;</li>
+<li>it is not an enemy fort the stack cannot besiege (judge corps by the
+whole group that will move, so two corps may gather to besiege a level-2
+fort);</li>
+<li>the moving units would be <strong>in supply</strong> there, counting
+any supply route their arrival opens.</li>
+</ul>
+<p>Stop when no such space is nearer the destination than the stack is.
+If that happens on the first step, drop the move.</p>
 <p><strong>Guard rule.</strong> When a stack of two or more units leaves
 a bot-controlled space that is in contact, it leaves its weakest unit
 behind, unless it is capturing a VP space. A lone unit may move.</p>
@@ -559,11 +569,12 @@ the one with the lowest keep value (ties: lower card number); repeat
 until it holds two. Never discard other cards.</td>
 </tr>
 <tr class="even">
-<td><strong>Attacks granted by an event</strong> (Guns of August and the
-like)</td>
-<td>Attack the target with the best Edge (no bonuses) that meets the
-Stance, then the next, as in §4 step 4. If none meets the Stance, make
-no attack.</td>
+<td><strong>Operations and attacks granted by an event</strong></td>
+<td>An event that grants a whole Operation (Guns of August and the like)
+is planned like any Operation (§4–§6) with the OPS the event gives.
+Units an event lets attack outside such a plan attack the target with
+the best Edge (no bonuses) that meets the Stance, then the next, as in
+§4 step 4. If none meets the Stance, they make no attack.</td>
 </tr>
 <tr class="odd">
 <td><strong>French Mutiny</strong></td>
@@ -572,8 +583,9 @@ its MO as met (no MO bonus, no MO steps). Its French units still attack
 normally; pay any VP the rules charge.</td>
 </tr>
 <tr class="even">
-<td><strong>Other choices</strong> (attrition, sieges, where to place an
-event trench, which army entrenches)</td>
+<td><strong>Other choices</strong> (attrition, the order of siege and
+entrenchment rolls, where to place an event trench, which army
+entrenches)</td>
 <td>Follow the rules; where the bot must choose, use front order, then
 the Tie. When an army entrenches, use the strongest.</td>
 </tr>
@@ -629,6 +641,11 @@ attacking.</td>
 <tr class="odd">
 <td><strong>Kerensky Offensive</strong></td>
 <td>Use the +2 on the first Russian attack that can take it.</td>
+</tr>
+<tr class="even">
+<td><strong>Brusilov Offensive</strong></td>
+<td>Cancel trench effects on the first Russian attack where the rules
+allow it (not against German defenders).</td>
 </tr>
 </tbody>
 </table>
