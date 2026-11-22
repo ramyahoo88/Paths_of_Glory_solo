@@ -92,6 +92,7 @@ class Bot {
     for (let t = 1; t < B.N; t++) {
       if (!all && !(data.spaces[t].vp || data.spaces[t].fort || data.spaces[t].capital)) continue
       if (!this.isMine(A, t) || this.piecesAt(A, t, this.side).length) continue
+      if (this.enemyUnitsAt(A, t).length) continue
       if (this.opts.crisisScope === 'home' && data.spaces[t].faction !== this.side) continue
       if (this.opts.crisisScope === 'vp' && !data.spaces[t].vp && !data.spaces[t].capital) continue
       if (ed[t] <= r) out.push(t)
@@ -171,6 +172,17 @@ class Bot {
     const mo = A.game[this.side].mo
     const roundNo = A.game[this.side].actions.length + 1
     let minEdge = this.minEdge()
+    // --- crisis Fill moves first (Crisis step)
+    if (this.fillFirst && this.opts.moves) {
+      const ed = this.enemyDist(A)
+      for (const m of this.moveCandidates(A, fronts, used)) {
+        if (m.kind !== 'fill' || ed[m.to] !== 1 || used.has(m.from)) continue
+        const k = A.cost_to_activate(m.from, 'move')
+        if (plan.cost + k > budget) continue
+        plan.moves.push(Object.assign({ cost: k }, m)); used.add(m.from); plan.cost += k
+      }
+      plan.fillCost = plan.cost
+    }
     // --- attacks
     const cand = this.attackCandidates(A, fronts, mo, roundNo)
     let evals = 0
@@ -320,7 +332,7 @@ class Bot {
       for (const t of B.adj[s]) {
         if (A.is_controlled_by(t, me)) continue
         if (this.enemyUnitsAt(A, t).length) continue
-        if (A.has_undestroyed_fort(t, this.enemy) && !A.is_besieged(t)) continue
+        if (A.has_undestroyed_fort(t, this.enemy) && (this.opts.captureBesieged === true ? !A.is_besieged(t) : true)) continue
         if (!A.is_space_at_war(t)) continue
         if (!A.can_end_move(t, ps)) continue
         let v = 1.5 + (data.spaces[t].vp ? 2 : 0) + (obj && B.dist(t, obj) < B.dist(s, obj) ? 0.5 : 0)
@@ -455,10 +467,12 @@ class Bot {
   }
   _actionPhase(A, g, acts) {
     this.stats.rounds++
-    this.blocked = null
+    this.blocked = null; this.srCrisisOnly = false; this.fillFirst = false
     if (!this.violation) this.resets = 0
     this.noMove = !!this.violation; this.violation = false
     this.dir = this.draw()
+    if (this.opts.fixedStance || this.opts.fixedPlan) this.dir = Object.assign({}, this.dir, this.opts.fixedStance ? { stance: this.opts.fixedStance } : {}, this.opts.fixedPlan ? { plan: this.opts.fixedPlan } : {})
+    if (this.opts.planMap && this.opts.planMap[this.dir.plan]) this.dir = Object.assign({}, this.dir, { plan: this.opts.planMap[this.dir.plan] })
     const hand = this.handInfo(A)
     const evLegal = new Set(acts.play_event || [])
     const opsLegal = new Set(acts.play_ops || [])
@@ -500,8 +514,24 @@ class Bot {
       const crisis = this.threatened(A, this.opts.crisisRange || 1)
       if (crisis.length) {
         this.step = 'Crisis'
-        if (plan.moves.some(m => m.kind === 'fill')) return this.useOps(A, hand, opsLegal, plan, 0)
-        const l = this.opts.crisisSR === true ? this.logistics(A, hand, acts, roundNo, false, true) : null
+        if (this.opts.crisisFill === 'first') {
+          this.fillFirst = true
+          const pc = this.planOps(A, maxOps)
+          if (pc.moves.some(m => m.kind === 'fill')) return this.useOps(A, hand, opsLegal, pc, (pc.fillCost || 0) + pc.attacks.reduce((a, x) => a + x.cost, 0))
+          this.fillFirst = false
+        } else if (plan.moves.some(m => m.kind === 'fill')) return this.useOps(A, hand, opsLegal, plan, 0)
+        let l = this.opts.crisisSR === true ? this.logistics(A, hand, acts, roundNo, false, true) : null
+        if (!l && this.opts.crisisReserve && !this.noMove && acts.play_sr && acts.play_sr.length) {
+          // only Reserve Box corps that can reach a crisis space
+          const reserve = this.side === 'ap' ? A.AP_RESERVE_BOX : A.CP_RESERVE_BOX
+          const thr = this.threatened(A, 1)
+          const ok = []
+          for (let p = 1; p < data.pieces.length; p++) if (data.pieces[p].faction === this.side && A.game.location[p] === reserve && this.srDests(A, p).some(d => thr.includes(d))) ok.push(p)
+          if (ok.length) {
+            const cards = hand.filter(h => acts.play_sr.includes(h.c) && h.pr < 7).sort((a, b) => a.pr - b.pr || a.d.sr - b.d.sr)
+            if (cards.length) { this.srCrisisOnly = true; this.stats.sr++; this.stats.crisisSR = (this.stats.crisisSR || 0) + 1; l = ['play_sr', cards[0].c] }
+          }
+        }
         if (l) return l
       }
     }
@@ -836,12 +866,11 @@ class Bot {
   s_defender_retreat(A, g, acts) {
     const sp = acts.space || []
     if (sp.length) {
-      // retreat toward my capital/supply: prefer mine, supplied, fewer enemy neighbours
+      // retreat: no overstack, bot-controlled, supplied, not in contact, nearest bot capital, most bot units, Tie
       const cap = B.CAPITALS[this.side]
       const moving = (A.game.attack && A.game.attack.retreating_pieces) ? A.game.attack.retreating_pieces.length : 1
-      const room = s => this.piecesAt(A, s, this.side).length + moving <= 3
-      const score = s => (room(s) ? 0 : -20) + (this.isMine(A, s) ? 2 : 0) + (A.is_space_supplied(s, this.side) ? 2 : -3) - (this.adjEnemy(A, s) ? 0.5 : 0) - 0.1 * Math.min(...cap.map(c => B.dist(s, c))) + this.piecesAt(A, s, this.side).length * 0.3
-      return ['space', sp.sort((a, b) => score(b) - score(a))[0]]
+      const key = x => [this.piecesAt(A, x, this.side).length + moving <= 3 ? 0 : 1, this.isMine(A, x) ? 0 : 1, A.is_space_supplied(x, this.side) ? 0 : 1, this.adjEnemy(A, x) ? 1 : 0, Math.min(...cap.map(c => B.dist(x, c))), -this.piecesAt(A, x, this.side).length]
+      return ['space', sp.slice().sort((a, b) => lex(key(a), key(b)) || this.tie(a, b))[0]]
     }
     if ((acts.piece || []).length) return ['piece', acts.piece[0]]
     return acts.done ? ['done'] : acts.eliminate ? ['eliminate'] : null
@@ -898,6 +927,11 @@ class Bot {
     const pts = A.game.sr.pts
     if (!acts.confirm_end_sr && !acts.end_action && acts.reset_phase) { this.violation = true; this.stats.violations = (this.stats.violations || 0) + 1; return ['reset_phase'] }
     let cands = this.srCandidates(A, true).filter(x => ps.includes(x.p) && x.cost <= pts)
+    if (this.srCrisisOnly) {
+      const reserve = this.side === 'ap' ? A.AP_RESERVE_BOX : A.CP_RESERVE_BOX
+      cands = cands.filter(x => A.game.location[x.p] === reserve)
+      if (!cands.length) { this.srCrisisOnly = false; return acts.confirm_end_sr ? ['confirm_end_sr'] : acts.end_action ? ['end_action'] : null }
+    }
     if (!cands.length) cands = this.srCandidates(A).filter(x => ps.includes(x.p) && x.cost <= pts && A.get_sr_destinations(x.p).length)
     // armies first if affordable
     cands.sort((a, b) => b.cost - a.cost)
@@ -911,17 +945,11 @@ class Bot {
     if (ok.length) sp = ok
     const fronts = this.frontsInOrder(A)
     const thr = this.threatened(A, 2)
-    const score = s => {
-      const f = B.FRONT[s]; const fi = fronts.indexOf(f)
-      let v = (fi < 0 ? 0 : (5 - fi))
-      if (thr.includes(s)) v += 8 - this.enemyDist(A)[s] * 2
-      if (this.adjEnemy(A, s)) v += 3
-      if (this.piecesAt(A, s, this.side).length >= 3) v -= 10
-      if (data.spaces[s].vp) v += 1
-      if (!A.is_space_supplied(s, this.side)) v -= 5
-      return v
-    }
-    return ['space', sp.sort((a, b) => score(b) - score(a))[0]]
+    const ed = this.enemyDist(A)
+    // supplied; threatened (nearest enemy first); in contact on the earliest front; VP; Tie
+    const fi = x => { const i = fronts.indexOf(B.FRONT[x]); return i < 0 ? 9 : i }
+    const key = x => [x < B.N && !A.is_space_supplied(x, this.side) ? 1 : 0, thr.includes(x) ? 0 : 1, thr.includes(x) ? ed[x] : 0, this.adjEnemy(A, x) ? 0 : 1, this.adjEnemy(A, x) ? fi(x) : 0, data.spaces[x] && data.spaces[x].vp ? 0 : 1]
+    return ['space', sp.slice().sort((a, b) => lex(key(a), key(b)) || this.tie(a, b))[0]]
   }
 
   s_replacement_phase(A, g, acts) {
@@ -948,8 +976,9 @@ class Bot {
       if (roomy.length) sp = roomy
       const fronts = this.frontsInOrder(A)
       const ed = this.enemyDist(A)
-      const score = s => -fronts.indexOf(B.FRONT[s]) * 2 - Math.min(ed[s] || 20, 20) * 0.5
-      return ['space', sp.sort((a, b) => score(b) - score(a))[0]]
+      const fi = x => { const i = fronts.indexOf(B.FRONT[x]); return i < 0 ? 9 : i }
+      const key = x => [fi(x), Math.min(ed[x] || 20, 20)]
+      return ['space', sp.slice().sort((a, b) => lex(key(a), key(b)) || this.tie(a, b))[0]]
     }
     return acts.done ? ['done'] : acts.skip ? ['skip'] : null
   }
@@ -958,7 +987,8 @@ class Bot {
     // discard combat cards only if hand would otherwise clog: keep at most 2
     const hand = A.game[this.side].hand
     const ccs = hand.filter(c => data.cards[c].cc)
-    if (ccs.length > 2 && (acts.card || []).length) return ['card', acts.card[0]]
+    const offer = (acts.card || []).filter(c => data.cards[c].cc)
+    if (ccs.length > 2 && offer.length) return ['card', offer[0]]
     return ['done']
   }
 
@@ -986,6 +1016,9 @@ class Bot {
     return ['space', sp.sort((a, b) => v(b) - v(a))[0]]
   }
 }
+
+// Lexicographic comparison of key arrays (smaller is better).
+function lex(ka, kb) { for (let i = 0; i < ka.length; i++) { if (ka[i] !== kb[i]) return ka[i] - kb[i] } return 0 }
 
 function colIndex(tbl, cf, shifts) {
   let col = 1

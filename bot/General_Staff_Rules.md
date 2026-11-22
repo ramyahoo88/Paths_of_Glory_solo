@@ -1,6 +1,6 @@
 # General Staff — a card-driven solo opponent for *Paths of Glory*
 
-**Version 0.4 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
+**Version 0.5 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
 
 General Staff can command **either side**; you play the other side normally. The bot follows the same rules you do. It holds a hand of real strategy cards and takes six action rounds a turn. Each round it plays a card as an Event, for Operations (OPS), for Strategic Redeployment (SR) or for Replacement Points (RP), or it takes the 1-OP Automatic Operation. It never breaks a rule, never looks at your hand and never rolls dice to make a decision. Its decisions come from a deck of **Staff cards** and the fixed priorities in this booklet. Dice are rolled only where the game rules call for them (combat, mandated offensives, entrenching, sieges and so on).
 
@@ -30,9 +30,11 @@ The optional **General Staff Companion** (an offline web page) draws Staff cards
 * **Front.** Every space belongs to one of five fronts: **West**, **East**, **Italy**, **Balkans**, **Near East** (§10.1).
 * **Front order.** The Staff card's front first; then the others in this fixed order: West, East, Italy, Balkans, Near East.
 * **Contact.** A space is *in contact* if an enemy unit is in an adjacent space.
-* **Objective.** For each front, the bot's Objective is the **first space on that front's Objective list (§10.3) that the bot does not control**. Each list starts with the bot's own key spaces, so a lost one becomes the Objective until it is retaken.
-* **Threatened space.** A bot-controlled VP space, capital or fort space that holds no bot unit while an enemy unit is within two spaces. It is in **crisis** if an enemy unit is adjacent.
+* **Objective.** For each front, the bot's Objective is the **first space on that front's Objective list (§10.3) that the bot does not control**. Where a list starts with some of the bot's own key spaces (for example Paris for the Allies, or Lemberg for the Central Powers), a lost one becomes the Objective until it is retaken.
+* **Distance.** The number of spaces between two spaces along the map's connections, by the shortest route, ignoring units. Connections that only one nation may use (the British Channel crossings, and the Russian, Italian and Turkish ones) count; MEF and Arab Northern Army landing links do not. Work out the Attack Search and the Move list only when a step needs them.
+* **Threatened space.** A bot-controlled VP space, capital or space with a fort symbol that holds no units at all, while an enemy unit is within two spaces. It is in **crisis** if an enemy unit is adjacent.
 * **Edge.** In a proposed attack, the bot's expected hits minus the defender's expected hits (§5.3).
+* **Current Staff card.** The card drawn for the bot's latest action round. Use it for every bot decision until the next draw, including decisions made during your action rounds and in the turn-end phases.
 * **Missing steps.** Count them by RP nationality: 2 for each eliminated army, 1 for each eliminated corps, 1 for each reduced army on the map, ½ for each reduced corps on the map.
 
 ---
@@ -45,7 +47,7 @@ Draw one Staff card. When the deck runs out, shuffle the discards to form a new 
 2. **MO: last chance.** In action rounds 5 and 6, if the bot's mandated offensive (MO) is unmet and the Attack Search (§5) includes an attack that would satisfy it, conduct that Operation (§4).
 3. **Urgent event.** Among the bot's cards whose event is legal now, play the one with the highest **event priority of 8 or 9** (§8). Ties: lower OPS value, then the lower card number.
 4. **MO.** From action round 3, if the MO is unmet and the Attack Search includes an attack that would satisfy it, conduct that Operation.
-5. **Crisis.** If a bot space is in crisis and the Move list (§6) contains a **Fill** move, conduct an Operation.
+5. **Crisis.** If a bot space is in crisis, plan an Operation as in §4 with the highest OPS among the bot's cards. If its planned moves include a **Fill** (§6), conduct the Operation. (The Fill is planned after the attacks, so a cheap card may not reach it; that is intended.)
 6. **Rebuild** (Allied bot only). If the bot has not played a card for RP this turn and its missing steps, less the RP it already holds, total **6 or more**, play a card for RP as in §7.1 (if one qualifies).
 7. **The Staff card's Plan**, in the order on the card:
 
@@ -60,7 +62,7 @@ Draw one Staff card. When the deck runs out, shuffle the discards to form a new 
    * **Logistics**: play a card for RP, or else for SR, if a normal trigger in §7 is met.
 8. **Fallback**, in order:
    1. play the highest legal event of priority **3 or 4**;
-   2. conduct a moves-only Operation if the Move list holds a Capture, Fill or Siege move, or at least two moves of any kind;
+   2. conduct a moves-only Operation if the moves it could pay for (going down the Move list with the highest OPS among its cards) include a Capture, Fill or Siege, or at least two moves of any kind;
    3. play a card for RP or SR using the low triggers in §7;
    4. otherwise take the **1-OP Automatic Operation** and use it for the first move on the Move list, if any.
 
@@ -71,10 +73,10 @@ Draw one Staff card. When the deck runs out, shuffle the discards to form a new 
 1. **Plan the attacks** with the Attack Search (§5). The bot may spend up to the highest OPS value among its cards (1 if it has none).
 2. **Choose the card.**
    * If the plan costs 1 OP and makes at most one attack, or the bot has no card it can play for OPS, take the **Automatic Operation** and keep the cards.
-   * Otherwise play the card with **enough OPS for the planned attacks** (if none are planned, enough for the first move on the Move list) that has the **lowest event priority**. Use a card of priority 6 or more only if no lower card is enough. Ties: lower OPS value, then the lower card number.
-   * If no card is enough, play the one with the highest OPS value and plan again within it.
+   * Otherwise play the card with the **lowest OPS value that is enough** for the planned attacks (if none are planned, enough for the first planned move), avoiding cards of event priority 6 or more unless no other card is enough. Ties: lower event priority, then the lower card number. For this choice, and for RP and SR, a combat card counts as priority 0.
+   * If no card is enough, play the one with the highest OPS value (ties: lower priority) and plan again within it.
 3. **Spend the OPS.** Activate the planned attack spaces. Then use any OPS left for Move activations, going down the Move list (§6) and skipping any that cost too much. Each space is activated only once.
-4. **Resolve** movement and then combat, as the rules require. Make the planned attacks in order. If a planned attack is no longer possible or no longer reaches its Stance by at least 0.5 below the requirement (MO attacks excepted), skip it. Attackers left over may attack any other target that meets the Stance.
+4. **Resolve** movement and then combat, as the rules require. Make the planned attacks in order. Before each one, work out its Score again with the units now able to attack. Skip it if it is no longer possible, or if its Score has fallen more than 0.5 below the Stance (never skip an MO attack). Units left in activated spaces that have not attacked may then attack the target with the best Edge that meets the Stance, one attack at a time.
 
 ---
 
@@ -88,7 +90,7 @@ A **target** is an enemy-occupied space, or an enemy-controlled fort that is not
 
 For each target, the **attackers** are the bot units able to attack it. Count attacking spaces strongest first, adding them while their activation costs still fit the OPS available.
 
-Make a **shortlist** across the whole map: the **five** targets with the largest **CF difference** (attacking CF minus defending CF, counting an undestroyed fort's value). Add any front's Objective that is a target, and any target where an attack would satisfy the bot's unmet MO.
+Make a **shortlist** across the whole map: the **five** targets with the largest **CF difference**, counting the CF of every bot unit able to attack the target (whatever the OPS) minus the defending CF and any undestroyed fort's value. Add any front's Objective that is a target, and any target where an attack by all those units would satisfy the bot's unmet MO. Rank the shortlist by Score (§5.3) worked out the same way.
 
 ### 5.3 Edge and Score
 
@@ -114,7 +116,7 @@ Read each column's **expected hits** from the Edge table (§10.4). Then:
 
 ### 5.4 Decision
 
-Consider the shortlisted targets from the highest Score down. Attack a target if its Score, recalculated with only the attacking spaces the remaining OPS can pay for, meets the Staff card's Stance:
+Consider the shortlisted targets from the highest Score down. For each, take its attacking spaces strongest first, skipping any whose activation cost no longer fits the OPS still unspent, and work out the Score again with only those units. Attack if it meets the Staff card's Stance:
 
 | Stance | Central Powers bot: attack if the Score is at least | Allied bot: attack if the Score is at least |
 |---|---|---|
@@ -134,7 +136,7 @@ The **Move list** holds every move below that the bot could make, ranked by **Mo
 
 | Move | What happens | Value |
 |---|---|---|
-| **Capture** | A stack moves into an adjacent enemy-controlled space that has no enemy unit and no intact enemy fort. A stack next to several such spaces takes a VP space first, then the one nearer its front's Objective. | 4 for a VP space, otherwise 2 |
+| **Capture** | A stack moves into an adjacent enemy-controlled space that has no enemy unit and no undestroyed enemy fort, and where the rules let it end its move. A stack next to several such spaces takes a VP space first, then one nearer the front's Objective than the stack is, then the Tie. | 4 for a VP space, otherwise 2 |
 | **Fill** | The nearest bot stack within three spaces of a threatened space moves into it. The stack must be out of contact or hold two or more units. | 2, +1 if in crisis, +1 if a capital |
 | **Siege** | A stack that can besiege moves into an adjacent enemy fort space with no enemy units. It can besiege if it moves an army, or at least as many corps as the fort's value after the Guard rule. | 3 for a VP space, otherwise 2 |
 | **Forward** | A stack not in contact moves toward the bot-controlled space in contact on its front that has fewer than three units. Choose the one nearest the stack, counting half the distance from that space to the front's Objective as extra distance. With no such space, the stack moves toward the Objective. It stops on reaching a space in contact. | 1.5 with an army, otherwise 1 |
@@ -144,7 +146,7 @@ Once a space is activated, ignore its other entries on the list.
 
 **How a stack moves.** Move the strongest units of the stack, up to three, by the shortest route. Never enter a space where the move would overstack, never end the move in an enemy fort space the stack cannot besiege, and stop rather than end in a space that would be out of supply.
 
-**Guard rule.** When a stack leaves a bot-controlled space that is in contact, it leaves its weakest unit behind, unless it is capturing a VP space.
+**Guard rule.** When a stack of two or more units leaves a bot-controlled space that is in contact, it leaves its weakest unit behind, unless it is capturing a VP space. A lone unit may move.
 
 ---
 
@@ -162,13 +164,13 @@ Add up the SR cost (corps 1, army 4) of the bot's units in the Reserve Box and i
 
 When the trigger is met, play the card whose SR value is closest to that total (counting at most 5). Never use a card of event priority 7 or more.
 
-Redeploy first any unit that can reach a space in crisis, then armies, then corps. Destinations, best first:
+Redeploy only those units (Reserve Box, or more than three spaces from the enemy): armies first, then corps, until the SR points run out. For each, choose the destination in this order of preference:
 
-1. a threatened space;
-2. a space in contact on the earliest front in front order;
-3. a VP space.
-
-Never overstack, and never redeploy a unit to a space that is out of supply.
+1. a space that would not overstack and is in supply;
+2. a threatened space (nearest an enemy unit first);
+3. a space in contact, on the earliest front in front order;
+4. a VP space;
+5. the Tie.
 
 ---
 
@@ -182,9 +184,11 @@ Each strategy card has an **event priority** from 0 to 9 on the Event Priority l
 * **0.** Never played as an action-round event.
 * **CC.** Combat cards are held for combat (§9).
 
-A card's event is played only when the rules allow it at that moment. A two-corps reinforcement card counts as priority 3 while the bot holds a playable army reinforcement card (priority 7 or more) of the same nation.
+A card's event is played only when the rules allow it at that moment. A reinforcement card of priority 5 or less counts as priority 3 while the bot holds a reinforcement card of the same nation with priority 7 or more.
 
-**Placing reinforcements.** Put new units in the legal arrival space on the earliest front in front order. Among those, choose the one nearest an enemy unit, and never overstack.
+Combat cards are never played as action-round events, but they can be spent for OPS, SR or RP like any priority-0 card (§4). The bot uses the ones it still holds in combat (§9).
+
+**Placing reinforcements.** Put each new unit in the legal arrival space that would not overstack, on the earliest front in front order; then the one nearest an enemy unit; then the Tie.
 
 ---
 
@@ -196,12 +200,26 @@ A card's event is played only when the rules allow it at that moment. A two-corp
 | **Combat cards, defending** | Play usable combat cards when defending a VP space, a fort space or a trench. |
 | **Flank attack** | Never attempted. (Wireless Intercepts is played when the rules allow, which makes the flank attack automatic.) |
 | **Losses** | Take steps from full corps first, then reduced corps, then full armies, then reduced armies. Within each group, start with the lowest CF. |
-| **Retreat** | Go to a bot-controlled, supplied space that the retreat will not overstack. Prefer one not in contact, then the one nearest a bot capital, then the one with the most bot units. |
+| **Retreat** | Choose among the spaces the rules allow, in this order of preference: one the retreat will not overstack; bot-controlled; supplied; not in contact; nearest a bot capital (Allies: Paris, London, Petrograd, Rome, Belgrade, Bucharest; CP: Berlin, Vienna, Constantinople, Sofia); most bot units; the Tie. Apply this to each space of a longer retreat. |
 | **Cancelling a retreat** | When defending a VP space or capital that holds a full-strength unit, take the extra step loss (from the smallest such unit) to stay, where the rules allow. |
-| **Advance after combat** | Advance into the battle space if it is a VP space, a fort, or on an Objective list, or if the Staff card is Assault or Press. Move the strongest units first, up to three in the space, keeping the Guard rule. Advance one space only. |
+| **Advance after combat** | Advance into the battle space if it is a VP space, a fort, or on an Objective list, or if the Staff card is Assault or Press. Move the strongest units first, up to three in the space. Leave one unit behind in any bot-controlled space that would otherwise be emptied while it is still in contact with other enemy units. Advance one space only. |
 | **Replacement Phase** | Spend RP on armies in contact first, then other armies on the map, then eliminated armies, then corps. Rebuild an eliminated army in the legal space on the earliest front in the bot's fixed front order, without overstacking. |
-| **Draw phase** | Before drawing, discard combat cards beyond the first two. |
-| **Other choices** (attrition, sieges, event details) | Follow the rules; where the bot must choose, use front order, then the Tie. |
+| **Draw phase** | Before drawing, discard combat cards beyond two, keeping the highest-priority ones. Never discard other cards. |
+| **Attacks granted by an event** (Guns of August and the like) | Attack the target with the best Score that the activated units can reach, then the next, as in §4 step 4. |
+| **French Mutiny** | While French Mutiny affects the Allied MO, the Allied bot makes no attack that would cost it VP. |
+| **Other choices** (attrition, sieges, where to place event trenches or entering neutrals, which army entrenches) | Follow the rules; where the bot must choose, use front order, then the Tie. When an army entrenches, use the strongest. |
+
+---
+
+## Rules reminders for the bot's operator
+
+The bot relies on the normal *Paths of Glory* rules. These come up most often when you run it:
+
+* Activating a space costs 1 OP per nationality in it, with the printed exceptions.
+* MO attacks must meet the MO rules: French and British attacks must hit German units in France, Belgium or Germany, and minor British units do not count.
+* Before Race to the Sea, Central Powers units may not end a move in Amiens, Calais or Ostend unless the CP War Status is 4 or more. German armies may not enter Trent, Villach or Trieste before the Allies reach Total War.
+* Out-of-supply units cannot move or attack, and units may not end a move overstacked.
+* A retreat can be cancelled only where the rules allow it (terrain or trenches).
 
 ---
 

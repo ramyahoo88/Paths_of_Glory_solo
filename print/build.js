@@ -8,7 +8,7 @@ const B = require(path.join(root, 'sim/board.js'))
 const POLICY = require(path.join(root, 'research/event_policy.json'))
 const EP = require(path.join(root, 'sim/events.js'))
 const out = path.join(root, 'print/out'); fs.mkdirSync(out, { recursive: true })
-const VERSION = process.env.GS_VERSION || '0.4'
+const VERSION = process.env.GS_VERSION || '0.5'
 
 const STANCE = { A: ['Assault', 'CP 0 · Allies +1'], P: ['Press', 'CP +0.75 · Allies +1.75'], H: ['Hold', 'CP +1.5 · Allies +2.5'] }
 const PLAN = { O: ['Ops', 'Attack · Event · Logistics'], E: ['Event', 'Event · Attack · Logistics'], L: ['Logistics', 'Logistics · Attack · Event'] }
@@ -113,5 +113,14 @@ function pdf(name) {
   cp.execFileSync('google-chrome', ['--headless', '--no-sandbox', '--disable-gpu', '--no-pdf-header-footer', `--print-to-pdf=${dst}`, 'file://' + src], { stdio: 'ignore' })
   return dst
 }
-if (!process.env.NO_PDF) { pdf('staff_cards'); pdf('reference') }
+// Rules booklet: Markdown -> HTML (pandoc) -> PDF
+try {
+  const body = cp.execFileSync('pandoc', ['-f', 'gfm', '-t', 'html', path.join(root, 'bot/General_Staff_Rules.md')], { encoding: 'utf8' })
+  const rcss = `@page { size: letter; margin: 0.6in 0.65in; } body { font-family: 'DejaVu Serif', Georgia, serif; font-size: 10.5pt; line-height: 1.38; color: #1d1d1b; }
+  h1 { font-size: 19pt; margin: 0 0 6px; } h2 { font-size: 13pt; margin: 16px 0 6px; border-bottom: 1.5px solid #333; page-break-after: avoid; } h3 { font-size: 11pt; margin: 12px 0 4px; page-break-after: avoid; }
+  table { border-collapse: collapse; width: 100%; font-size: 9pt; margin: 6px 0 10px; page-break-inside: avoid; } th, td { border: 1px solid #aaa; padding: 3px 5px; vertical-align: top; text-align: left; } th { background: #ece5d2; }
+  blockquote { margin: 6px 0; padding: 4px 10px; background: #f3eee0; border-left: 3px solid #8c2d1e; } code { font-size: 9pt; } li { margin: 2px 0; } hr { border: 0; border-top: 1px solid #bbb; margin: 14px 0; }`
+  fs.writeFileSync(path.join(out, 'rules.html'), `<!doctype html><meta charset="utf-8"><title>General Staff Rules</title><style>${rcss}</style>${body}`)
+} catch (e) { console.error('pandoc failed:', e.message) }
+if (!process.env.NO_PDF) { pdf('staff_cards'); pdf('reference'); if (fs.existsSync(path.join(out, 'rules.html'))) pdf('rules') }
 console.log('built', out)

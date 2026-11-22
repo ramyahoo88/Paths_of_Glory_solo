@@ -8,7 +8,7 @@ const B = require(path.join(root, 'sim/board.js'))
 const R = require(path.join(root, 'engine/rules.js'))
 const POLICY = require(path.join(root, 'research/event_policy.json'))
 const EP = require(path.join(root, 'sim/events.js'))
-const VERSION = process.env.GS_VERSION || '0.4'
+const VERSION = process.env.GS_VERSION || '0.5'
 
 const FN = { WEST: 'West', EAST: 'East', ITALY: 'Italy', BALKANS: 'Balkans', NEAREAST: 'Near East' }
 const objectives = {}
@@ -81,7 +81,7 @@ td, th { border-bottom:1px solid #e2d7bb; padding:4px; text-align:left; vertical
 <li><b>MO last chance</b>: rounds 5–6, MO unmet, MO attack exists.</li>
 <li><b>Urgent event</b>: priority 8–9, legal now.</li>
 <li><b>MO</b>: round 3+, MO attack in the Attack Search.</li>
-<li><b>Crisis</b>: Fill move for a crisis space.</li>
+<li><b>Crisis</b>: crisis space and the planned Operation includes a Fill.</li>
 <li><b>Rebuild</b> (Allies only): missing steps − RP held ≥ 6, no RP card yet this turn.</li>
 <li><b>Plan</b> (see card).</li>
 <li><b>Fallback</b>: event 3–4 → moves-only Ops → low-trigger RP/SR → 1-OP Automatic Operation.</li>

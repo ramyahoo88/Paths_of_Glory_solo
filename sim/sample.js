@@ -12,6 +12,7 @@ const log = []
 let li = 0, lastTraceLen = { ap: 0, cp: 0 }
 const out = []
 const ST = { A: 'Assault', P: 'Press', H: 'Hold' }, PL = { O: 'Ops', E: 'Event', L: 'Logistics' }
+const STEP = s => ({ 'Plan ops': 'Plan: Attack', 'Plan event': 'Plan: Event', 'Plan log': 'Plan: Logistics', 'Mandated Offensive': 'MO', 'Mandated Offensive (last chance)': 'MO: last chance' })[s] || s
 while (g.state !== 'game_over' && g.turn <= turns) {
   const role = g.active
   const v = R.view(g, role)
@@ -23,7 +24,7 @@ while (g.state !== 'game_over' && g.turn <= turns) {
     while (lastTraceLen[side] < tr.length) {
       const t = tr[lastTraceLen[side]++]
       const who = side === 'cp' ? 'Central Powers bot' : 'Allied bot'
-      let line = `**Turn ${t.turn}, ${who}, round ${t.round}.** Staff card ${t.staff.id}: front ${t.staff.n}, ${ST[t.staff.stance]}, plan ${PL[t.staff.plan]}, tie ${t.staff.tie === 'N' ? 'North' : 'South'}. Step: *${t.step}*. `
+      let line = `**Turn ${t.turn}, ${who}, round ${t.round}.** Staff card ${t.staff.id}: front ${t.staff.n}, ${ST[t.staff.stance]}, plan ${PL[t.staff.plan]}, tie ${t.staff.tie === 'N' ? 'North' : 'South'}. Step: *${STEP(t.step)}*. `
       if (t.action === 'play_event') line += `Plays **${t.card}** as an Event.`
       else if (t.action === 'play_ops') line += `Plays **${t.card}** for Operations.`
       else if (t.action === 'single_op') line += `Takes the 1-OP Automatic Operation.`
