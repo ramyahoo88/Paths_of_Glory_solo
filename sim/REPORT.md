@@ -64,12 +64,12 @@ Following the printed Capture rule made the Allied bot about **seven points stro
 
 ### Difficulty handicap
 
-Moving the starting VP marker changes the self-play result by about **six percentage points per VP** (150 games each, the same seeds for every column):
+Moving the starting VP marker changes the self-play result by about **five or six percentage points per VP** (150 games each, the same seeds for every column of a row):
 
 | Starting VP | 8 | 9 | 10 (normal) | 11 | 12 |
 |---|---|---|---|---|---|
-| Allied wins | 69% | 66% | 60% | 53% | 46% |
-| CP wins | 31% | 34% | 40% | 47% | 54% |
+| v0.7: Allied / CP wins | 69% / 31% | 66% / 34% | 60% / 40% | 53% / 47% | 46% / 54% |
+| v0.7.1: Allied / CP wins | 76% / 24% | 71% / 29% | 66% / 34% | 62% / 38% | 54% / 46% |
 
 The rules offer this as an optional difficulty setting (§1).
 

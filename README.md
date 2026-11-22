@@ -25,9 +25,9 @@ General Staff was developed and tested in about **30,000 simulated full campaign
 * plays both sides competently: in 600 self-play games of the current version (v0.7.1), the Allied bot won **68%** and the Central Powers bot **32%**;
 * beat a random player and a naive one-attack, no-events bot in every test game (**540 of 540** across v0.7 and v0.7.1);
 * made only legal moves, and plays a recognisable war: Russia usually collapses in 1917 and the USA enters in most games;
-* has an optional difficulty handicap (starting VP), worth about six points of win rate per VP.
+* has an optional difficulty handicap (starting VP), worth about five or six points of win rate per VP.
 
-Bot-versus-bot strength is not the same as strength against a person; **human playtesting is the next step.** See the [report](sim/REPORT.md) for the evidence behind each design decision and the known limits. In self-play the Allied bot is clearly the stronger of the two, so for a harder game give the bot the Allies; against the Central Powers bot, consider a one-VP handicap in its favour. The main known weakness is that both bots, and especially the Allies, miss some mandated offensives.
+Bot-versus-bot strength is not the same as strength against a person; **human playtesting is the next step.** See the [report](sim/REPORT.md) for the evidence behind each design decision and the known limits. In self-play the Allied bot is clearly the stronger of the two, so for a harder game give the bot the Allies; against the Central Powers bot, consider a one- or two-VP handicap in its favour (see the report's handicap table). The main known weakness is that both bots, and especially the Allies, miss some mandated offensives.
 
 ## For developers
 
