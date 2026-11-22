@@ -1,12 +1,12 @@
 # General Staff — simulation report
 
-*Covers General Staff **v0.7** (rules: [`bot/General_Staff_Rules.md`](../bot/General_Staff_Rules.md)). Written 22 November 2026.*
+*Covers General Staff **v0.7**, with a check of the **v0.7.1** clarifications (rules: [`bot/General_Staff_Rules.md`](../bot/General_Staff_Rules.md)). Written 22 November 2026.*
 
 ## Summary
 
 * In **200 self-play campaigns** (bot against bot), the Allied bot won **62%** and the Central Powers bot **38%**. Mean VP stayed between 8 and 12 all war.
 * Against a **random** player and against a **naive** one-attack, no-events bot, General Staff won **every** game on both sides: 260 of 260.
-* About **22,000 further campaigns** compared design alternatives in paired tests. They settled the main choices:
+* About **26,000 further campaigns** compared design alternatives in paired tests. They settled the main choices:
   * attack the best Score, not the first acceptable target;
   * advance after combat;
   * fill endangered spaces by movement, not SR;
@@ -28,6 +28,19 @@
 * **Naive**: the same machinery with the main features off. It plays only forced events and makes one attack per action round. It does not advance, move, use SR or fill crisis spaces, and it checks every target. This is roughly a first-draft "one order per round" bot.
 
 **Design comparisons.** A candidate bot played one side against a frozen reference bot on the other side, on the same seeds: 120 or 150 per side. At those sizes the standard error of a win rate near 50% is about ±4 points. Only differences of about 10 points or more were treated as real. When a change made no difference, the simpler procedure was kept.
+
+## v0.7.1 check
+
+v0.7.1 changes no rule of play. It pins down tie-breaks that the booklet left open (RP and SR cards by lower card number, movement steps by the Tie, rebuilt armies by the Tie) and fixes three harness faults: a map lookup that sent the CP Balkans list's Salonika entry to an off-map box, event-granted operations that ignored the "attacks only" restriction after a rule-violation reset (this caused one stuck game in 300), and a safe exit for a stack left with no legal step.
+
+| Test | v0.7 | v0.7.1 |
+|---|---|---|
+| Self-play, the same 300 seeds (20001–20300) | Allies 59% / CP 41% | Allies 65% / CP 35%, no errors |
+| CP bot against the v0.7 Allied reference, 600 paired games on three seed sets | 39% | 37.5% |
+| Allied bot against the v0.7 CP reference, 450 paired games on two seed sets | 60% | 58% |
+| Against random and naive opponents (140 games) | — | won all 140 |
+
+In the paired tests neither side changed by more than noise (two points or less). The self-play shift of six points is at the edge of noise for 300 games. Re-running self-play with one change undone at a time points to the RP/SR card tie-break (lower card number instead of the order the cards were drawn): with it undone, self-play was 61% / 39%. The other changes made no measurable difference. The card-number rule was kept because the operator can apply it at the table and it matches the rule already used for Operations cards. The handicap figures below were measured on v0.7 and still apply approximately.
 
 ## Results for v0.7
 
@@ -139,6 +152,7 @@ Each row compares a candidate with the reference bot of the time, on the same se
 | Allied Forward move with an army valued **2.5** instead of 1.5 | 55% → 61%; 54% → 64% (two seed sets) | 45% → 38% (if given to CP) | Allies only (v0.7) |
 | Extra gap-filling, longer crisis range, idle-reserve SR, reserve-only crisis SR, MO preparation moves, capital units counted as reserves, different RP/SR triggers, other Stance offsets, making all war-status or reinforcement events urgent | no gain, or worse | no gain, or worse | Not adopted |
 | CP-only tries in v0.7: Capture value 3, other Plan mixes, always advancing, Forward value 1 | — | 39% → 25–43% | Not adopted (none clearly better) |
+| Gap-filling plus always advancing, re-tested on four seed sets (and once for the Allies) | 61% → 57% | 35–39% → 35–44% | Not adopted (no consistent gain) |
 
 What the Plan experiments show: the even mix of Ops, Event and Logistics Plans on the Staff cards is what keeps the CP bot playing its reinforcements and war-status events and buying replacements. A bot that always attacks first collapses. The cards are not decoration; they carry the bot's strategic balance.
 
@@ -166,7 +180,7 @@ These are counts, not clock times. Table time has not been measured.
 * **The Allied bot misses mandated offensives** about 3.3 times a game, often because no British or Italian unit is in contact with a valid target. Moving those units into contact (MO preparation) made no difference in testing, so it was left out.
 * **Events are played by priority and legality, with a few situational adjustments.** The finer timing advice in [`research/event_policy.md`](../research/event_policy.md) is research, not part of the procedure.
 * **The tests used Rally the Troops' rules implementation.** Any difference between it and your printed rules would affect these results.
-* **Some minor tie-breaks in the harness follow map-data order** rather than the Tie (which stack fills a space, which of two capture targets). **Some sub-choices took the engine's first legal option**: where to place an event trench, entering neutral units, and some event follow-ups. At the table the rules say to use front order and the Tie, so those choices were never tested.
+* **Some minor tie-breaks in the harness follow map-data order** rather than the Tie (which stack fills a space, which of two capture targets). Since v0.7.1, movement steps, rebuilt armies and RP/SR card choices follow the printed tie-breaks. **Some sub-choices took the engine's first legal option**: where to place an event trench, entering neutral units, and some event follow-ups. At the table the rules say to use front order and the Tie, so those choices were never tested.
 
 ## What to watch for in playtesting
 

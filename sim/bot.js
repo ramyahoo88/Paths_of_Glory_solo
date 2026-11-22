@@ -641,7 +641,7 @@ class Bot {
           if (!acts.play_rps.includes(h.c) || h.pr >= 7 || this.isKeep(A, h.c)) continue
           let v = 0
           for (const k of Object.keys(h.d)) if (k.startsWith('rp')) { const t = k.slice(2) === 'a' ? 'allied' : k.slice(2); const n = need[t] || (t === 'allied' ? (need.be || 0) + (need.sb || 0) + (need.mn || 0) + (need.gr || 0) + (need.ro || 0) : 0); v += Math.min(h.d[k], n) }
-          if (v >= (weak ? 1 : (this.opts.rpCard ?? 2)) && (!best || v > best.v || (v === best.v && h.pr < best.pr))) best = { c: h.c, v, pr: h.pr }
+          if (v >= (weak ? 1 : (this.opts.rpCard ?? 2)) && (!best || v > best.v || (v === best.v && (h.pr < best.pr || (h.pr === best.pr && h.c < best.c))))) best = { c: h.c, v, pr: h.pr }
         }
         if (best) { this.stats.rp++; this.stats.cardUse[best.c] = 'rp'; return ['play_rps', best.c] }
       }
@@ -651,7 +651,7 @@ class Bot {
       const sr = this.srCandidates(A)
       const need = sr.reduce((a, x) => a + x.cost, 0)
       if (sr.length && A.game.turn >= (this.opts.logTurn || 1) && (need >= (this.opts.srMin ?? 4) || (weak && need >= 1))) {
-        const cards = hand.filter(h => acts.play_sr.includes(h.c) && h.pr < 7 && !this.isKeep(A, h.c)).sort((a, b) => Math.abs(a.d.sr - Math.min(need, 5)) - Math.abs(b.d.sr - Math.min(need, 5)) || a.pr - b.pr)
+        const cards = hand.filter(h => acts.play_sr.includes(h.c) && h.pr < 7 && !this.isKeep(A, h.c)).sort((a, b) => Math.abs(a.d.sr - Math.min(need, 5)) - Math.abs(b.d.sr - Math.min(need, 5)) || a.pr - b.pr || a.c - b.c)
         if (cards.length) { this.stats.sr++; this.stats.cardUse[cards[0].c] = 'sr'; return ['play_sr', cards[0].c] }
       }
     }
@@ -697,7 +697,10 @@ class Bot {
     // leftover ops: replan with remaining budget, excluding already activated
     if (!this._replanned) {
       this._replanned = true
+      const savedMoves = this.opts.moves
+      if (this.noMove) this.opts.moves = false
       const extra = this.planOps(A, A.game.ops)
+      this.opts.moves = savedMoves
       const activated = new Set([...A.game.activated.move, ...A.game.activated.attack])
       extra.attacks = extra.attacks.filter(x => x.spaces.every(s => !activated.has(s)))
       extra.moves = extra.moves.filter(x => !activated.has(x.from))
@@ -716,6 +719,7 @@ class Bot {
     // pick the first piece of a planned move space; entrench spaces first
     const plan = this.plan || { moves: [] }
     for (const m of plan.moves) {
+      if (m.abandon) continue
       const p = pcs.find(p => A.game.location[p] === m.from)
       if (p !== undefined) { this.curMove = m; this.curMove.done = false; return ['piece', this.leadPiece(A, m, pcs.filter(q => A.game.location[q] === m.from))] }
     }
@@ -734,6 +738,7 @@ class Bot {
   s_choose_pieces_to_move(A, g, acts) {
     const m = this.curMove
     if (!m) return acts.done ? ['done'] : acts.stop ? ['stop'] : null
+    if (m.abandon) return acts.done ? ['done'] : acts.stop ? ['stop'] : null
     if (m.kind === 'entrench') { if (acts.entrench) { m.kind = 'done'; return ['entrench'] } if (acts.confirm_odd_entrench) { m.kind = 'done'; return ['confirm_odd_entrench'] } }
     const sel = A.game.move.pieces
     const here = A.game.move.initial
@@ -758,7 +763,10 @@ class Bot {
       return ['piece', nxt]
     }
     if (sel.length > total - keep && acts.stop) { return ['stop'] }
-    return this.stepToward(A, acts, m.to)
+    const r = this.stepToward(A, acts, m.to)
+    // no legal step for the stack (every adjacent space would overstack, etc.): put the units back and end the activation
+    if (!r && sel.length && acts.undo) { m.abandon = true; this.stats.abandoned = (this.stats.abandoned || 0) + 1; return ['undo'] }
+    return r
   }
 
   stepToward(A, acts, to) {
@@ -785,7 +793,8 @@ class Bot {
       }
       const d = B.dist(s, to)
       // don't end in an unsupplied space
-      if (d < bd || (d === bd && best === null && false)) { bd = d; best = s }
+      // nearest the destination; ties: the Staff card's Tie
+      if (d < bd || (this.opts.stepTie !== false && d === bd && best !== null && this.tie(s, best) < 0)) { bd = d; best = s }
     }
     if (best === null) {
       if (acts.stop) return ['stop']
@@ -969,7 +978,7 @@ class Bot {
       const roomy = sp.filter(s => s >= B.N || this.piecesAt(A, s, this.side).length < 3)
       if (roomy.length) sp = roomy
       const fronts = FRONT_ORDER[this.side]
-      return ['space', sp.sort((a, b) => fronts.indexOf(B.FRONT[a]) - fronts.indexOf(B.FRONT[b]))[0]]
+      return ['space', sp.sort((a, b) => fronts.indexOf(B.FRONT[a]) - fronts.indexOf(B.FRONT[b]) || this.tie(a, b))[0]]
     }
     const ps = acts.piece || []
     if (ps.length) {

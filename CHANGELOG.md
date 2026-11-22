@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.7.1 — 22 Nov 2026
+
+Rules clarifications from a third independent review. None changes the bot's intended play; they say exactly what the tested procedure does.
+
+* Losses are chosen only among the allocations the rules allow (12.4). RP and SR plays respect the no-consecutive-play rules (9.3.3, 9.4.3) and Influenza; a forbidden play counts as a trigger not met.
+* The Automatic Operation test counts the whole plan (attacks plus moves). The MO steps fire only when the *planned* attacks include an MO attack. Crisis fires on any planned Fill.
+* At resolution, the Edge is worked out again and the planning bonuses are kept; an attack planned as an MO attack is never skipped. Leftover attacks come only from spaces activated for combat.
+* Objectives count only for the front a space lies on. Distance counts connections (adjacent = 1). Missing steps ignore permanently eliminated units. Equal units in one space: you choose.
+* Card ties for RP and SR (lower priority, then lower number); Move-list ties use the moving stack's front; each movement step uses the Tie between equally near spaces; rebuilt armies follow a fixed front order.
+* Harness: the same tie-breaks are now coded. Fixed a map lookup that sent the CP Balkans list's Salonika entry to an off-map box, and event-granted operations that ignored the "attacks only" restriction after a rule-violation reset (one stuck game in 300). Added a safe exit for a stack with no legal step.
+* Testing: in 1,050 paired games against v0.7, neither side changed by more than two points. Self-play on the same 300 seeds moved from 59% / 41% to 65% / 35% (Allies / CP), mostly from the card-number tie-break; see the report.
+
 ## v0.7 — 22 Nov 2026
 
 * Allied bot: a **Forward move with an army is worth 2.5** (CP bot: 1.5). The Allies now bring idle armies up to the line sooner. In paired tests on two seed sets this raised the Allied bot from 55% to 61% and from 54% to 64%; the same change hurt the CP bot, so it is Allied-only.

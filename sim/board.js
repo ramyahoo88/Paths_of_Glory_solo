@@ -5,7 +5,8 @@ const data = require('../engine/data.js')
 
 const N = 282 // map spaces 1..281
 const byName = {}
-for (let i = 1; i < data.spaces.length; i++) if (data.spaces[i] && data.spaces[i].name) byName[data.spaces[i].name] = i
+// first space with a name wins, so map spaces take precedence over boxes of the same name (Salonika)
+for (let i = 1; i < data.spaces.length; i++) if (data.spaces[i] && data.spaces[i].name && !(data.spaces[i].name in byName)) byName[data.spaces[i].name] = i
 function S(name) { const i = byName[name]; if (!i) throw new Error('No space ' + name); return i }
 
 // --- adjacency (generic, ignoring nation-limited links except where all nations allowed) ---
