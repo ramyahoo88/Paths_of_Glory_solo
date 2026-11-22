@@ -7,7 +7,8 @@ d = sys.argv[1]
 def load(name):
     out = []
     for f in sorted(glob.glob(os.path.join(d, name))):
-        data = json.load(open(f))
+        try: data = json.load(open(f))
+        except ValueError: continue  # empty or partial file (a run still in progress)
         if isinstance(data, dict) and 'games' in data: out += data['games']  # skips digest.json
     return out
 
@@ -46,7 +47,7 @@ for label, n, ap, cp, errs, mt, kinds in rows:
     print(f'| {label} | {n} | {ap} ({ap/n:.0%}) | {cp} ({cp/n:.0%}) | {mt:.1f} | {k} |')
 
 # Run health: every game in every file, so clean-run claims can be checked
-ALL = load('*.json')
+ALL = load('self_*.json') + load('naive_*.json') + load('rnd_*.json')  # evaluation files only (paired and handicap files have another format)
 if ALL:
     inc = [g for g in ALL if g.get('err') or not g.get('result')]
     exc = sum(len(g.get('exceptions', [])) for g in ALL)

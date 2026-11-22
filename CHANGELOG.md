@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.7.5 — 22 Nov 2026
+
+Follow-ups from the v0.7.4 verification (`audits/general-staff-v0.7.4/`). Response: [`audits/general-staff-v0.7.4/Response.md`](audits/general-staff-v0.7.4/Response.md).
+
+* **Siege rule (15.2.4).** Units leaving a space where they besiege an enemy fort keep a legal besieging force behind: an army, or as many corps as the fort's level. A unit whose departure would leave less is skipped, and a move with no unit free to leave is dropped. This is printed in §6. `sim/tests/siege.js` replays the exact v0.7.4 position (seed 1080569) that caused the last resets.
+* **Per-game evidence.** `ab.js` and `vpshift.js` record every seed, the candidate and reference commits, and any error game (none are dropped silently). The full evidence set was rerun from commit `9c1326e`: self-play, baselines, paired tests, isolation (now including legal groups alone) and the handicap table. It is in `sim/results/v0.7.5/`.
+* Results:
+  * Allied bot 90–92% and CP bot 49–59% against the v0.7 reference.
+  * Strict self-play 85% / 15% with **0 rule-violation resets** in 740 games.
+  * About 5.5 VP evens a bot-versus-bot game.
+  * Without legal attack groups, 13–25% of games break off with harness errors.
+* Corrected the earlier description of the reset cause: units moved out of a siege, not "an army too weak to besiege".
+
 ## v0.7.4 — 22 Nov 2026
 
 Short corrective patch for the v0.7.3 re-audit (`audits/general-staff-v0.7.3/`). Response: [`audits/general-staff-v0.7.3/Response.md`](audits/general-staff-v0.7.3/Response.md).

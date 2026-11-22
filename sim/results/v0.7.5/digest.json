@@ -1,0 +1,73 @@
+{
+ "Self-play (GS vs GS)": {
+  "n": 600,
+  "ap": 509,
+  "cp": 91,
+  "errors": 0,
+  "kinds": {
+   "AP Automatic Victory": 220,
+   "AP Turn Limit": 190,
+   "CP Automatic Victory": 65,
+   "AP Armistice Declared": 99,
+   "CP Turn Limit": 18,
+   "CP Armistice Declared": 8
+  },
+  "meanVP": 4.94,
+  "meanTurn": 17.166666666666668
+ },
+ "GS Allies vs random CP": {
+  "n": 20,
+  "ap": 20,
+  "cp": 0,
+  "errors": 0,
+  "kinds": {
+   "AP Automatic Victory": 20
+  },
+  "meanVP": -1.65,
+  "meanTurn": 5.7
+ },
+ "GS CP vs random Allies": {
+  "n": 20,
+  "ap": 0,
+  "cp": 20,
+  "errors": 0,
+  "kinds": {
+   "CP Automatic Victory": 20
+  },
+  "meanVP": 21.25,
+  "meanTurn": 4.45
+ },
+ "GS Allies vs naive CP": {
+  "n": 50,
+  "ap": 50,
+  "cp": 0,
+  "errors": 0,
+  "kinds": {
+   "AP Automatic Victory": 50
+  },
+  "meanVP": -0.76,
+  "meanTurn": 7.22
+ },
+ "GS CP vs naive Allies": {
+  "n": 50,
+  "ap": 0,
+  "cp": 50,
+  "errors": 0,
+  "kinds": {
+   "CP Automatic Victory": 50
+  },
+  "meanVP": 21.26,
+  "meanTurn": 4.28
+ },
+ "health": {
+  "games": 740,
+  "incomplete": 0,
+  "exceptions": 0,
+  "violations": {},
+  "undos": 0,
+  "holdMoves": 3,
+  "calledOff": 0,
+  "fallback": {},
+  "forced": {}
+ }
+}

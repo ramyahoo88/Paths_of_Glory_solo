@@ -4,7 +4,7 @@
   blockquote { margin: 6px 0; padding: 4px 10px; background: #f3eee0; border-left: 3px solid #8c2d1e; } code { font-size: 9pt; } li { margin: 2px 0; } hr { border: 0; border-top: 1px solid #bbb; margin: 14px 0; }</style><h1
 id="general-staff--a-card-driven-solo-opponent-for-paths-of-glory">General
 Staff — a card-driven solo opponent for <em>Paths of Glory</em></h1>
-<p><strong>Version 0.7.4 (playtest draft)</strong> · Unofficial fan
+<p><strong>Version 0.7.5 (playtest draft)</strong> · Unofficial fan
 material for GMT Games' <em>Paths of Glory</em> (Deluxe edition,
 Historical scenario / full campaign, the standard 110 strategy cards, no
 optional cards). You need the physical game. Strategy-card numbers below
@@ -53,7 +53,7 @@ human player.</p>
 VP marker 1 or 2 spaces in the bot's favour: toward 20 when the bot
 plays the Central Powers, toward 0 when it plays the Allies. For an
 easier game, move it toward you instead. In bot-versus-bot tests, each
-VP of handicap shifted the result by about six percentage points. The
+VP of handicap shifted the result by about seven percentage points. The
 Allied bot is clearly the stronger of the two. A player facing the
 Central Powers bot may want to start with 1 to 3 VP in the bot's favour,
 raising it if the bot still loses. Keep the bot's hand face down beside
@@ -408,13 +408,16 @@ a bot-controlled space below trench level 2, attempts to entrench.</td>
 <p>Once a space is activated, ignore its other entries on the list.</p>
 <p><strong>How a stack moves.</strong> Move the strongest units of the
 stack, up to three, but no more than the first step can take without
-overstacking (the Guard rule still applies). If no unit can take a step,
-drop the move. At each step, enter the adjacent space nearest the
-destination (ties: the Tie) that the stack may legally enter and end its
-move in, that holds no enemy unit, that would not overstack, and that is
-not an enemy fort the stack cannot besiege. Stop if no such space is
-nearer the destination than the stack is, or if the next space would be
-out of supply.</p>
+overstacking (the Guard rule still applies). Units besieging an enemy
+fort keep a legal besieging force behind (an army, or as many corps as
+the fort's level, 15.2.4): skip any unit whose departure would leave
+less. If no unit can take a step, or none may leave a siege, drop the
+move. At each step, enter the adjacent space nearest the destination
+(ties: the Tie) that the stack may legally enter and end its move in,
+that holds no enemy unit, that would not overstack, and that is not an
+enemy fort the stack cannot besiege. Stop if no such space is nearer the
+destination than the stack is, or if the next space would be out of
+supply.</p>
 <p><strong>Guard rule.</strong> When a stack of two or more units leaves
 a bot-controlled space that is in contact, it leaves its weakest unit
 behind, unless it is capturing a VP space. A lone unit may move.</p>

@@ -12,7 +12,7 @@ Both remaining issues were reproduced and fixed in **v0.7.4**. The eight closed 
 * 600 of 600 games finished, with 0 exceptions;
 * 0 choices left to the engine's default;
 * 0 Salonika safety-path transfers;
-* 2 rule-violation resets, both in one game (an army too weak to besiege);
+* 2 rule-violation resets, both in one game (units moved out of a siege left too small a besieging force; fixed in v0.7.5);
 * Allies won 85%, the CP 15%.
 
 The seed-level files are in `sim/results/v0.7.4/`.

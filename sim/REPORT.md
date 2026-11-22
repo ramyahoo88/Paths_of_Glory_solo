@@ -1,10 +1,11 @@
 # General Staff — simulation report
 
-*Covers General Staff **v0.7**, with checks of **v0.7.1** to **v0.7.4** (rules: [`bot/General_Staff_Rules.md`](../bot/General_Staff_Rules.md)). Written 22 November 2026.*
+*Covers General Staff **v0.7**, with checks of **v0.7.1** to **v0.7.5** (rules: [`bot/General_Staff_Rules.md`](../bot/General_Staff_Rules.md)). Written 22 November 2026.*
 
 ## Summary
 
-* **v0.7.4 (current).** v0.7.4 corrects the two issues left by the v0.7.3 re-audit: a Salonika corps in contact and the event Tie. 600 fresh strict self-play games: **85% Allies / 15% CP**, no exceptions, no choice left to the engine's default (see *v0.7.4: re-audit corrections*).
+* **v0.7.5 (current).** In v0.7.5, units leaving a siege keep a legal besieging force, and every headline figure comes from per-seed records of one pinned commit. Against the v0.7 reference the Allied bot wins 90–92% and the CP bot 49–59%. Strict self-play is **85% Allies / 15% CP**, with **no rule-violation resets** in 740 games (see *v0.7.5*).
+* **v0.7.4.** v0.7.4 corrects the two issues left by the v0.7.3 re-audit: a Salonika corps in contact and the event Tie. 600 fresh strict self-play games: **85% Allies / 15% CP**, no exceptions, no choice left to the engine's default (see *v0.7.4: re-audit corrections*).
 * **v0.7.3.** v0.7.3 fixes the nine findings of a comprehensive audit. The simulator now follows the printed procedure in every choice it meets, including event choices and event-granted Operations. Both bots are much stronger against the v0.7 reference: Allies 90–95%, CP 49–56%. Strict self-play is **84% Allies / 16% CP**, with one rule-violation reset in 740 games (see *v0.7.3: comprehensive audit fixes*).
 * **v0.7.2.** v0.7.2 fixes the five findings of an independent review: MO credit, a Companion error, one shared Edge-table precision, evaluation honesty and engine setup. Strict self-play over 600 games is **67% Allies / 33% CP**, with no exceptions and no unfinished games (see *v0.7.2: review fixes*). v0.7.1 had made the Allied bot about seven points stronger by following the printed Capture tie-break. The rest of this summary describes v0.7.
 * In **200 self-play campaigns** (bot against bot), the Allied bot won **62%** and the Central Powers bot **38%**. Mean VP stayed between 8 and 12 all war.
@@ -32,6 +33,50 @@
 
 **Design comparisons.** A candidate bot played one side against a frozen reference bot on the other side, on the same seeds: 120 or 150 per side. At those sizes the standard error of a win rate near 50% is about ±4 points. Only differences of about 10 points or more were treated as real. When a change made no difference, the simpler procedure was kept.
 
+## v0.7.5: siege rule and complete per-game evidence
+
+The v0.7.4 verification closed all earlier findings and named two follow-ups. Both are done ([response](../audits/general-staff-v0.7.4/Response.md)):
+
+* **Units leaving a siege** now keep a legal besieging force behind (15.2.4). This caused the last rule-violation resets.
+* **Paired and handicap runs** now save one record per seed.
+
+Every figure below was produced from a clean worktree of the v0.7.5 code (commit `9c1326e`), against the v0.7 reference bots (commit `bc8bef6`). The per-seed files are in [`results/v0.7.5/`](results/v0.7.5/).
+
+| Test | Result |
+|---|---|
+| Allied bot against the v0.7 reference, seeds 6001–6300 / 7001–7300 | **90% / 92%** |
+| CP bot against the v0.7 reference, seeds 6001–6300 / 7001–7300 | **49% / 59%** |
+| Strict self-play, seeds 1080000–1080599 (600 games) | Allies **85%** / CP **15%** |
+| Against random and naive opponents (140 games) | won all 140 |
+| Mandated offensives missed per game (self-play) | Allies 2.7, CP 1.1 |
+
+**Isolation** (seeds 7001–7300, one switch off at a time; the effects interact and are not additive):
+
+| Switched off | Allied bot | CP bot |
+|---|---|---|
+| Nothing (v0.7.5) | 92% | 59% |
+| Event-granted Operations keep their plan | 81% | 47% |
+| Named event choices | 87% | 53% |
+| Legal attack groups, on their own | 90% of the 260 games that finished; **40 games ended in a harness error** | 54% of 226; **74 ended in a harness error** |
+| War in Africa gives the VP instead of a corps | 91% (and 89% vs 90% on seeds 6001–6300) | — |
+
+Without legal attack groups the bot keeps declaring attacks that units of different nationalities cannot make together, and many games break off. Legal groups are therefore needed for the bot to run at all, not just for strength. The corps-for-VP choice in War in Africa is worth only about one point, but it is never worse.
+
+**Run health, strict mode** (740 games):
+
+* 0 unfinished games, 0 errors and 0 decision exceptions;
+* **0 rule-violation resets**;
+* 0 choices left to the engine's default and 0 Salonika safety-path transfers;
+* 3 units moved one safe step after an abandoned move.
+
+**Handicap** (self-play, starting VP moved in the CP bot's favour, seeds 30001–30150, per-seed files `handicap_<shift>.json`):
+
+| Starting VP | 10 (normal) | 11 | 12 | 13 | 14 | 15 | 16 |
+|---|---|---|---|---|---|---|---|
+| Allied / CP wins | 87% / 13% | 85% / 15% | 79% / 21% | 71% / 29% | 66% / 34% | 58% / 42% | 43% / 57% |
+
+Each VP is worth about seven points, and about five and a half VP evens a bot-versus-bot game. Against a person, treat 1–3 VP for the CP bot as a starting setting for playtests.
+
 ## v0.7.4: re-audit corrections
 
 The v0.7.3 re-audit ([`audits/general-staff-v0.7.3/`](../audits/general-staff-v0.7.3/)) closed eight of the nine findings and reported two remaining issues:
@@ -47,7 +92,7 @@ Both are fixed ([response](../audits/general-staff-v0.7.3/Response.md)). Fresh s
 | Unfinished games, harness errors, decision exceptions | 0 |
 | Choices left to the engine's default | 0 |
 | Salonika safety-path transfers | 0 |
-| Rule-violation resets | 2, in one game (an army too weak to besiege) |
+| Rule-violation resets | 2, in one game (units moved out of a siege left too small a besieging force; fixed in v0.7.5) |
 | Units moved one safe step after an abandoned move | 5 |
 | Mandated offensives missed per game | Allies 2.7, CP 1.2 |
 
@@ -95,7 +140,7 @@ Each fix helps both sides. One-at-a-time ablations interact, so these difference
 | Check | v0.7.2 | v0.7.3 |
 |---|---|---|
 | Unfinished games, harness errors, decision exceptions | 0 | 0 |
-| Rule-violation resets | 67 (32 games) | **1** (an army too weak to besiege) |
+| Rule-violation resets | 67 (32 games) | **1** (units moved out of a siege left too small a besieging force; fixed in v0.7.5) |
 | Choice-bearing states with no bot rule | about 14 a game | **0** |
 | Units moved one safe step after an abandoned move | — | 8 |
 | Attacks called off at the final selected-unit check | — | 0 |
