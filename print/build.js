@@ -85,9 +85,10 @@ function eventTable(side) {
     const pr = EP.printedPriority(e.global)
     let note = EP.NOTE[e.global] || ''
     const d = B.data.cards[e.global]
-    if (pr === 'CC') note = 'Combat card: held for combat.' + (d.ops ? '' : '')
+    if (pr === 'CC') note = 'Combat card: never an action-round event; counts as priority 0 for OPS/SR/RP; played in combat if still held.'
     else if (d.reinfnation && +pr <= 5) note = (note ? note + ' ' : '') + '3 if an army reinforcement card of the same nation (priority 7+) is in hand.'
-    h += `<tr><td>${e.num}</td><td>${esc(e.name)}</td><td>${pr}</td><td>${esc(note)}</td></tr>`
+    const shown = pr === 'CC' ? 'CC ' + e.event_priority : pr
+    h += `<tr><td>${e.num}</td><td>${esc(e.name)}</td><td>${shown}</td><td>${esc(note)}</td></tr>`
   }
   return h + '</table>'
 }
@@ -99,12 +100,12 @@ let ref = `<!doctype html><meta charset="utf-8"><style>${css}</style><div class=
 <h2>Front Table &mdash; Allied bot</h2>${frontTable('ap')}
 <p class="small">After the Staff card's front, check the others in this order: West, East, Italy, Balkans, Near East.</p>
 <h2>Edge table</h2>${edgeTables()}
-<p class="small">Use the columns after all shifts. Edge = bot's expected hits &minus; defender's expected hits. Score = Edge + bonuses (Objective +1; within 2 of the Objective +0.4; VP space +0.5; a defender out of supply +0.5; MO attack +1 / +2.5 / +6 in rounds 1&ndash;2 / 3&ndash;4 / 5&ndash;6; &minus;0.25 for each place the target's front is after the first in front order). Attack if Score &ge; Stance: Central Powers bot Assault 0, Press +0.75, Hold +1.5; Allied bot Assault +1, Press +1.75, Hold +2.5. From round 5 an MO attack is made at any Score.</p>
+<p class="small">Use the columns after all shifts. Edge = bot's expected hits &minus; defender's expected hits. Score = Edge + bonuses (Objective +1, or else within 2 of the Objective +0.4; VP space +0.5; a defender out of supply +0.5; MO attack +1 / +2.5 / +6 in rounds 1&ndash;2 / 3&ndash;4 / 5&ndash;6; &minus;0.25 for each place the target's front is after the first in front order). Attack if Score &ge; Stance: Central Powers bot Assault 0, Press +0.75, Hold +1.5; Allied bot Assault +1, Press +1.75, Hold +2.5. From round 5 an MO attack is made at any Score.</p>
 <h2>Objectives &mdash; Central Powers bot</h2>${objTable('cp')}
 <h2>Objectives &mdash; Allied bot</h2>${objTable('ap')}
 <div class="pb"></div><h1>Event priorities &mdash; Central Powers cards</h1>${eventTable('cp')}
 <div class="pb"></div><h1>Event priorities &mdash; Allied cards</h1>${eventTable('ap')}
-<p class="small">Play an event only when the rules allow it. Pri 7&ndash;9 urgent; 5&ndash;6 when the Plan reaches Event; 3&ndash;4 fallback only; 0 never; CC = combat card, held for combat. Cards of priority 7+ are never used for RP or SR.</p>
+<p class="small">Play an event only when the rules allow it. Pri 7&ndash;9 urgent; 5&ndash;6 when the Plan reaches Event; 3&ndash;4 fallback only; 0&ndash;2 never. CC n = combat card with keep value n (draw-phase discards drop the lowest). Cards of priority 7+ are never used for RP or SR.</p>
 </div>`
 fs.writeFileSync(path.join(out, 'reference.html'), ref)
 

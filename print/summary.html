@@ -4,7 +4,7 @@
 <li><b>MO last chance</b>: rounds 5&ndash;6, MO unmet, the Attack Search has an MO attack &rarr; that Operation.</li>
 <li><b>Urgent event</b>: highest legal event of priority 7&ndash;9 (ties: lower OPS, lower number).</li>
 <li><b>MO</b>: round 3+, MO unmet, the Attack Search has an MO attack &rarr; that Operation.</li>
-<li><b>Crisis</b>: a bot VP/capital/fort space is empty with an enemy unit adjacent, and the Operation planned with the highest OPS card includes a Fill &rarr; that Operation.</li>
+<li><b>Crisis</b>: a bot VP/capital/fort space is empty with an enemy unit adjacent, and the Operation planned with the highest OPS card includes a Fill &rarr; Operation with the cheapest card that pays for the first planned move (replan, attacks first).</li>
 <li><b>Rebuild</b> (Allied bot only): no RP card yet this turn and missing steps &minus; RP held &ge; 6 &rarr; RP (&sect;7.1).</li>
 <li><b>Plan</b> on the Staff card: <b>Ops</b> = Attack, Event 5+, Logistics &middot; <b>Event</b> = Event 5+, Attack, Logistics &middot; <b>Logistics</b> = Logistics, Attack, Event 5+.</li>
 <li><b>Fallback</b>: Event 3&ndash;4 &rarr; moves-only Operation (a Capture, Fill or Siege, or 2+ moves) &rarr; RP/SR at low triggers &rarr; 1-OP Automatic Operation.</li>
@@ -32,14 +32,14 @@
 <p><b>RP</b> if missing steps &minus; RP held &ge; 3 (fallback 1.5): the card covering most missing steps (at least 2; fallback 1). <b>SR</b> if units worth &ge; 4 SR points (fallback 1) sit in the Reserve Box or &gt;3 spaces from the enemy: card whose SR value is closest (max 5); redeploy those units, armies first. Cards of priority 7+ are never used for RP or SR.</p>
 <h3>Combat and phases</h3>
 <ul>
-<li><b>Combat cards</b>: attacking, play every usable one; defending, play them in VP, fort or trench spaces.</li>
+<li><b>Combat cards</b>: attacking, play every usable one; defending, play them in VP, fort or trench spaces; always use already-played ones that apply. For OPS/SR/RP a combat card counts as priority 0.</li>
 <li><b>Flank attack</b>: never (Wireless Intercepts is played when allowed).</li>
 <li><b>Losses</b>: full corps, reduced corps, full armies, reduced armies; lowest CF first.</li>
 <li><b>Retreat</b>: no overstack &gt; bot-controlled &gt; supplied &gt; not in contact &gt; nearest bot capital &gt; most bot units &gt; Tie.</li>
 <li><b>Hold ground</b>: in a VP space or capital with a full-strength unit, take the extra step to cancel a retreat where allowed.</li>
-<li><b>Advance</b>: into a VP, fort or Objective-list space, or with an Assault or Press card; strongest first, up to 3 in the space; one space only.</li>
+<li><b>Advance</b>: into a VP, fort or Objective-list space, or with an Assault or Press card; strongest first, up to 3 in the space; leave one unit in an emptied space still in contact; one space only.</li>
 <li><b>Replacements</b>: armies in contact, other armies on the map, eliminated armies, then corps.</li>
 <li><b>Reinforcements</b>: no overstack &gt; earliest front in front order &gt; nearest an enemy unit &gt; Tie.</li>
-<li><b>Draw</b>: discard combat cards beyond two.</li>
+<li><b>Draw</b>: with 3+ combat cards, discard the lowest keep value until two remain.</li>
 </ul>
 </div>

@@ -24,7 +24,7 @@ while (g.state !== 'game_over' && g.turn <= turns) {
     while (lastTraceLen[side] < tr.length) {
       const t = tr[lastTraceLen[side]++]
       const who = side === 'cp' ? 'Central Powers bot' : 'Allied bot'
-      let line = `**Turn ${t.turn}, ${who}, round ${t.round}.** Staff card ${t.staff.id}: front ${t.staff.n}, ${ST[t.staff.stance]}, plan ${PL[t.staff.plan]}, tie ${t.staff.tie === 'N' ? 'North' : 'South'}. Step: *${STEP(t.step)}*. `
+      let line = `**Turn ${t.turn}, ${who}, round ${t.round}.** ${t.hand ? 'Hand: ' + t.hand + '. ' : ''}Staff card ${t.staff.id}: front ${t.staff.n}, ${ST[t.staff.stance]}, plan ${PL[t.staff.plan]}, tie ${t.staff.tie === 'N' ? 'North' : 'South'}. Step: *${STEP(t.step)}*. `
       if (t.action === 'play_event') line += `Plays **${t.card}** as an Event.`
       else if (t.action === 'play_ops') line += `Plays **${t.card}** for Operations.`
       else if (t.action === 'single_op') line += `Takes the 1-OP Automatic Operation.`

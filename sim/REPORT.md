@@ -6,7 +6,7 @@
 
 * In **200 self-play campaigns** (bot against bot), the Allied bot won **57%** and the Central Powers bot **43%**. Mean VP stayed between 8 and 12 all war.
 * Against a **random** player and against a **naive** one-attack, no-events bot, General Staff won **every** game on both sides: 260 of 260.
-* About **19,600 further campaigns** compared design alternatives in paired tests. They settled the main choices:
+* About **21,000 further campaigns** compared design alternatives in paired tests. They settled the main choices:
   * attack the best Score, not the first acceptable target;
   * advance after combat;
   * fill endangered spaces by movement, not SR;
@@ -41,7 +41,7 @@
 
 ### Difficulty handicap
 
-Moving the starting VP marker changes the self-play result by about **6–7 percentage points per VP** (150 games each, the same seeds for every column):
+Moving the starting VP marker changes the self-play result by about **six or seven percentage points per VP** (150 games each, the same seeds for every column):
 
 | Starting VP | 8 | 9 | 10 (normal) | 11 | 12 |
 |---|---|---|---|---|---|
@@ -95,7 +95,7 @@ Which step of the action-round procedure decided the round:
 
 | Step | Allied bot | CP bot |
 |---|---|---|
-| Crisis (Fill) | 41.7% | 22.0% |
+| Crisis | 41.7% | 22.0% |
 | Urgent event (priority 7–9) | 24.2% | 21.1% |
 | Plan: Attack | 5.0% | 24.2% |
 | Plan: Event | 4.5% | 6.4% |
@@ -124,16 +124,19 @@ Each row compares a candidate with the reference bot of the time, on the same se
 | Holding key event cards until playable ("Kept" cards) | no effect | 87% → 80% | Dropped |
 | Lexicographic retreat/SR/reinforcement choices and other clean-ups from the rules review | 39% → 49% | 61% → 57% | Kept (simpler, no loss) |
 | Events of priority **7** made urgent (played before anything else), instead of 8+ | 50% → 69% | 51% → 55% | Kept (v0.6) |
-| Urgent threshold 6, 5 or 9 instead of 7 | 64% / 34% / 25% | 54% / — / 36% | Rejected |
-| Plan: Event threshold 4 or 6 instead of 5 | 50% / 47% | 51% / 53% | No effect |
-| Two or four attacks a round instead of three; lose steps by flipping first; Capture value 1 | 44% / 47%; 47%; 32% | 46%; 51%; 51% | Not adopted |
+| Urgent threshold 6, 5 or 9 (baseline: threshold 8) | 50% → 64% / 34% / 25% | 51% → 54% / not run / 36% | Rejected; 7 is best |
+| Plan: Event threshold 4 or 6 instead of 5 | 50% → 50% / 47% | 51% → 51% / 53% | No effect |
+| At most two attacks a round instead of three | 48% → 44% | 52% → 46% | Rejected |
+| At most four attacks a round | 48% → 47% | — | No effect |
+| Losses: flip full units before eliminating reduced ones | 48% → 47% | 52% → 51% | No effect |
+| Capture of a non-VP space valued 1 instead of 2 | 48% → 32% | 52% → 51% | Rejected |
 | Crisis Fill paid for **before** attacks | 49% → 22% | 57% → 44% | Rejected |
 | Every Staff card's Plan = Ops (no Plan variety) | 39% → 43% | 61% → **8%** | Rejected: the Plan mix matters |
 | Every Staff card's Plan = Logistics / = Event | 38% / 56% | 9% / 30% | Rejected |
 | Every Staff card's Stance = Press (no Stance variety) | 39% → 42% | 61% → 57% | Variety kept (free) |
 | Staff card front preference switched off | 80% → 78% | 20% → 24% | Kept (free) |
 | Flank attacks attempted | 27% → 23% | 83% → 81% | Never attempt |
-| Extra gap-filling, longer crisis range, idle-reserve SR, reserve-only crisis SR, MO preparation moves, different RP/SR triggers | no gain, or worse | no gain, or worse | Not adopted |
+| Extra gap-filling, longer crisis range, idle-reserve SR, reserve-only crisis SR, MO preparation moves, different RP/SR triggers, other Stance offsets, making all war-status or reinforcement events urgent | no gain, or worse | no gain, or worse | Not adopted |
 
 What the Plan experiments show: the even mix of Ops, Event and Logistics Plans on the Staff cards is what keeps the CP bot playing its reinforcements and war-status events and buying replacements. A bot that always attacks first collapses. The cards are not decoration; they carry the bot's strategic balance.
 
@@ -152,7 +155,7 @@ These are counts, not clock times. Table time has not been measured.
 * **The Allied bot misses mandated offensives** about 3.6 times a game, often because no British or Italian unit is in contact with a valid target. Moving those units into contact (MO preparation) made no difference in testing, so it was left out.
 * **Events are played by priority and legality, with a few situational adjustments.** The finer timing advice in [`research/event_policy.md`](../research/event_policy.md) is research, not part of the procedure.
 * **The tests used Rally the Troops' rules implementation.** Any difference between it and your printed rules would affect these results.
-* **Some sub-choices took the engine's first legal option** in the harness: where to place an event trench, entering neutral units, and some event follow-ups. At the table the rules say to use front order and the Tie, so those choices were never tested.
+* **Some minor tie-breaks in the harness follow map-data order** rather than the Tie (which stack fills a space, which of two capture targets). **Some sub-choices took the engine's first legal option**: where to place an event trench, entering neutral units, and some event follow-ups. At the table the rules say to use front order and the Tie, so those choices were never tested.
 
 ## Reproducing
 

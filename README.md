@@ -8,7 +8,7 @@ The bot plays by the same rules you do. It holds a hand of real strategy cards a
 
 | What | File |
 |---|---|
-| **Rules** (8-page booklet) | [Markdown](bot/General_Staff_Rules.md) · [PDF](print/out/rules.pdf) |
+| **Rules** (booklet) | [Markdown](bot/General_Staff_Rules.md) · [PDF](print/out/rules.pdf) |
 | **Staff cards**: 18 poker-size cards and backs | [PDF](print/out/staff_cards.pdf) |
 | **Reference sheets**: procedure summary, Front Tables, Objectives, Edge table, Event priorities for both decks | [PDF](print/out/reference.pdf) |
 | **Companion** (optional offline web page: draws Staff cards, Edge/Score calculator, lookups) | [HTML file](app/General_Staff_Companion.html) |
@@ -20,11 +20,12 @@ Print the cards at 100% (US Letter), single-sided; the last sheet is backs. The 
 
 ## How good is it?
 
-General Staff was developed and tested in about **16,600 simulated full campaigns** on the open-source **Rally the Troops** rules engine. The engine is used with GMT's permission on that site and is not included here. The final version:
+General Staff was developed and tested in about **21,000 simulated full campaigns** on the open-source **Rally the Troops** rules engine. The engine is used with GMT's permission on that site and is not included here. The final version:
 
-* is balanced against itself: in 200 self-play games, the Allies won **48%** and the Central Powers **52%**;
+* is close to balanced against itself: in 200 self-play games, the Allies won **57%** and the Central Powers **43%**;
 * beat a random player and a naive one-attack, no-events bot in **260 of 260** games;
-* made only legal moves.
+* made only legal moves, and plays a recognisable war: Russia usually collapses in 1917 and the USA enters in most games;
+* has an optional difficulty handicap (starting VP), worth about six or seven points of win rate per VP.
 
 Bot-versus-bot strength is not the same as strength against a person; **human playtesting is the next step.** See the [report](sim/REPORT.md) for the evidence behind each design decision and the known limits. The most important limit: the Allied bot is the more reactive of the two and misses some mandated offensives.
 

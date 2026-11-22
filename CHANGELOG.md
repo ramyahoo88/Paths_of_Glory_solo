@@ -4,8 +4,9 @@
 
 * Events of priority **7–9** are urgent (played before anything else); the Plan's Event step now covers priorities 5–6. In paired tests this raised the Allied bot from 50% to 69% and the CP bot from 51% to 55%, and the war's milestones became far more historical (USA at war in 76% of games, Fall of the Tsar in 74%).
 * Attack Search shortlist cut from five targets to **three** (no measurable loss, less work).
-* Draw-phase discards: the lowest-priority combat cards go first; other cards are never discarded.
-* Optional **difficulty handicap** via the starting VP (about six points of win rate per VP).
+* Draw-phase discards: the combat cards with the lowest keep value go first (keep values now printed); other cards are never discarded.
+* Wording aligned with the tested procedure after a second independent review (Crisis card choice, SR order, French Mutiny, event-granted attacks, combat cards as priority 0 for spending).
+* Optional **difficulty handicap** via the starting VP (about six or seven points of win rate per VP).
 * Self-play balance now 57% Allies / 43% CP; Edge/Score calculations average about 2.5 per bot action round.
 
 ## v0.5 — 22 Nov 2026 (first published draft)
@@ -14,7 +15,7 @@ New design, replacing GPT's 1914 Tabletop Pilot approach (kept in `gpt_handoff/`
 
 * Full campaign, either side, card-driven: 18 Staff cards (front, Stance, Plan, Tie) plus printed priorities.
 * Action round: forced play → MO last chance → urgent events → MO → Crisis → Rebuild (Allies only) → Staff card Plan → Fallback.
-* Attack Search: three-target shortlist by CF difference, scored by Edge (expected hits) plus bonuses, attack if the Score meets the Stance. The Allied bot attacks with a margin one point higher.
+* Attack Search: five-target shortlist by CF difference, scored by Edge (expected hits) plus bonuses, attack if the Score meets the Stance. The Allied bot attacks with a margin one point higher.
 * Moves ranked by a five-line value table: Capture, Fill, Siege, Forward, Entrench.
 * Logistics triggers for RP and SR; card-by-card event priorities with situational notes.
 * Advance after combat, guard rule, lexicographic retreat, SR and reinforcement placement.

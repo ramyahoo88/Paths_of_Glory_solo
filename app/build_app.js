@@ -19,9 +19,9 @@ const events = {}
 for (const side of ['cp', 'ap']) events[side] = POLICY.filter(e => e.side === side).sort((a, b) => a.num - b.num).map(e => {
   const pri = EP.printedPriority(e.global), d = B.data.cards[e.global]
   let when = EP.NOTE[e.global] || ''
-  if (pri === 'CC') when = 'Combat card: held for combat.'
+  if (pri === 'CC') when = 'Combat card: never an action-round event; counts as priority 0 for OPS/SR/RP; played in combat if still held.'
   else if (d.reinfnation && +pri <= 5) when = (when ? when + ' ' : '') + '3 if an army reinforcement card of the same nation (priority 7+) is in hand.'
-  return { n: e.num, name: e.name, pri, when, keep: EP.KEEP.has(e.global) }
+  return { n: e.num, name: e.name, pri: pri === 'CC' ? 'CC ' + e.event_priority : pri, when, keep: EP.KEEP.has(e.global) }
 })
 const DATA = {
   version: VERSION, deck: makeDeck(), frontTable, objectives, events, stance: STANCE_MIN_EDGE,
@@ -81,7 +81,7 @@ td, th { border-bottom:1px solid #e2d7bb; padding:4px; text-align:left; vertical
 <li><b>MO last chance</b>: rounds 5–6, MO unmet, MO attack exists.</li>
 <li><b>Urgent event</b>: priority 7–9, legal now.</li>
 <li><b>MO</b>: round 3+, MO attack in the Attack Search.</li>
-<li><b>Crisis</b>: crisis space and the planned Operation includes a Fill.</li>
+<li><b>Crisis</b>: crisis space and the planned Operation includes a Fill (card: cheapest for the first move).</li>
 <li><b>Rebuild</b> (Allies only): missing steps − RP held ≥ 6, no RP card yet this turn.</li>
 <li><b>Plan</b> (see card).</li>
 <li><b>Fallback</b>: event 3–4 → moves-only Ops → low-trigger RP/SR → 1-OP Automatic Operation.</li>
@@ -93,7 +93,7 @@ td, th { border-bottom:1px solid #e2d7bb; padding:4px; text-align:left; vertical
 <div class="row"><label>Defender CF</label><input type="number" id="dcf" value="4" min="0"><label><input type="checkbox" id="darmy" checked> army defending</label><label>fort <input type="number" id="fort" value="0" min="0" max="3"></label></div>
 <div class="row"><label>Terrain</label><select id="terr"><option value="0">clear/forest/desert</option><option value="1">mountain or swamp</option></select><label>Trench <select id="tr"><option>0</option><option>1</option><option>2</option></select></label></div>
 <div class="row"><label>Bonuses</label>
-<label><input type="checkbox" id="bobj"> Objective (+1)</label><label><input type="checkbox" id="bnear"> near Objective (+0.4)</label><label><input type="checkbox" id="bvp"> VP (+0.5)</label><label><input type="checkbox" id="boos"> defender OOS (+0.5)</label></div>
+<label><input type="checkbox" id="bobj"> Objective (+1)</label><label><input type="checkbox" id="bnear"> else within 2 of it (+0.4)</label><label><input type="checkbox" id="bvp"> VP (+0.5)</label><label><input type="checkbox" id="boos"> defender OOS (+0.5)</label></div>
 <div class="row"><label>MO attack</label><select id="bmo"><option value="0">no</option><option value="1">rounds 1–2 (+1)</option><option value="2.5">rounds 3–4 (+2.5)</option><option value="6">rounds 5–6 (+6)</option></select><label>Front position <select id="bfront"><option value="0">1st</option><option value="-0.25">2nd</option><option value="-0.5">3rd</option><option value="-0.75">4th</option><option value="-1">5th</option></select></label></div>
 <div id="edge" class="res"></div></section>
 <section><div class="row tabs"><button data-t="obj" class="on">Objectives</button><button data-t="front">Front Table</button><button data-t="ev">Event priorities</button></div>
@@ -136,7 +136,7 @@ function renderEdge() {
   const ac = col(aA ? D.armyCols : D.corpsCols, acf, ash), dc = col(dA ? D.armyCols : D.corpsCols, dcf, dsh);
   const eA = (aA ? D.army : D.corps)[ac], eD = dcf > 0 ? (dA ? D.army : D.corps)[dc] : 0;
   const edge = eA - eD;
-  const bonus = ($('bobj').checked ? 1 : 0) + ($('bnear').checked ? 0.4 : 0) + ($('bvp').checked ? 0.5 : 0) + ($('boos').checked ? 0.5 : 0) + (+$('bmo').value) + (+$('bfront').value);
+  const bonus = ($('bobj').checked ? 1 : ($('bnear').checked ? 0.4 : 0)) + ($('bvp').checked ? 0.5 : 0) + ($('boos').checked ? 0.5 : 0) + (+$('bmo').value) + (+$('bfront').value);
   const score = edge + bonus;
   const c = S.cur ? cardById(S.cur) : null, need = c ? D.stance[c.stance] + (S.side === 'ap' ? 1 : 0) : null;
   const verdict = need === null ? '' : (score >= need ? '<span class="ok"> — attack (needs ' + need + ')</span>' : '<span class="no"> — too weak (needs ' + need + ')</span>');
@@ -148,7 +148,7 @@ function renderTabs() {
   const ft = D.frontTable[S.side];
   $('t-front').innerHTML = '<table><tr><th>Staff number</th>' + [1,2,3,4,5,6].map(n => '<th>' + n + '</th>').join('') + '</tr>' + Object.keys(ft).map(l => '<tr><th>' + l + '</th>' + ft[l].map(f => '<td>' + f + '</td>').join('') + '</tr>').join('') + '</table>';
   const q = ($('evq').value || '').toLowerCase();
-  $('evlist').innerHTML = '<table><tr><th>#</th><th>Card</th><th>Pri</th><th>Notes</th></tr>' + D.events[S.side].filter(e => !q || String(e.n) === q || e.name.toLowerCase().includes(q)).map(e => '<tr><td>' + e.n + '</td><td>' + e.name + '</td><td>' + e.pri + '</td><td>' + e.when + '</td></tr>').join('') + '</table><p class="muted">Play an event only when the rules allow it. Priority 7–9 urgent; 5–6 at the Event step of the Plan; 3–4 fallback; 0 never; CC held for combat.</p>';
+  $('evlist').innerHTML = '<table><tr><th>#</th><th>Card</th><th>Pri</th><th>Notes</th></tr>' + D.events[S.side].filter(e => !q || String(e.n) === q || e.name.toLowerCase().includes(q)).map(e => '<tr><td>' + e.n + '</td><td>' + e.name + '</td><td>' + e.pri + '</td><td>' + e.when + '</td></tr>').join('') + '</table><p class="muted">Play an event only when the rules allow it. Priority 7–9 urgent; 5–6 at the Event step of the Plan; 3–4 fallback; 0–2 never. CC n = combat card with keep value n.</p>';
 }
 $('draw').onclick = () => { if (!S.deck.length) { S.deck = shuffle(S.discard); S.discard = [] } S.hist.push(JSON.stringify({ deck: S.deck, discard: S.discard, cur: S.cur })); if (S.hist.length > 30) S.hist.shift(); S.cur = S.deck.pop(); S.discard.push(S.cur); render() };
 $('undo').onclick = () => { const h = S.hist.pop(); if (h) { const x = JSON.parse(h); S.deck = x.deck; S.discard = x.discard; S.cur = x.cur } render() };

@@ -1,6 +1,6 @@
 // Event priority policy, derived from research/event_policy.json (card-by-card table).
-// Priority 0-9: 9 = play as soon as legal; >=8 urgent (checked before anything else);
-// 5-7 played when the Directive's plan reaches "Event"; 3-4 only when nothing better; 0 never.
+// Priority 0-9: 9 = play as soon as legal; >= urgentMin (7 in the release) is urgent (checked before anything else);
+// 5-6 played when the Staff card's Plan reaches "Event"; 3-4 only in the Fallback; 0-2 never.
 "use strict"
 const data = require('../engine/data.js')
 const POLICY = require('../research/event_policy.json')
@@ -38,6 +38,9 @@ function priority(bot, A, c) {
   if (e.class === 'combat_card') return 0
   let p = e.event_priority
   if (ADJUST[c]) p = ADJUST[c](bot, A, p)
+  // experiments: boost war-status-bearing or reinforcement events into the urgent band
+  if (bot.opts && bot.opts.wsBoost && d.ws && p >= 4) p = Math.max(p, bot.opts.wsBoost)
+  if (bot.opts && bot.opts.reinfBoost && d.reinfnation && p >= 4) p = Math.max(p, bot.opts.reinfBoost)
   // two-corps reinforcement cards: lower if an army reinforcement of the same nation is in hand
   if (d.reinfnation && p <= 5) {
     const armyCard = A.game[bot.side].hand.some(h => h !== c && data.cards[h].reinfnation === d.reinfnation && BY[h] && BY[h].event_priority >= 7)

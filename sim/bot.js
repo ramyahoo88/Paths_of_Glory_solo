@@ -456,7 +456,7 @@ class Bot {
     if (this.opts.trace) {
       const nm = c => data.cards[c] ? data.cards[c].name : ''
       const sn = s => data.spaces[s] ? data.spaces[s].name : s
-      const t = { turn: A.game.turn, round: A.game[this.side].actions.length + 1, side: this.side, staff: this.dir, step: this.step, action: res[0], card: res[1] ? nm(res[1]) : '', mo: A.game[this.side].mo, vp: A.game.vp }
+      const t = { turn: A.game.turn, round: A.game[this.side].actions.length + 1, side: this.side, staff: this.dir, step: this.step, action: res[0], card: res[1] ? nm(res[1]) : '', mo: A.game[this.side].mo, vp: A.game.vp, hand: A.game[this.side].hand.map(c => nm(c) + ' [' + data.cards[c].ops + ']').join(', ') }
       if (this.plan && (res[0] === 'play_ops' || res[0] === 'single_op')) {
         t.attacks = this.plan.attacks.map(a => ({ target: sn(a.target), from: a.spaces.map(sn), edge: +(a.edge || 0).toFixed(2), mo: !!a.mo }))
         t.moves = this.plan.moves.map(m => ({ kind: m.kind, from: sn(m.from), to: sn(m.to) }))
@@ -479,7 +479,7 @@ class Bot {
     const roundNo = A.game[this.side].actions.length + 1
     // 0. forced
     if (evLegal.size && !opsLegal.size) { this.step = 'Forced play'; return this.useEvent([...evLegal][0]) }
-    // 1. urgent events (priority >= 8)
+    // 1. urgent events (priority >= opts.urgentMin, 7 in the release)
     const evs = hand.filter(h => evLegal.has(h.c) && h.pr >= 1).sort((a, b) => b.pr - a.pr || a.d.ops - b.d.ops || a.c - b.c)
     // MO last chance (rounds moLast+): before urgent events
     const moUnmet = A.game[this.side].mo && A.game[this.side].mo !== 'none' && !(A.game.events.french_mutiny > 0 && A.game[this.side].mo === 'fr')
