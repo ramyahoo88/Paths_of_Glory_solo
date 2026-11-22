@@ -53,4 +53,25 @@ function ccOk(bot, A, c, attacking) {
   return (e.event_priority || 0) >= 4
 }
 
-module.exports = { priority, ccOk, BY, C }
+// Cards held until their event becomes playable (never used for OPS, SR or RP) -- only while
+// the event is close to playable.
+const KEEP = new Set([12, 16, 17, 26, 33, 40, 43, 47, 52, 54, 55, 71, 93, 99, 101, 110, 117, 118, 119])
+const KEEP_WHEN = {
+  12: A => !(A.game.events.entrench > 0), 71: A => !(A.game.events.entrench > 0),
+  16: A => true, 17: A => true, 99: A => true, // neutral entries: blocked only by another entry this turn
+  26: A => !(A.game.events.zimmermann_telegram > 0),
+  33: A => A.game.events.high_seas_fleet > 0,
+  54: A => A.game.ap.ws + A.game.cp.ws >= 25,
+  55: A => A.game.events.zimmermann_telegram > 0, 40: A => A.game.events.zimmermann_telegram > 0,
+  43: A => A.game.events.zimmermann_telegram > 0, 47: A => A.game.events.zimmermann_telegram > 0,
+  52: A => A.game.events.uboats_unleashed > 0,
+  93: A => A.game.cp.ru_vp >= 2,
+  117: A => A.game.events.tsar_takes_command > 0,
+  118: A => A.game.events.fall_of_the_tsar > 0,
+  110: A => A.game.events.bolshevik_revolution > 0,
+  101: A => A.game.events.h_l_take_command > 0,
+  119: A => true,
+}
+function keepNow(A, c) { return KEEP.has(c) && (!KEEP_WHEN[c] || KEEP_WHEN[c](A)) }
+
+module.exports = { priority, ccOk, BY, C, KEEP, KEEP_WHEN, keepNow }

@@ -30,7 +30,8 @@ function playGame(seed, mkAP, mkCP, opts = {}) {
     const view = R.view(g, role)
     if (!view.actions) throw new Error('No actions for ' + role + ' in ' + g.state)
     let a
-    try { a = pl.decide(g, view) } catch (e) { if (opts.debug) console.error('decide error', g.state, e.stack); a = fallback(view.actions); pl.stats.errors = (pl.stats.errors || 0) + 1; (pl.stats.errorKinds = pl.stats.errorKinds || {})[g.state + ':' + e.message.slice(0, 60)] = 1 }
+    try { a = pl.decide(g, view) } catch (e) {
+      if (/unresolvable/.test(e.message)) throw e; if (opts.debug) console.error('decide error', g.state, e.stack); a = fallback(view.actions); pl.stats.errors = (pl.stats.errors || 0) + 1; (pl.stats.errorKinds = pl.stats.errorKinds || {})[g.state + ':' + e.message.slice(0, 60)] = 1 }
     if (!a) a = fallback(view.actions)
     if (!a) throw new Error('No legal action in ' + g.state)
     if (a[0] === 'undo') { stuck++ }

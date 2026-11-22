@@ -72,4 +72,8 @@ function expectedTable(tbl) { return tbl.map(c => c.result.reduce((a, b) => a + 
 
 const CAPITALS = { cp: ['Berlin', 'Vienna', 'Constantinople', 'Sofia'].map(S), ap: ['Paris', 'London', 'Petrograd', 'Rome', 'Belgrade', 'Bucharest'].map(S) }
 
-module.exports = { data, N, S, byName, adj, dist, FRONT, FRONTS, OBJ, expectedTable, CAPITALS }
+// Map y-coordinate (north = smaller) for the Tie rule.
+const Y = require('./coords_y.json')
+function ycoord(s) { return Y[s] !== undefined ? Y[s] : 9999 }
+
+module.exports = { data, N, S, byName, adj, dist, FRONT, FRONTS, OBJ, expectedTable, CAPITALS, ycoord }
