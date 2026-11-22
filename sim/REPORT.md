@@ -35,12 +35,14 @@ v0.7.1 changes no rule of play. It pins down tie-breaks that the booklet left op
 
 | Test | v0.7 | v0.7.1 |
 |---|---|---|
-| Self-play, the same 300 seeds (20001–20300) | Allies 59% / CP 41% | Allies 65% / CP 35%, no errors |
+| Self-play, seeds 20001–20300 | Allies 59% / CP 41% | Allies 65% / CP 35%, no errors |
+| Self-play, seeds 10001–10300 | Allies 63% / CP 37% | Allies 58% / CP 42%, no errors |
+| Self-play, both sets (600 games) | Allies 61% / CP 39% | Allies 62% / CP 38% |
 | CP bot against the v0.7 Allied reference, 600 paired games on three seed sets | 39% | 37.5% |
 | Allied bot against the v0.7 CP reference, 450 paired games on two seed sets | 60% | 58% |
 | Against random and naive opponents (140 games) | — | won all 140 |
 
-In the paired tests neither side changed by more than noise (two points or less). The self-play shift of six points is at the edge of noise for 300 games. Re-running self-play with one change undone at a time points to the RP/SR card tie-break (lower card number instead of the order the cards were drawn): with it undone, self-play was 61% / 39%. The other changes made no measurable difference. The card-number rule was kept because the operator can apply it at the table and it matches the rule already used for Operations cards. The handicap figures below were measured on v0.7 and still apply approximately.
+In the paired tests neither side changed by more than two points. On single sets of 300 seeds, self-play moved by about five points, but in opposite directions on the two sets; over all 600 games the balance is unchanged. Swings of this size are ordinary noise for 300 games, so all v0.7 figures in this report still apply.
 
 ## Results for v0.7
 

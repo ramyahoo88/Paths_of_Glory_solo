@@ -22,7 +22,7 @@ Print the cards at 100% (US Letter), single-sided; the last sheet is backs. The 
 
 General Staff was developed and tested in about **28,000 simulated full campaigns** on the open-source **Rally the Troops** rules engine. The engine is used with GMT's permission on that site and is not included here. The final version:
 
-* is reasonably close to balanced against itself: in self-play the Allied bot wins about **60–65%** and the Central Powers bot **35–40%** (v0.7.1: 65% / 35% in 300 games);
+* is reasonably close to balanced against itself: in 600 self-play games of the current version, the Allied bot won **62%** and the Central Powers bot **38%**;
 * beat a random player and a naive one-attack, no-events bot in every test game (**400 of 400** across v0.7 and v0.7.1);
 * made only legal moves, and plays a recognisable war: Russia usually collapses in 1917 and the USA enters in most games;
 * has an optional difficulty handicap (starting VP), worth about six points of win rate per VP.

@@ -10,7 +10,7 @@ Rules clarifications from a third independent review. None changes the bot's int
 * Objectives count only for the front a space lies on. Distance counts connections (adjacent = 1). Missing steps ignore permanently eliminated units. Equal units in one space: you choose.
 * Card ties for RP and SR (lower priority, then lower number); Move-list ties use the moving stack's front; each movement step uses the Tie between equally near spaces; rebuilt armies follow a fixed front order.
 * Harness: the same tie-breaks are now coded. Fixed a map lookup that sent the CP Balkans list's Salonika entry to an off-map box, and event-granted operations that ignored the "attacks only" restriction after a rule-violation reset (one stuck game in 300). Added a safe exit for a stack with no legal step.
-* Testing: in 1,050 paired games against v0.7, neither side changed by more than two points. Self-play on the same 300 seeds moved from 59% / 41% to 65% / 35% (Allies / CP), mostly from the card-number tie-break; see the report.
+* Testing: in 1,050 paired games against v0.7, neither side changed by more than two points. Self-play over 600 games: Allies 62% / CP 38% (v0.7 on the same seeds: 61% / 39%). No harness errors.
 
 ## v0.7 — 22 Nov 2026
 
