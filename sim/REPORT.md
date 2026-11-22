@@ -12,7 +12,7 @@
   * fill endangered spaces by movement, not SR;
   * play every event of priority 7 or more as soon as it is legal;
   * make the Allied bot more cautious, with a once-a-turn rebuild of heavy losses, and quicker to bring armies up to the line.
-* The bot never made an illegal move: every decision was chosen from the rules engine's list of legal actions. The 460 evaluation games finished without a harness error.
+* The bot never made an illegal move: every decision was chosen from the rules engine's list of legal actions. The 460 evaluation games finished without a harness error. A further 300 fresh self-play games, run from this repository's copy of the code, gave 63% / 37% and no errors.
 * These are bot-versus-bot results. They show the procedure is coherent, legal, much stronger than simple baselines, and plays a recognisable war. They do not show how it fares against a strong player. **Human playtesting is the next step.**
 
 ## Method
@@ -121,7 +121,7 @@ Each row compares a candidate with the reference bot of the time, on the same se
 | Allied Stance thresholds **+1** | 12% → 27% | — | Kept |
 | Map's nation-only links (Channel crossings, Russian links) counted in distances | 26% → 44% | 83% → 80% | Kept |
 | Allied **Rebuild** step (one RP play a turn when missing steps ≥ 6) | 38% → 51% | 68% → 60% (if given to CP) | Allies only |
-| Holding key event cards until playable ("Kept" cards) | no effect | 87% → 80% | Dropped |
+| Holding key event cards until playable ("Kept" cards); re-tested in v0.7 holding only the Russian-collapse and US-entry chains | no effect; 61% → 60% | 87% → 80%; 39% → 35–37% | Dropped |
 | Lexicographic retreat/SR/reinforcement choices and other clean-ups from the rules review | 39% → 49% | 61% → 57% | Kept (simpler, no loss) |
 | Events of priority **7** made urgent (played before anything else), instead of 8+ | 50% → 69% | 51% → 55% | Kept (v0.6) |
 | Urgent threshold 6, 5 or 9 (baseline: threshold 8) | 50% → 64% / 34% / 25% | 51% → 54% / not run / 36% | Rejected; 7 is best |
@@ -138,6 +138,7 @@ Each row compares a candidate with the reference bot of the time, on the same se
 | Flank attacks attempted | 27% → 23% | 83% → 81% | Never attempt |
 | Allied Forward move with an army valued **2.5** instead of 1.5 | 55% → 61%; 54% → 64% (two seed sets) | 45% → 38% (if given to CP) | Allies only (v0.7) |
 | Extra gap-filling, longer crisis range, idle-reserve SR, reserve-only crisis SR, MO preparation moves, capital units counted as reserves, different RP/SR triggers, other Stance offsets, making all war-status or reinforcement events urgent | no gain, or worse | no gain, or worse | Not adopted |
+| CP-only tries in v0.7: Capture value 3, other Plan mixes, always advancing, Forward value 1 | — | 39% → 25–43% | Not adopted (none clearly better) |
 
 What the Plan experiments show: the even mix of Ops, Event and Logistics Plans on the Staff cards is what keeps the CP bot playing its reinforcements and war-status events and buying replacements. A bot that always attacks first collapses. The cards are not decoration; they carry the bot's strategic balance.
 
@@ -166,6 +167,16 @@ These are counts, not clock times. Table time has not been measured.
 * **Events are played by priority and legality, with a few situational adjustments.** The finer timing advice in [`research/event_policy.md`](../research/event_policy.md) is research, not part of the procedure.
 * **The tests used Rally the Troops' rules implementation.** Any difference between it and your printed rules would affect these results.
 * **Some minor tie-breaks in the harness follow map-data order** rather than the Tie (which stack fills a space, which of two capture targets). **Some sub-choices took the engine's first legal option**: where to place an event trench, entering neutral units, and some event follow-ups. At the table the rules say to use front order and the Tie, so those choices were never tested.
+
+## What to watch for in playtesting
+
+* **Table time per bot round.** Count minutes for a few turns. The Attack Search and Move list are the slow parts.
+* **Thin lines.** Watch whether the bot's Fill and Capture moves leave holes a person can drive through.
+* **Mandated offensives.** Note when the Allied bot misses one because no British or Italian unit is in contact.
+* **The 1914 West.** Check whether the CP bot's Guns of August push feels too strong or too weak against your defence.
+* **Event timing.** Note any card the bot plays (or holds) at a clearly wrong moment, with the turn and the situation.
+
+Reports like these are the most useful input for v0.8.
 
 ## Reproducing
 

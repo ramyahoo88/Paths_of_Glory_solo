@@ -75,6 +75,8 @@ const KEEP_WHEN = {
   101: A => A.game.events.h_l_take_command > 0,
   119: A => true,
 }
+// Narrow keep set: the Russian-collapse chain (CP) and the US-entry chain (Allies).
+const CHAIN = new Set([93, 117, 118, 110, 54, 55, 43, 47])
 function keepNow(A, c) { return KEEP.has(c) && (!KEEP_WHEN[c] || KEEP_WHEN[c](A)) }
 
 // Printed notes (match ADJUST and KEEP_WHEN above). Keys are global card indices.
@@ -93,4 +95,4 @@ function printedPriority(c) {
   return String(fixed[c] !== undefined ? fixed[c] : e.event_priority)
 }
 
-module.exports = { priority, ccOk, BY, C, KEEP, KEEP_WHEN, keepNow, NOTE, printedPriority }
+module.exports = { priority, ccOk, BY, C, KEEP, KEEP_WHEN, keepNow, NOTE, printedPriority, CHAIN }

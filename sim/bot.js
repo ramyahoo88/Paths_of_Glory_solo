@@ -582,6 +582,7 @@ class Bot {
   isKeep(A, c) {
     if (this.opts.keep === false) return false
     if (this.opts.keep === 'all') return EP.KEEP.has(c)
+    if (this.opts.keep === 'chain') return EP.CHAIN.has(c) && EP.keepNow(A, c)
     return EP.keepNow(A, c)
   }
 
