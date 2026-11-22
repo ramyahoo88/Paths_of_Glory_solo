@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.7 — 22 Nov 2026
+
+* Allied bot: a **Forward move with an army is worth 2.5** (CP bot: 1.5). The Allies now bring idle armies up to the line sooner. In paired tests on two seed sets this raised the Allied bot from 55% to 61% and from 54% to 64%; the same change hurt the CP bot, so it is Allied-only.
+* Harness robustness: a stack never takes an overstacking step when no step toward its target exists. After a rule-violation reset, the bot finishes the action round with attacks only.
+* Stress test: a greedy one-round look-ahead variant lost all 80 games against the plain procedure (see report).
+* Self-play now 62% Allies / 38% CP (460 evaluation games, no harness errors); about six points of win rate per VP of handicap.
+
 ## v0.6 — 22 Nov 2026
 
 * Events of priority **7–9** are urgent (played before anything else); the Plan's Event step now covers priorities 5–6. In paired tests this raised the Allied bot from 50% to 69% and the CP bot from 51% to 55%, and the war's milestones became far more historical (USA at war in 76% of games, Fall of the Tsar in 74%).

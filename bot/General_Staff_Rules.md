@@ -1,6 +1,6 @@
 # General Staff — a card-driven solo opponent for *Paths of Glory*
 
-**Version 0.6 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
+**Version 0.7 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
 
 General Staff can command **either side**; you play the other side normally. The bot follows the same rules you do. It holds a hand of real strategy cards and takes six action rounds a turn. Each round it plays a card as an Event, for Operations (OPS), for Strategic Redeployment (SR) or for Replacement Points (RP), or it takes the 1-OP Automatic Operation. It never breaks a rule, never looks at your hand and never rolls dice to make a decision. Its decisions come from a deck of **Staff cards** and the fixed priorities in this booklet. Dice are rolled only where the game rules call for them (combat, mandated offensives, entrenching, sieges and so on).
 
@@ -23,7 +23,7 @@ The optional **General Staff Companion** (an offline web page) draws Staff cards
 
 **Setup.** Set up the Historical scenario normally. Shuffle the Staff deck. Deal the bot its strategy cards exactly as for a human player.
 
-**Difficulty (optional).** For a harder game, start the VP marker 1 or 2 spaces in the bot's favour: toward 20 when the bot plays the Central Powers, toward 0 when it plays the Allies. For an easier game, move it toward you instead. In bot-versus-bot tests, each VP of handicap shifted the result by about six or seven percentage points. Keep the bot's hand face down beside the board and look at it when the procedure tells you to. The bot plays to fixed rules, so seeing its cards gives you little, but the honest habit is to look only when asked.
+**Difficulty (optional).** For a harder game, start the VP marker 1 or 2 spaces in the bot's favour: toward 20 when the bot plays the Central Powers, toward 0 when it plays the Allies. For an easier game, move it toward you instead. In bot-versus-bot tests, each VP of handicap shifted the result by about six percentage points. Keep the bot's hand face down beside the board and look at it when the procedure tells you to. The bot plays to fixed rules, so seeing its cards gives you little, but the honest habit is to look only when asked.
 
 ---
 
@@ -141,7 +141,7 @@ The **Move list** holds every move below that the bot could make, ranked by **Mo
 | **Capture** | A stack moves into an adjacent enemy-controlled space that has no enemy unit and no undestroyed enemy fort, and where the rules let it end its move. A stack next to several such spaces takes a VP space first, then one nearer the front's Objective than the stack is, then the Tie. | 4 for a VP space, otherwise 2 |
 | **Fill** | The nearest bot stack within three spaces of a threatened space moves into it. The stack must be out of contact or hold two or more units. | 2, +1 if in crisis, +1 if a capital |
 | **Siege** | A stack that can besiege moves into an adjacent enemy fort space with no enemy units. It can besiege if it moves an army, or at least as many corps as the fort's value after the Guard rule. | 3 for a VP space, otherwise 2 |
-| **Forward** | A stack not in contact moves toward the bot-controlled space in contact on its front that has fewer than three units. Choose the one nearest the stack, counting half the distance from that space to the front's Objective as extra distance. With no such space, the stack moves toward the Objective. It stops on reaching a space in contact. | 1.5 with an army, otherwise 1 |
+| **Forward** | A stack not in contact moves toward the bot-controlled space in contact on its front that has fewer than three units. Choose the one nearest the stack, counting half the distance from that space to the front's Objective as extra distance. With no such space, the stack moves toward the Objective. It stops on reaching a space in contact. | With an army: 1.5 (CP bot), 2.5 (Allied bot). Otherwise 1 |
 | **Entrench** | Only once an Entrench event has been played: an army in contact, in a bot-controlled space below trench level 2, attempts to entrench. | 1.5 with a Hold card, otherwise 0.5 |
 
 Once a space is activated, ignore its other entries on the list.

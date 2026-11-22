@@ -22,12 +22,12 @@ Print the cards at 100% (US Letter), single-sided; the last sheet is backs. The 
 
 General Staff was developed and tested in about **22,000 simulated full campaigns** on the open-source **Rally the Troops** rules engine. The engine is used with GMT's permission on that site and is not included here. The final version:
 
-* is close to balanced against itself: in 200 self-play games, the Allies won **57%** and the Central Powers **43%**;
+* plays both sides well enough to beat itself either way: in 200 self-play games, the Allied bot won **62%** and the Central Powers bot **38%**;
 * beat a random player and a naive one-attack, no-events bot in **260 of 260** games;
 * made only legal moves, and plays a recognisable war: Russia usually collapses in 1917 and the USA enters in most games;
-* has an optional difficulty handicap (starting VP), worth about six or seven points of win rate per VP.
+* has an optional difficulty handicap (starting VP), worth about six points of win rate per VP.
 
-Bot-versus-bot strength is not the same as strength against a person; **human playtesting is the next step.** See the [report](sim/REPORT.md) for the evidence behind each design decision and the known limits. The most important limit: the Allied bot is the more reactive of the two and misses some mandated offensives.
+Bot-versus-bot strength is not the same as strength against a person; **human playtesting is the next step.** See the [report](sim/REPORT.md) for the evidence behind each design decision and the known limits. In self-play the Allied bot is currently the stronger of the two, so for a harder game give the bot the Allies or use the VP handicap. The main known weakness is that both bots, and especially the Allies, miss some mandated offensives.
 
 ## For developers
 

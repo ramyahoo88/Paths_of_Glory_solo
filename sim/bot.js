@@ -45,7 +45,7 @@ class Bot {
   constructor(side, seed, opts = {}) {
     this.side = side; this.enemy = side === 'ap' ? 'cp' : 'ap'
     this.role = ROLE[side]
-    this.opts = Object.assign({ edgeShift: side === 'ap' ? 1.0 : 0, flank: false, events: true, sr: true, rp: true, entrench: true, guard: true, moves: true, directive: true, moveMode: 'table', shortlist: 3, keep: false, urgentMin: 7, rpStep: side === 'ap' ? 6 : 0 }, opts)
+    this.opts = Object.assign({ edgeShift: side === 'ap' ? 1.0 : 0, flank: false, events: true, sr: true, rp: true, entrench: true, guard: true, moves: true, directive: true, moveMode: 'table', shortlist: 3, keep: false, urgentMin: 7, fwdArmyV: side === 'ap' ? 2.5 : 1.5, rpStep: side === 'ap' ? 6 : 0 }, opts)
     this.r = rng(seed * 7919 + (side === 'ap' ? 13 : 29))
     this.deck = makeDeck(); this.shuffle(); this.discard = []
     this.dir = null; this.plan = null
@@ -409,7 +409,7 @@ class Bot {
         if (m.kind === 'capture') return (data.spaces[m.to].vp ? 4 : (this.opts.captureV ?? 2))
         if (m.kind === 'fill') return ((data.spaces[m.to].vp || data.spaces[m.to].fort || data.spaces[m.to].capital) ? 2 : 1) + (ed[m.to] === 1 ? 1 : 0) + (data.spaces[m.to].capital ? 1 : 0)
         if (m.kind === 'siege') return 2 + (data.spaces[m.to].vp ? 1 : 0)
-        if (m.kind === 'forward') return this.piecesAt(A, m.from, this.side).some(p => data.pieces[p].type === 'army') ? 1.5 : 1
+        if (m.kind === 'forward') return this.piecesAt(A, m.from, this.side).some(p => data.pieces[p].type === 'army') ? (this.opts.fwdArmyV ?? 1.5) : 1
         if (m.kind === 'entrench') return (this.dir && this.dir.stance === 'H') ? (this.opts.entrenchH ?? 1.5) : (this.opts.entrenchV ?? 0.5)
         if (m.kind === 'gap') return m.score
         if (m.kind === 'moApproach') return 3
@@ -680,6 +680,7 @@ class Bot {
       if (!loc || loc >= B.N) continue
       // far from any enemy unit (distance > 3) -> move up
       const near = this.enemyDist(A)[loc]
+      if (this.opts.capRear && B.CAPITALS[this.side].includes(loc) && near > 1 && A.is_space_at_war(loc)) { out.push({ p, cost: pd.type === 'army' ? 4 : 1, why: 'capital' }); continue }
       if (near > 3 && A.is_space_at_war(loc)) out.push({ p, cost: pd.type === 'army' ? 4 : 1, why: 'rear' })
     }
     return out
@@ -688,6 +689,7 @@ class Bot {
   // ================= operations execution =================
   s_activate_spaces(A, g, acts) {
     const plan = this.plan || { attacks: [], moves: [] }
+    if (this.violation) { plan.moves = []; this._replanned = true } // after a rule-violation reset: attacks only
     const att = new Set(acts.activate_attack || []), mov = new Set(acts.activate_move || [])
     for (const a of plan.attacks) for (const s of a.spaces) if (att.has(s)) return ['activate_attack', s]
     for (const m of plan.moves) if (mov.has(m.from)) return ['activate_move', m.from]
@@ -784,7 +786,13 @@ class Bot {
       // don't end in an unsupplied space
       if (d < bd || (d === bd && best === null && false)) { bd = d; best = s }
     }
-    if (best === null) return acts.stop ? ['stop'] : null
+    if (best === null) {
+      if (acts.stop) return ['stop']
+      // no step toward the target: take any safe step (no overstack, can end there), nearest the target
+      const safe = sp.filter(x => !this.enemyUnitsAt(A, x).length && this.piecesAt(A, x, this.side).length + moving.length <= 3 && A.can_end_move(x, moving) && !(A.has_undestroyed_fort(x, this.enemy) && !A.is_besieged(x)))
+      if (safe.length) return ['space', safe.sort((a, b) => B.dist(a, to) - B.dist(b, to))[0]]
+      return null
+    }
     if (!A.is_space_supplied(best, this.side) && acts.stop) return ['stop']
     return ['space', best]
   }

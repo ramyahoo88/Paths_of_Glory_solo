@@ -1,17 +1,17 @@
 # General Staff — simulation report
 
-*Covers General Staff **v0.6** (rules: [`bot/General_Staff_Rules.md`](../bot/General_Staff_Rules.md)). Written 22 November 2026.*
+*Covers General Staff **v0.7** (rules: [`bot/General_Staff_Rules.md`](../bot/General_Staff_Rules.md)). Written 22 November 2026.*
 
 ## Summary
 
-* In **200 self-play campaigns** (bot against bot), the Allied bot won **57%** and the Central Powers bot **43%**. Mean VP stayed between 8 and 12 all war.
+* In **200 self-play campaigns** (bot against bot), the Allied bot won **62%** and the Central Powers bot **38%**. Mean VP stayed between 8 and 12 all war.
 * Against a **random** player and against a **naive** one-attack, no-events bot, General Staff won **every** game on both sides: 260 of 260.
 * About **22,000 further campaigns** compared design alternatives in paired tests. They settled the main choices:
   * attack the best Score, not the first acceptable target;
   * advance after combat;
   * fill endangered spaces by movement, not SR;
   * play every event of priority 7 or more as soon as it is legal;
-  * make the Allied bot more cautious, with a once-a-turn rebuild of heavy losses.
+  * make the Allied bot more cautious, with a once-a-turn rebuild of heavy losses, and quicker to bring armies up to the line.
 * The bot never made an illegal move: every decision was chosen from the rules engine's list of legal actions. The 460 evaluation games finished without a harness error.
 * These are bot-versus-bot results. They show the procedure is coherent, legal, much stronger than simple baselines, and plays a recognisable war. They do not show how it fares against a strong player. **Human playtesting is the next step.**
 
@@ -29,24 +29,24 @@
 
 **Design comparisons.** A candidate bot played one side against a frozen reference bot on the other side, on the same seeds: 120 or 150 per side. At those sizes the standard error of a win rate near 50% is about ±4 points. Only differences of about 10 points or more were treated as real. When a change made no difference, the simpler procedure was kept.
 
-## Results for v0.6
+## Results for v0.7
 
 | Match-up | Games | Allied wins | CP wins | Mean end turn | How games ended |
 |---|---|---|---|---|---|
-| Self-play | 200 | 114 (57%) | 86 (43%) | 17.6 | Allied win at turn limit 80, CP automatic victory 59, CP win at turn limit 23, Allied automatic victory 22, armistice 16 (12 Allied, 4 CP) |
-| General Staff Allies vs random CP | 30 | 30 (100%) | 0 | 6.7 | Allied automatic victory 30 |
+| Self-play | 200 | 124 (62%) | 76 (38%) | 17.7 | Allied win at turn limit 79, CP automatic victory 47, armistice 34 (26 Allied, 8 CP), CP win at turn limit 21, Allied automatic victory 19 |
+| General Staff Allies vs random CP | 30 | 30 (100%) | 0 | 6.4 | Allied automatic victory 30 |
 | General Staff CP vs random Allies | 30 | 0 | 30 (100%) | 4.4 | CP automatic victory 30 |
-| General Staff Allies vs naive CP | 100 | 100 (100%) | 0 | 8.1 | Allied automatic victory 99, turn limit 1 |
+| General Staff Allies vs naive CP | 100 | 100 (100%) | 0 | 8.4 | Allied automatic victory 100 |
 | General Staff CP vs naive Allies | 100 | 0 | 100 (100%) | 4.7 | CP automatic victory 100 |
 
 ### Difficulty handicap
 
-Moving the starting VP marker changes the self-play result by about **six or seven percentage points per VP** (150 games each, the same seeds for every column):
+Moving the starting VP marker changes the self-play result by about **six percentage points per VP** (150 games each, the same seeds for every column):
 
 | Starting VP | 8 | 9 | 10 (normal) | 11 | 12 |
 |---|---|---|---|---|---|
-| Allied wins | 69% | 63% | 57% | 51% | 42% |
-| CP wins | 31% | 37% | 43% | 49% | 58% |
+| Allied wins | 69% | 66% | 60% | 53% | 46% |
+| CP wins | 31% | 34% | 40% | 47% | 54% |
 
 The rules offer this as an optional difficulty setting (§1).
 
@@ -59,22 +59,22 @@ Self-play, 200 games. The table gives the median turn when each milestone was re
 | CP and Allies reach Limited War; Turkey enters | 2 | 100% |
 | Italy and Bulgaria enter | 5 | 99–100% |
 | CP reach Total War | 6 | 99% |
-| Romania enters | 8 | 78% |
-| Allies reach Total War | 8 | 94% |
-| Tsar Takes Command | 10 | 81% |
-| Fall of the Tsar | 13 | 74% |
-| USA at war | 14 | 76% |
-| Bolshevik Revolution and Brest-Litovsk | 17 | 28% |
-| Greece enters | 16 | 27% |
+| Romania enters | 8 | 82% |
+| Allies reach Total War | 8 | 98% |
+| Tsar Takes Command | 9 | 82% |
+| Fall of the Tsar | 13 | 76% |
+| USA at war | 15 | 80% |
+| Bolshevik Revolution and Brest-Litovsk | 17 | 30% / 28% |
+| Greece enters | 16 | 46% |
 
 Mean VP at the start of each turn (games still running):
 
 | Turn | 2 | 4 | 6 | 8 | 10 | 12 | 14 | 16 | 18 | 20 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Mean VP | 10.3 | 11.2 | 11.2 | 12.0 | 11.1 | 10.3 | 9.6 | 9.3 | 8.8 | 8.3 |
-| Games still running | 200 | 199 | 199 | 196 | 190 | 184 | 169 | 151 | 129 | 119 |
+| Mean VP | 10.3 | 11.1 | 11.1 | 12.2 | 11.1 | 10.6 | 9.6 | 9.2 | 8.6 | 8.7 |
+| Games still running | 200 | 199 | 199 | 197 | 189 | 180 | 170 | 153 | 140 | 117 |
 
-The war has a familiar shape. The Central Powers gain ground until 1916, then the tide turns. The big events arrive in roughly historical order: early neutral entries, Russia collapsing in 1917, and the USA entering in 1917 in three games out of four.
+The war has a familiar shape. The Central Powers gain ground until 1916, then the tide turns. The big events arrive in roughly historical order: early neutral entries, Russia collapsing in 1917, and the USA entering in 1917 in four games out of five.
 
 ### What the bots do with their action rounds
 
@@ -82,29 +82,29 @@ Mean per game, self-play:
 
 | Measure | Allied bot | CP bot |
 |---|---|---|
-| Action rounds | 105.3 | 105.3 |
-| Events played | 30.4 | 30.1 |
-| Operations (of which 1-OP Automatic) | 59.0 (0.2) | 55.8 (0.3) |
-| SR plays | 2.5 | 7.0 |
-| RP plays | 13.4 | 12.5 |
-| Attacks | 45.2 | 88.1 |
-| Advances after combat | 17.1 | 35.9 |
-| Mandated offensives missed | 3.58 | 1.46 |
+| Action rounds | 106.2 | 106.2 |
+| Events played | 32.9 | 30.2 |
+| Operations (of which 1-OP Automatic) | 53.6 (0.1) | 57.1 (0.3) |
+| SR plays | 3.5 | 6.6 |
+| RP plays | 16.2 | 12.2 |
+| Attacks | 46.8 | 89.0 |
+| Advances after combat | 19.9 | 34.0 |
+| Mandated offensives missed | 3.34 | 1.39 |
 
 Which step of the action-round procedure decided the round:
 
 | Step | Allied bot | CP bot |
 |---|---|---|
-| Crisis | 41.7% | 22.0% |
-| Urgent event (priority 7–9) | 24.2% | 21.1% |
-| Plan: Attack | 5.0% | 24.2% |
-| Plan: Event | 4.5% | 6.4% |
-| Plan: Logistics (RP / SR) | 2.8% / 2.4% | 11.8% / 6.6% |
-| Rebuild (Allies only) | 9.9% | — |
-| Mandated Offensive (round 3+ / last chance) | 6.0% / 2.7% | 4.6% / 1.4% |
-| Forced play, Fallback, Automatic Operation | 0.7% | 1.9% |
+| Crisis | 33.9% | 23.3% |
+| Urgent event (priority 7–9) | 24.5% | 21.0% |
+| Plan: Attack | 6.7% | 24.0% |
+| Plan: Event | 6.3% | 6.3% |
+| Plan: Logistics (RP / SR) | 3.7% / 3.3% | 11.5% / 6.2% |
+| Rebuild (Allies only) | 11.5% | — |
+| Mandated Offensive (round 3+ / last chance) | 6.4% / 2.8% | 4.6% / 1.3% |
+| Forced play, Fallback, Automatic Operation | 0.8% | 1.7% |
 
-The two bots play differently. The CP bot attacks about twice as often and advances far more. The Allied bot spends about two rounds in five shoring up endangered spaces.
+The two bots play differently. The CP bot attacks about twice as often and advances far more. The Allied bot spends about a third of its rounds shoring up endangered spaces.
 
 ## How the design changed
 
@@ -136,13 +136,23 @@ Each row compares a candidate with the reference bot of the time, on the same se
 | Every Staff card's Stance = Press (no Stance variety) | 39% → 42% | 61% → 57% | Variety kept (free) |
 | Staff card front preference switched off | 80% → 78% | 20% → 24% | Kept (free) |
 | Flank attacks attempted | 27% → 23% | 83% → 81% | Never attempt |
-| Extra gap-filling, longer crisis range, idle-reserve SR, reserve-only crisis SR, MO preparation moves, different RP/SR triggers, other Stance offsets, making all war-status or reinforcement events urgent | no gain, or worse | no gain, or worse | Not adopted |
+| Allied Forward move with an army valued **2.5** instead of 1.5 | 55% → 61%; 54% → 64% (two seed sets) | 45% → 38% (if given to CP) | Allies only (v0.7) |
+| Extra gap-filling, longer crisis range, idle-reserve SR, reserve-only crisis SR, MO preparation moves, capital units counted as reserves, different RP/SR triggers, other Stance offsets, making all war-status or reinforcement events urgent | no gain, or worse | no gain, or worse | Not adopted |
 
 What the Plan experiments show: the even mix of Ops, Event and Logistics Plans on the Staff cards is what keeps the CP bot playing its reinforcements and war-status events and buying replacements. A bot that always attacks first collapses. The cards are not decoration; they carry the bot's strategic balance.
 
+### A greedy look-ahead variant is weaker, not stronger
+
+As a stress test, a variant was built that looks one round ahead at each action phase. It tries up to ten first actions, plays out the rest of its round and the opponent's next round with the General Staff procedure (dice re-seeded so the future stays unknown), scores the result (VP, surviving steps, war status, RP) and picks the best. It overruled the printed procedure in about three rounds out of four. Against the plain bot:
+
+* as the Allies it won **0 of 40** games;
+* as the Central Powers it won **0 of 40** games.
+
+Short-horizon greed loses because it undervalues what the procedure plays for over the longer term: reinforcement and war-status events, MO compliance and rebuilding. It also suggests the printed priorities are not easy to beat by local tinkering. It says nothing about strong human play.
+
 ## Admin load
 
-* The operator works out about **2.5 Edge/Score values per bot action round** on average: 2.3 for the CP bot and 2.6 for the Allies. The three-target shortlist (plus Objectives and MO targets) caps this. Each value takes two lookups on the Edge table plus a few small bonuses; the Companion's calculator does it in seconds.
+* The operator works out about **2.4 Edge/Score values per bot action round** on average: 2.3 for the CP bot and 2.5 for the Allies. The three-target shortlist (plus Objectives and MO targets) caps this. Each value takes two lookups on the Edge table plus a few small bonuses; the Companion's calculator does it in seconds.
 * Many bot rounds need no Attack Search at all: an urgent event, the Rebuild step, or an Event or Logistics Plan that fires first decides them. The Attack Search is only needed when a step asks for it.
 * The 1-OP Automatic Operation is almost never used, so the bot's hand turns over normally.
 * Turn-end decisions (replacements, reinforcements, draw-phase discards) follow short fixed orders.
@@ -152,7 +162,7 @@ These are counts, not clock times. Table time has not been measured.
 ## Known limits
 
 * **The opponent was a bot.** All strength figures come from games against bots. A strong person will exploit things no tested opponent exploits, especially thin lines and the bot's predictable Fill moves.
-* **The Allied bot misses mandated offensives** about 3.6 times a game, often because no British or Italian unit is in contact with a valid target. Moving those units into contact (MO preparation) made no difference in testing, so it was left out.
+* **The Allied bot misses mandated offensives** about 3.3 times a game, often because no British or Italian unit is in contact with a valid target. Moving those units into contact (MO preparation) made no difference in testing, so it was left out.
 * **Events are played by priority and legality, with a few situational adjustments.** The finer timing advice in [`research/event_policy.md`](../research/event_policy.md) is research, not part of the procedure.
 * **The tests used Rally the Troops' rules implementation.** Any difference between it and your printed rules would affect these results.
 * **Some minor tie-breaks in the harness follow map-data order** rather than the Tie (which stack fills a space, which of two capture targets). **Some sub-choices took the engine's first legal option**: where to place an event trench, entering neutral units, and some event follow-ups. At the table the rules say to use front order and the Tie, so those choices were never tested.
