@@ -1,0 +1,17 @@
+page 1: faces  card numbers 6  Tie lines 6  tops 6  backs 0  ok
+page 2: backs  card numbers 0  Tie lines 0  tops 0  backs 6  ok
+page 3: faces  card numbers 6  Tie lines 6  tops 6  backs 0  ok
+page 4: backs  card numbers 0  Tie lines 0  tops 0  backs 6  ok
+page 5: faces  card numbers 6  Tie lines 6  tops 6  backs 0  ok
+page 6: backs  card numbers 0  Tie lines 0  tops 0  backs 6  ok
+companion shift matches the bot: ok
+rules: Stance table: ok
+reference p1: Stance: ok
+reference p2: Stance: MISMATCH (expected 'Central Powers bot Assault +0.75, Press +1.5, Hold +2.25; Allied bot Assault +1, Press +1.75, Hold +2.5')
+Staff cards: A thresholds: ok
+Staff cards: P thresholds: ok
+Staff cards: H thresholds: ok
+rules: CP West first: ok
+reference p1: CP West first: ok
+reference p2: CP West first: MISMATCH (expected 'The Central Powers bot always puts the West first')
+FAIL

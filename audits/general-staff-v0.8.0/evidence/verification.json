@@ -1,0 +1,92 @@
+{
+  "reviewed_commit": "569bdc7b3eb1768504cc2393147c05fcbc95b0e4",
+  "bot_code_commit": "c8559da042c4498c8cb01ad53d324f7804bfbabb",
+  "reference_commit": "62a7746f34271e9e362db04b0a3dd0f9c4798aa4",
+  "engine_commit": "c58b0b4a33e227faf73cbe561f3bede17087a142",
+  "companion_sha256": "60a650af3c9c25da517f961c391491b0dd8fa399931f1a408e9b0e975775eafd",
+  "rebuilds_byte_identical": [
+    "app/General_Staff_Companion.html",
+    "print/out/staff_cards.html",
+    "print/out/reference.html",
+    "print/out/rules.html"
+  ],
+  "strict_self_play_replayed": {
+    "seed_start": 1100000,
+    "games": 20,
+    "all_recorded_fields_equal": true
+  },
+  "release_game_totals": {
+    "self_play": 600,
+    "cp_wins": 186,
+    "ap_wins": 414,
+    "health_suite": 740,
+    "fallbacks": 0,
+    "bot_supply_breaches": 0,
+    "random_opponent_supply_breaches": 2
+  },
+  "verified_stored_confirmation": [
+    {
+      "seed_start": 8001,
+      "games": 300,
+      "old_wins": 48,
+      "new_wins": 90,
+      "gained": 76,
+      "lost": 34
+    },
+    {
+      "seed_start": 9001,
+      "games": 300,
+      "old_wins": 46,
+      "new_wins": 96,
+      "gained": 82,
+      "lost": 32
+    }
+  ],
+  "allied_stored_identity": {
+    "games": 60,
+    "exact_equal": true
+  },
+  "finding": {
+    "severity": "Medium",
+    "source": "print/build.js",
+    "lines": [
+      111,
+      113
+    ],
+    "pdf": "print/out/reference.pdf",
+    "page": 2,
+    "old_thresholds": [
+      0,
+      0.75,
+      1.5
+    ],
+    "correct_thresholds": [
+      0.75,
+      1.5,
+      2.25
+    ],
+    "old_front_order": "Staff card front, then fixed order",
+    "correct_cp_front_order": "West, then Staff card front, then fixed order"
+  },
+  "independent_fresh_confirmation": {
+    "seeds": [
+      2200000,
+      2200199
+    ],
+    "games_per_arm": 200,
+    "baseline_cp_wins": 24,
+    "v080_cp_wins": 63,
+    "baseline_cp_win_rate": 0.12,
+    "v080_cp_win_rate": 0.315,
+    "difference_points": 19.5,
+    "gained": 50,
+    "lost": 11,
+    "paired_difference_approx_95ci_points": [
+      12.321117412244314,
+      26.678882587755687
+    ],
+    "mcnemar_two_sided_exact_p": 4.588831219506234e-07,
+    "candidate_decision_errors_both_runs": 0,
+    "limits": "Repository ab.js harness; fixed v0.7.6 Allied opponent; no human-play inference or full strict health claim."
+  }
+}

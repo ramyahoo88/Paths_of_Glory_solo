@@ -1,6 +1,6 @@
 # Response to the v0.8.0 review
 
-The review was run by GPT and relayed by the user on 22 Nov 2026. The review files were not in the repository when this response was written, so this records the findings as reported.
+The original response was written from the user-relayed summary on 22 Nov 2026. The complete [independent review](Review.md), [original review/evidence archive](General_Staff_v0.8.0_Review_and_Evidence.zip), and [expanded evidence](evidence/) are now included alongside it. See the [v0.8.1 verification](Verification_v0.8.1.md) for the independently checked closure and the remaining Low checker-coverage limitation.
 
 ## Reported results
 

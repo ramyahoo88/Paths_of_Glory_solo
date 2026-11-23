@@ -1,0 +1,49 @@
+Fronts, Objectives and Edge
+Front Table — Central Powers bot
+ Staff number                              1             2                  3             4                   5                             6
+ Mobilization                              West          West               West          East                East                          Balkans
+ Limited War                               West          East               East          East                Balkans                       Near East
+ Total War                                 West          West               East          East                Italy                         Balkans
+
+Front Table — Allied bot
+ Staff number                                  1               2                3                4                      5               6
+ Mobilization                                  West            West             East             East                   East            Balkans
+ Limited War                                   West            West             East             East                   Italy           Near East
+ Total War                                     West            West             West             East                   Italy           Near East
+
+After the Staff card's front, check the others in this order: West, East, Italy, Balkans, Near East.
+
+Edge table
+ Army column                         1             2      3           4         5         6–8           9–11                12–14                15     16+
+ Expected hits                       1.2           2.0    2.5         3.0       3.5       4.0           4.7                 5.3                  5.8    6.3
+
+ Corps column                                  0         1            2             3           4                 5               6             7       8+
+ Expected hits                                 0.3       0.5          0.8           1.3         1.5               1.8             2.0           2.5     3.0
+
+Use the columns after all shifts. Edge = bot's expected hits − defender's expected hits. Score = Edge + bonuses (Objective +1, or else within 2 of
+the Objective +0.4; VP space +0.5; a defender out of supply +0.5; MO attack +1 / +2.5 / +6 in rounds 1–2 / 3–4 / 5–6; −0.25 for each place the
+target's front is after the first in front order). Attack if Score ≥ Stance: Central Powers bot Assault 0, Press +0.75, Hold +1.5; Allied bot Assault +1,
+Press +1.75, Hold +2.5. From round 5 an MO attack is made at any Score.
+
+Objectives — Central Powers bot
+ Front        Objective list (first space the bot does not control)
+ West         Liege → Brussels → Sedan → Cambrai → Amiens → Verdun → Paris → Calais → Ostend → Antwerp → Nancy → Chateau Thierry
+              → Melun → Rouen → Bar le Duc → Belfort → Dijon → Le Havre → Orleans
+ East         Konigsberg → Lemberg → Czernowitz → Cracow → Lodz → Warsaw → Ivangorod → Kovno → Grodno → Vilna → Riga → Brest
+              Litovsk → Lutsk → Rovno → Minsk → Kiev → Bucharest → Ploesti → Odessa
+ Italy        Trent → Trieste → Udine → Venice → Asiago → Verona → Milan → Bologna → Genoa → Florence
+ Balkans      Belgrade → Valjevo → Nis → Skopje → Cetinje → Monastir → Bucharest → Constanta → Salonika → Florina
+ Near         Basra → Baghdad → Kars → Batum → Erivan → Sinai → Port Said → Cairo → Baku
+ East
+
+Objectives — Allied bot
+ Front        Objective list (first space the bot does not control)
+ West         Paris → Calais → Amiens → Verdun → Nancy → Ostend → Cambrai → Sedan → Brussels → Liege → Antwerp → Metz →
+              Strasbourg → Aachen → Koblenz → Essen → Frankfurt
+ East         Warsaw → Lodz → Riga → Kovno → Vilna → Lemberg → Przemysl → Czernowitz → Cracow → Konigsberg → Breslau → Posen →
+              Danzig → Budapest → Debrecen → Cluj
+ Italy        Trent → Trieste → Villach → Zagreb → Innsbruck
+ Balkans      Belgrade → Nis → Skopje → Monastir → Sofia → Strumitsa → Philippoli → Adrianople → Constantinople
+ Near         Basra → Qurna → Kut → Baghdad → Gaza → Jerusalem → Beersheba → Damascus → Erzerum → Trebizond → Mosul →
+ East         Constantinople
+
