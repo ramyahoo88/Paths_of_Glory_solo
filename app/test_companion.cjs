@@ -102,6 +102,46 @@ const d3 = boot(); const pre = JSON.stringify(d3.state()); d3.nodes.iotext.value
 ok(JSON.stringify(d3.state()) === pre && d3.nodes.ioinfo.textContent.includes('rejected'), 'a damaged import is rejected and changes nothing')
 d3.nodes.iotext.value = '{not json'; d3.nodes.import.onclick(); ok(d3.nodes.ioinfo.textContent.includes('rejected'), 'malformed import text is rejected')
 
+// A01 (v0.8.1 audit): Undo of an Import restores the whole recipient session, and its own Undo history
+{
+  const exportOf = b => { b.nodes.export.onclick(); return b.nodes.iotext.value }
+  // recipient: CP, Mobilization, two draws; donor: Allies, Total War, four draws
+  const r = boot(); r.nodes.side.onchange({ target: { value: 'cp' } }); r.nodes.lvl.onchange({ target: { value: 'mobilization' } })
+  r.nodes.draw.onclick(); const r1 = JSON.stringify(r.state()); r.nodes.draw.onclick(); r.nodes.nextround.onclick(); const r2 = JSON.stringify(r.state())
+  const dn = boot(); dn.nodes.side.onchange({ target: { value: 'ap' } }); dn.nodes.lvl.onchange({ target: { value: 'total' } })
+  for (let i = 0; i < 4; i++) dn.nodes.draw.onclick()
+  const dt = exportOf(dn)
+  r.nodes.iotext.value = dt; r.nodes.import.onclick()
+  ok(r.state().side === 'ap' && r.state().lvl === 'total' && r.state().hist.length === 1, 'A01: Import takes the donor side and commitment, with one Undo step back')
+  r.nodes.undo.onclick()
+  ok(JSON.stringify(r.state()) === r2 && r.nodes.side.value === 'cp' && r.nodes.lvl.value === 'mobilization', 'A01: one Undo restores the recipient exactly: deck, card, tracker, side, commitment and history')
+  r.nodes.undo.onclick(); r.nodes.undo.onclick()
+  ok(JSON.stringify(r.state()) === r1, "A01: further Undos walk the recipient's own history, not the donor's")
+  // the restored card is shown with the recipient's (CP) threshold, not the donor's (Allied) one
+  const st = r.run('cardById(S.cur).stance'), cpT = r.run(`D.stance['${st}'] + SHIFT.cp`), apT = r.run(`D.stance['${st}'] + SHIFT.ap`)
+  ok(r.nodes.card.innerHTML.includes('Score ≥ +' + cpT) && !r.nodes.card.innerHTML.includes('Score ≥ +' + apT + '<'), `A01: after Undo the card shows the CP threshold (+${cpT}, not the Allied +${apT})`)
+  // reload after an import, then Undo
+  const q = boot(); q.nodes.draw.onclick(); const q1 = JSON.stringify(q.state()); q.nodes.iotext.value = dt; q.nodes.import.onclick()
+  const saved = q.store.get(KEY), q2 = boot(saved)
+  ok(q2.error === null && q2.state().side === 'ap' && q2.state().hist.length === 1, 'A01: an imported session with its Undo step survives a reload')
+  q2.nodes.undo.onclick(); ok(JSON.stringify(q2.state()) === q1, 'A01: Undo after reload still restores the pre-import session')
+  // two imports in a row: two Undos return to the original
+  const w = boot(); w.nodes.draw.onclick(); const w0 = JSON.stringify(w.state())
+  w.nodes.iotext.value = dt; w.nodes.import.onclick(); const w1 = JSON.stringify(w.state())
+  w.nodes.iotext.value = text; w.nodes.import.onclick()
+  w.nodes.undo.onclick(); ok(JSON.stringify(w.state()) === w1, 'A01: after a second Import, Undo returns to the first imported session')
+  w.nodes.undo.onclick(); ok(JSON.stringify(w.state()) === w0, 'A01: a second Undo returns to the original session')
+  // an import step that is damaged is skipped like any other damaged step, and a damaged nested session is rejected on import
+  const z = boot(); z.nodes.draw.onclick(); z.nodes.draw.onclick(); z.run(`S.hist.push(JSON.stringify({ kind: 'import', session: { side: 'cp', lvl: 'nope', deck: [], discard: [], hist: [] } }))`)
+  z.nodes.undo.onclick(); ok(z.state().discard.length === 1 && z.nodes.notice.textContent.includes('damaged Undo step'), 'A01: a damaged import step is skipped with a notice')
+  const bad = JSON.parse(exportOf(w)); bad.hist = [JSON.stringify({ kind: 'import', session: { side: 'xx' } })]
+  const y = boot(); const yPre = JSON.stringify(y.state()); y.nodes.iotext.value = JSON.stringify(bad); y.nodes.import.onclick()
+  ok(JSON.stringify(y.state()) === yPre && y.nodes.ioinfo.textContent.includes('rejected'), 'A01: an import whose history holds a damaged import step is rejected')
+  // an older saved session (ordinary steps only) still loads and undoes
+  const old = JSON.parse(r1); const o = boot(JSON.stringify(Object.assign({ v: 1 }, old))); o.nodes.draw.onclick(); o.nodes.undo.onclick()
+  ok(JSON.stringify(o.state()) === r1, 'A01: an older saved session with ordinary steps still loads and undoes')
+}
+
 // search
 c = boot(); c.nodes.evq.value = '55'; c.nodes.evq.oninput(); ok(c.nodes.evlist.innerHTML.includes('Lloyd George'), 'card-number search')
 c.nodes.side.onchange({ target: { value: 'ap' } }); ok(c.nodes.evlist.innerHTML.includes('Over There'), 'side switch changes the event list')

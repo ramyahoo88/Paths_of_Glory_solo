@@ -28,7 +28,7 @@ th { background: #e8e2d0; }
 .small { font-size: 7.5pt; } .pb { page-break-before: always; } .rec td { height: 30px; } .rec th { font-size: 8pt; }
 ol, ul { margin: 2px 0 4px 16px; padding: 0; } li { margin: 1px 0; }
 </style><div class="ref">
-<h1>General Staff v0.8.1 &mdash; Reference</h1><h2>Bot action round &mdash; draw 1 Staff card, then take the first step that applies</h2>
+<h1>General Staff v0.8.2 &mdash; Reference</h1><h2>Bot action round &mdash; draw 1 Staff card, then take the first step that applies</h2>
 <p class="small"><b>Front order</b>: card's front, then W, E, It, Bal, NE. <b>CP bot: West first</b>, then the card's front.</p>
 <ol>
 <li><b>Forced play</b> (Guns of August, CP turn 1 round 1).</li>
@@ -61,7 +61,7 @@ ol, ul { margin: 2px 0 4px 16px; padding: 0; } li { margin: 1px 0; }
 <tr><td><b>Entrench</b> an army in contact (after an Entrench event)</td><td>1.5 Hold / 0.5</td></tr></table>
 <p class="small"><b>Guard</b>: a stack of 2+ leaving a bot space in contact leaves its weakest unit (except to capture a VP space). Move no more units than the first step can take; a siege keeps a legal besieging force behind. Each step: the legal, in-supply adjacent space nearest the destination (Tie); never overstack, never end out of supply or in a fort space you cannot besiege; stop if no step gets nearer.</p>
 <h3>Logistics</h3>
-<p><b>RP</b> if missing steps &minus; RP held &ge; 3 (fallback 1.5): the card covering most missing steps (at least 2; fallback 1). <b>SR</b> if units worth &ge; 4 SR points (fallback 1) sit in the Reserve Box or &gt;3 spaces from the enemy: card whose SR value is closest (max 5); redeploy those units, armies first. Cards of priority 7+ are never used for RP or SR. Card ties: lower priority, lower number. No RP or SR right after the same play; no RP in the Influenza turn.</p>
+<p><b>RP</b> if missing steps &minus; RP held &ge; 3 (fallback 1.5): the card covering most missing steps (at least 2; fallback 1). <b>SR</b> if units worth &ge; 4 SR points (fallback 1) sit in the Reserve Box or &gt;3 spaces from the enemy: card whose SR value is closest (max 5); redeploy them: armies, then corps; Reserve Box first, then Tie. Never a priority 7+ card for RP or SR. Card ties: lower priority, lower number. No RP or SR right after the same play; no RP in the Influenza turn.</p>
 <h3>Combat and phases</h3>
 <ul>
 <li><b>Combat cards</b>: attacking, play every usable one; defending, play them in VP, fort or trench spaces; always use already-played ones that apply. For OPS/SR/RP a combat card counts as priority 0.</li>
@@ -70,7 +70,7 @@ ol, ul { margin: 2px 0 4px 16px; padding: 0; } li { margin: 1px 0; }
 <li><b>Retreat</b>: no overstack &gt; bot-controlled &gt; supplied &gt; not in contact &gt; nearest bot capital &gt; most bot units &gt; Tie.</li>
 <li><b>Hold ground</b>: in a VP space or capital with a full-strength unit, take the extra step to cancel a retreat where allowed.</li>
 <li><b>Advance</b>: into a VP, fort or own-front Objective-list space, or with an Assault or Press card; strongest first, up to 3 in the space; leave one unit in an emptied space still in contact; one space only.</li>
-<li><b>Replacements</b>: armies in contact, other armies on the map, eliminated armies, then corps likewise. Rebuilt armies: earliest of West, East, Italy, Balkans, Near East.</li>
+<li><b>Replacements</b>: armies in contact, other armies on the map, eliminated armies, then corps likewise; ties: Tie. Rebuilt armies: earliest front, W, E, It, Bal, NE.</li>
 <li><b>Event choices</b> (&sect;9): Landwehr in Replacement order; War in Africa: a corps (Reserve Box first); Salonika only with an eligible corps; neutrals next to the enemy; Kerensky, Brusilov: first Russian attack.</li>
 <li><b>Reinforcements</b>: no overstack &gt; earliest front &gt; nearest an enemy &gt; Tie.</li>
 <li><b>Draw</b>: 3+ combat cards: discard lowest keep value to 2.</li>

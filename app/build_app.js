@@ -8,7 +8,7 @@ const B = require(path.join(root, 'sim/board.js'))
 const R = require(path.join(root, 'engine/rules.js'))
 const POLICY = require(path.join(root, 'research/event_policy.json'))
 const EP = require(path.join(root, 'sim/events.js'))
-const VERSION = process.env.GS_VERSION || '0.8.1'
+const VERSION = process.env.GS_VERSION || '0.8.2'
 
 const FN = { WEST: 'West', EAST: 'East', ITALY: 'Italy', BALKANS: 'Balkans', NEAREAST: 'Near East' }
 const objectives = {}
@@ -145,7 +145,14 @@ function renderTrack() {
 function validSession(x) {
   if (!x || typeof x !== 'object' || !['cp', 'ap'].includes(x.side) || !LEVELS.includes(x.lvl)) return false;
   if (!validDeck(x) || !Array.isArray(x.hist)) return false;
-  return x.hist.every(h => { try { return typeof h === 'string' && validDeck(JSON.parse(h)) } catch (e) { return false } });
+  return x.hist.every(validStep);
+}
+// An Undo step is either an ordinary step {deck, discard, cur, track}, or an import step {kind: 'import', session} that holds the
+// whole session an Import replaced: side, commitment, deck, current card, tracker and its own Undo history.
+function validStep(h) {
+  if (typeof h !== 'string') return false;
+  let x = null; try { x = JSON.parse(h) } catch (e) { return false }
+  return x && x.kind === 'import' ? validSession(x.session) : validDeck(x);
 }
 function load() {
   let raw = null;
@@ -212,8 +219,9 @@ function snapshot() { S.hist.push(JSON.stringify({ deck: S.deck, discard: S.disc
 $('draw').onclick = () => { snapshot(); if (!S.deck.length) { S.deck = shuffle(S.discard.slice()); S.discard = [] } S.cur = S.deck.pop(); S.discard.push(S.cur); render() };
 $('undo').onclick = () => {
   while (S.hist.length) {
-    let x = null; try { x = JSON.parse(S.hist.pop()) } catch (e) {}
-    if (validDeck(x)) { S.deck = x.deck; S.discard = x.discard; S.cur = x.cur ?? null; if (x.track) S.track = cleanTrack(x.track); break }
+    const h = S.hist.pop(), x = validStep(h) ? JSON.parse(h) : null;
+    if (x && x.kind === 'import') { const p = x.session; S.side = p.side; S.lvl = p.lvl; S.deck = p.deck; S.discard = p.discard; S.cur = p.cur ?? null; S.track = cleanTrack(p.track); S.hist = p.hist; $('ioinfo').textContent = 'Import undone: your previous session is back, with its side, commitment and Undo history.'; break }
+    if (x) { S.deck = x.deck; S.discard = x.discard; S.cur = x.cur ?? null; if (x.track) S.track = cleanTrack(x.track); break }
     note('A damaged Undo step was skipped.');
   }
   render();
@@ -225,9 +233,11 @@ $('export').onclick = () => { $('iotext').value = JSON.stringify(Object.assign({
 $('import').onclick = () => {
   let x = null; try { x = JSON.parse($('iotext').value) } catch (e) {}
   if (!validSession(x)) { $('ioinfo').textContent = 'Import rejected: that is not a complete, undamaged session. Nothing was changed.'; return }
-  snapshot(); const keep = S.hist;
-  S.side = x.side; S.lvl = x.lvl; S.deck = x.deck; S.discard = x.discard; S.cur = x.cur ?? null; S.track = cleanTrack(x.track); S.hist = x.hist.concat(keep.slice(-1)).slice(-30);
-  $('ioinfo').textContent = 'Imported. Undo returns to your previous deck and tracker.'; render();
+  // one Undo returns to the whole session this Import replaces (its Undo history included); the other device's history is not imported
+  const prev = { side: S.side, lvl: S.lvl, deck: S.deck, discard: S.discard, cur: S.cur, track: S.track, hist: S.hist };
+  S.side = x.side; S.lvl = x.lvl; S.deck = x.deck; S.discard = x.discard; S.cur = x.cur ?? null; S.track = cleanTrack(x.track);
+  S.hist = [JSON.stringify({ kind: 'import', session: prev })];
+  $('ioinfo').textContent = 'Imported. Undo returns to your previous session: deck, tracker, side and commitment.'; render();
 };
 $('side').onchange = e => { S.side = e.target.value; render() };
 for (const id of ['tturn', 'tround', 'tmo', 'trp']) $(id).onchange = $(id).oninput = () => { S.track = cleanTrack({ turn: Math.round(+$('tturn').value), round: Math.round(+$('tround').value), mo: $('tmo').checked, rp: $('trp').checked }); render() };

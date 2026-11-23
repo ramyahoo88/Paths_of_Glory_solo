@@ -380,6 +380,14 @@ class Bot {
     const d = B.ycoord(a) - B.ycoord(b)
     return (dir === 'N' ? d : -d) || a - b
   }
+  // Tie between two equally ranked units: by their spaces (the Tie). A unit off the map (Reserve Box) comes before one on the map
+  // (§7.2). Units in the same space or box are the operator's choice (§2); the simulator takes the lower piece number.
+  unitTie(A, p, q) {
+    if (this.opts.printedTies === false) return p - q
+    const a = A.game.location[p], b = A.game.location[q], offA = a >= B.N, offB = b >= B.N
+    if (offA !== offB) return offA ? -1 : 1
+    return (!offA && a !== b ? this.tie(a, b) : 0) || p - q
+  }
 
   moveCandidates(A, fronts, used) {
     const out = []
@@ -515,7 +523,7 @@ class Bot {
       if (!this.adjEnemy(A, t)) continue
       if (this.piecesAt(A, t, this.side).length >= 3) continue
       const d = B.dist(s, t) + (obj ? 0.5 * B.dist(t, obj) : 0)
-      if (d < bd) { bd = d; best = t }
+      if (d < bd || (d === bd && this.opts.printedTies !== false && this.tie(t, best) < 0)) { bd = d; best = t } // equal distance: the Tie
     }
     if (!best && obj) best = obj
     return best
@@ -1070,7 +1078,7 @@ class Bot {
       if (this.opts.lossMode === 'flipFirst') return (red ? 20 : 0) + (pd.type === 'army' ? 10 : 2) + A.get_piece_cf(p) * 0.3
       return (pd.type === 'army' ? 10 : 2) + (red ? (pd.type === 'army' ? 8 : 1) : 0) + A.get_piece_cf(p) * 0.3
     }
-    return ['piece', ps.sort((a, b) => val(a) - val(b))[0]]
+    return ['piece', ps.sort((a, b) => val(a) - val(b) || this.unitTie(A, a, b))[0]]
   }
   s_apply_defender_losses(A, g, acts) { if (acts.space && !(acts.piece || []).length) return ['space', acts.space[0]]; return this.lossChoice(A, acts) }
   s_apply_attacker_losses(A, g, acts) { return this.lossChoice(A, acts) }
@@ -1118,7 +1126,7 @@ class Bot {
       const chosen = at.advancing_pieces
       const already = this.piecesAt(A, t, this.side).filter(p => !chosen.includes(p)).length
       if (chosen.length + already < 3) {
-        const cand = ps.filter(p => !chosen.includes(p)).sort((a, b) => A.get_piece_cf(b) - A.get_piece_cf(a))
+        const cand = ps.filter(p => !chosen.includes(p)).sort((a, b) => A.get_piece_cf(b) - A.get_piece_cf(a) || this.unitTie(A, a, b))
         for (const p of cand) {
           const org = A.game.location[p]
           const left = this.piecesAt(A, org, this.side).filter(q => q !== p && !chosen.includes(q))
@@ -1149,8 +1157,8 @@ class Bot {
     if (!cands.length) cands = this.srCandidates(A).filter(x => ps.includes(x.p) && x.cost <= pts && A.get_sr_destinations(x.p).length)
     // only units with a destination that will not overstack (stacking limit 3; boxes have no limit)
     cands = cands.filter(x => A.get_sr_destinations(x.p).some(d => d >= B.N || this.piecesAt(A, d, this.side).length < 3))
-    // armies first if affordable
-    cands.sort((a, b) => b.cost - a.cost)
+    // armies first if affordable; equal units: Reserve Box first, then the Tie (§7.2)
+    cands.sort((a, b) => b.cost - a.cost || this.unitTie(A, a.p, b.p))
     if (cands.length) { this.srUnit = cands[0].p; return ['piece', cands[0].p] }
     return acts.confirm_end_sr ? ['confirm_end_sr'] : acts.end_action ? ['end_action'] : null
   }
@@ -1180,7 +1188,7 @@ class Bot {
     const ps = acts.piece || []
     if (ps.length) {
       const val = p => { const pd = data.pieces[p]; const onMap = A.game.location[p] < B.N; return (pd.type === 'army' ? 10 : 3) + (onMap && this.adjEnemy(A, A.game.location[p]) ? 3 : 0) + (onMap ? 1 : 0) }
-      return ['piece', ps.sort((a, b) => val(b) - val(a))[0]]
+      return ['piece', ps.sort((a, b) => val(b) - val(a) || this.unitTie(A, a, b))[0]]
     }
     return acts.confirm_end_rp ? ['confirm_end_rp'] : acts.end_rp ? ['end_rp'] : null
   }
