@@ -1,0 +1,27 @@
+{
+  "companion": {
+    "checks": 40,
+    "displays": 108,
+    "result": "pass"
+  },
+  "multinational": "pass",
+  "eventChoices": {
+    "checks": 9,
+    "result": "pass"
+  },
+  "siege": "pass",
+  "movement": {
+    "checks": 3,
+    "result": "pass"
+  },
+  "priorities": {
+    "checks": 6,
+    "result": "pass"
+  },
+  "print_check": "pass",
+  "independentPdfMutations": {
+    "checks": 23,
+    "result": "pass"
+  },
+  "print_test_check_print": "not run: google-chrome not installed; PDF mutations independently run with PyMuPDF"
+}

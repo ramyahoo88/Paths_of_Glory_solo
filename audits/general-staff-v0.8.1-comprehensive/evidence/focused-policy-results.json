@@ -1,0 +1,104 @@
+{
+  "forward": [
+    {
+      "tie": "N",
+      "expected": "Verdun",
+      "actual": "Verdun",
+      "candidates": [
+        {
+          "name": "Verdun",
+          "weightedDistance": 1.5,
+          "y": 731
+        },
+        {
+          "name": "Nancy",
+          "weightedDistance": 1.5,
+          "y": 799
+        }
+      ]
+    },
+    {
+      "tie": "S",
+      "expected": "Nancy",
+      "actual": "Verdun",
+      "candidates": [
+        {
+          "name": "Verdun",
+          "weightedDistance": 1.5,
+          "y": 731
+        },
+        {
+          "name": "Nancy",
+          "weightedDistance": 1.5,
+          "y": 799
+        }
+      ]
+    }
+  ],
+  "sr": [
+    {
+      "tie": "N",
+      "staff": 1,
+      "expected": "Berlin",
+      "actual": "Stuttgart",
+      "action": [
+        "piece",
+        68
+      ]
+    },
+    {
+      "tie": "S",
+      "staff": 4,
+      "expected": "Stuttgart",
+      "actual": "Stuttgart",
+      "action": [
+        "piece",
+        68
+      ]
+    }
+  ],
+  "replacements": [
+    {
+      "tie": "N",
+      "staff": 1,
+      "expected": "Berlin",
+      "actual": "Stuttgart",
+      "action": [
+        "piece",
+        1
+      ]
+    },
+    {
+      "tie": "S",
+      "staff": 4,
+      "expected": "Stuttgart",
+      "actual": "Stuttgart",
+      "action": [
+        "piece",
+        1
+      ]
+    }
+  ],
+  "captureControls": [
+    {
+      "tie": "N",
+      "actual": "Cherbourg"
+    },
+    {
+      "tie": "S",
+      "actual": "Le Mans"
+    }
+  ],
+  "siegeControls": [
+    {
+      "count": 1,
+      "candidate": false,
+      "groupCanEnter": false
+    },
+    {
+      "count": 2,
+      "candidate": true,
+      "groupCanEnter": true
+    }
+  ]
+}

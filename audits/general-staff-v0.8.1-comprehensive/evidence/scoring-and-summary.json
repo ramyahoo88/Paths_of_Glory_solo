@@ -1,0 +1,429 @@
+{
+  "scoring": [
+    {
+      "file": "representative-trace-3410000",
+      "initial": 10,
+      "spaces": [
+        {
+          "space": "Rouen",
+          "delta": 1
+        },
+        {
+          "space": "Orleans",
+          "delta": 1
+        },
+        {
+          "space": "Amiens",
+          "delta": 1
+        },
+        {
+          "space": "Calais",
+          "delta": 1
+        },
+        {
+          "space": "Ostend",
+          "delta": 1
+        },
+        {
+          "space": "Cambrai",
+          "delta": 1
+        },
+        {
+          "space": "Melun",
+          "delta": 1
+        },
+        {
+          "space": "Dijon",
+          "delta": 1
+        },
+        {
+          "space": "Bar le Duc",
+          "delta": 1
+        },
+        {
+          "space": "Sedan",
+          "delta": 1
+        },
+        {
+          "space": "Brussels",
+          "delta": 1
+        },
+        {
+          "space": "Antwerp",
+          "delta": 1
+        },
+        {
+          "space": "Verdun",
+          "delta": 1
+        },
+        {
+          "space": "Nancy",
+          "delta": 1
+        },
+        {
+          "space": "Trent",
+          "delta": -1
+        },
+        {
+          "space": "Trieste",
+          "delta": -1
+        },
+        {
+          "space": "Lodz",
+          "delta": 1
+        },
+        {
+          "space": "Warsaw",
+          "delta": 1
+        },
+        {
+          "space": "Kovno",
+          "delta": 1
+        },
+        {
+          "space": "Vilna",
+          "delta": 1
+        }
+      ],
+      "board": 16,
+      "events": -5,
+      "missedMO": 0,
+      "endAdjustment": 0,
+      "total": 21,
+      "result": "Central Powers"
+    },
+    {
+      "file": "turnlimit-trace-3410001",
+      "initial": 10,
+      "spaces": [
+        {
+          "space": "Strasbourg",
+          "delta": -1
+        },
+        {
+          "space": "Metz",
+          "delta": -1
+        },
+        {
+          "space": "Koblenz",
+          "delta": -1
+        },
+        {
+          "space": "Aachen",
+          "delta": -1
+        },
+        {
+          "space": "Essen",
+          "delta": -1
+        },
+        {
+          "space": "Frankfurt",
+          "delta": -1
+        },
+        {
+          "space": "Trent",
+          "delta": -1
+        },
+        {
+          "space": "Lodz",
+          "delta": 1
+        },
+        {
+          "space": "Belgrade",
+          "delta": 1
+        },
+        {
+          "space": "Warsaw",
+          "delta": 1
+        },
+        {
+          "space": "Riga",
+          "delta": 1
+        },
+        {
+          "space": "Kovno",
+          "delta": 1
+        },
+        {
+          "space": "Vilna",
+          "delta": 1
+        },
+        {
+          "space": "Czernowitz",
+          "delta": -1
+        }
+      ],
+      "board": -2,
+      "events": -8,
+      "missedMO": 1,
+      "endAdjustment": 0,
+      "total": 1,
+      "result": "Allied Powers"
+    }
+  ],
+  "boundaries": [
+    {
+      "vp": 10,
+      "brest": false,
+      "USarmiesPlayed": false,
+      "expectedVP": 12,
+      "result": "Allied Powers"
+    },
+    {
+      "vp": 10,
+      "brest": false,
+      "USarmiesPlayed": true,
+      "expectedVP": 10,
+      "result": "Allied Powers"
+    },
+    {
+      "vp": 11,
+      "brest": false,
+      "USarmiesPlayed": false,
+      "expectedVP": 13,
+      "result": "Central Powers"
+    },
+    {
+      "vp": 11,
+      "brest": false,
+      "USarmiesPlayed": true,
+      "expectedVP": 11,
+      "result": "Allied Powers"
+    },
+    {
+      "vp": 12,
+      "brest": false,
+      "USarmiesPlayed": false,
+      "expectedVP": 14,
+      "result": "Central Powers"
+    },
+    {
+      "vp": 12,
+      "brest": false,
+      "USarmiesPlayed": true,
+      "expectedVP": 12,
+      "result": "Allied Powers"
+    },
+    {
+      "vp": 13,
+      "brest": false,
+      "USarmiesPlayed": false,
+      "expectedVP": 15,
+      "result": "Central Powers"
+    },
+    {
+      "vp": 13,
+      "brest": false,
+      "USarmiesPlayed": true,
+      "expectedVP": 13,
+      "result": "Central Powers"
+    },
+    {
+      "vp": 10,
+      "brest": true,
+      "USarmiesPlayed": false,
+      "expectedVP": 12,
+      "result": "Central Powers"
+    },
+    {
+      "vp": 10,
+      "brest": true,
+      "USarmiesPlayed": true,
+      "expectedVP": 10,
+      "result": "Allied Powers"
+    },
+    {
+      "vp": 11,
+      "brest": true,
+      "USarmiesPlayed": false,
+      "expectedVP": 13,
+      "result": "Central Powers"
+    },
+    {
+      "vp": 11,
+      "brest": true,
+      "USarmiesPlayed": true,
+      "expectedVP": 11,
+      "result": "Central Powers"
+    },
+    {
+      "vp": 12,
+      "brest": true,
+      "USarmiesPlayed": false,
+      "expectedVP": 14,
+      "result": "Central Powers"
+    },
+    {
+      "vp": 12,
+      "brest": true,
+      "USarmiesPlayed": true,
+      "expectedVP": 12,
+      "result": "Central Powers"
+    },
+    {
+      "vp": 13,
+      "brest": true,
+      "USarmiesPlayed": false,
+      "expectedVP": 15,
+      "result": "Central Powers"
+    },
+    {
+      "vp": 13,
+      "brest": true,
+      "USarmiesPlayed": true,
+      "expectedVP": 13,
+      "result": "Central Powers"
+    },
+    {
+      "noTsar": true,
+      "before": 14,
+      "after": 12,
+      "result": "Allied Powers"
+    },
+    {
+      "kind": "no mid-round automatic ending",
+      "vp": 0,
+      "state": "activate_spaces"
+    },
+    {
+      "kind": "War Status automatic ending; no Historical end adjustment",
+      "vp": 0,
+      "result": "Allied Powers"
+    },
+    {
+      "kind": "no mid-round automatic ending",
+      "vp": 20,
+      "state": "activate_spaces"
+    },
+    {
+      "kind": "War Status automatic ending; no Historical end adjustment",
+      "vp": 20,
+      "result": "Central Powers"
+    }
+  ],
+  "summary": {
+    "batches": [
+      {
+        "file": "release-ap",
+        "policy": "release",
+        "side": "ap",
+        "n": 20,
+        "start": 3410000,
+        "ap": 14,
+        "cp": 6
+      },
+      {
+        "file": "pressure-ap",
+        "policy": "pressure",
+        "side": "ap",
+        "n": 20,
+        "start": 3410000,
+        "ap": 16,
+        "cp": 4
+      },
+      {
+        "file": "pressure-cp",
+        "policy": "pressure",
+        "side": "cp",
+        "n": 20,
+        "start": 3410000,
+        "ap": 17,
+        "cp": 3
+      },
+      {
+        "file": "preservation-ap",
+        "policy": "preservation",
+        "side": "ap",
+        "n": 20,
+        "start": 3410000,
+        "ap": 7,
+        "cp": 13
+      },
+      {
+        "file": "preservation-cp",
+        "policy": "preservation",
+        "side": "cp",
+        "n": 20,
+        "start": 3410000,
+        "ap": 19,
+        "cp": 1
+      },
+      {
+        "file": "exploitation-ap",
+        "policy": "exploitation",
+        "side": "ap",
+        "n": 20,
+        "start": 3410000,
+        "ap": 12,
+        "cp": 8
+      },
+      {
+        "file": "exploitation-cp",
+        "policy": "exploitation",
+        "side": "cp",
+        "n": 20,
+        "start": 3410000,
+        "ap": 15,
+        "cp": 5
+      }
+    ],
+    "games": 140,
+    "decisions": 389930,
+    "scoreLedgerChecks": 389930,
+    "errors": 0,
+    "resets": 0,
+    "unsafeSteps": 0,
+    "fallback": {},
+    "states": {
+      "confirm_mo": 4454,
+      "action_phase": 26724,
+      "guns_of_august": 280,
+      "choose_attackers": 46824,
+      "confirm_attack": 15670,
+      "choose_flank_attack": 4154,
+      "defender_combat_cards": 2030,
+      "apply_defender_losses": 39011,
+      "withdrawal_negate_step_loss": 137,
+      "withdrawal_negate_step_loss_confirm": 137,
+      "apply_attacker_losses": 25242,
+      "defender_retreat": 14952,
+      "attacker_advance": 27341,
+      "end_operations": 15024,
+      "confirm_event": 2524,
+      "rps": 3447,
+      "activate_spaces": 39939,
+      "choose_move_space": 16977,
+      "choose_pieces_to_move": 23907,
+      "move_stack": 21870,
+      "choose_sr_unit": 3841,
+      "choose_sr_destination": 2432,
+      "attrition_phase": 4002,
+      "replacement_phase": 25046,
+      "draw_cards_phase": 3776,
+      "place_reinforcements": 10574,
+      "landwehr": 492,
+      "attacker_combat_cards": 4877,
+      "cancel_retreat": 746,
+      "cancel_retreat_confirm": 221,
+      "place_event_trench": 140,
+      "war_in_africa_confirm": 140,
+      "war_in_africa": 280,
+      "place_new_neutral_units": 1235,
+      "siege_phase": 1077,
+      "kerensky_offensive_option": 6,
+      "salonika": 299,
+      "negate_trench": 56,
+      "trench_rolls": 37,
+      "brusilov_offensive_option": 1,
+      "eliminate_retreated_units": 8
+    },
+    "endings": {
+      "Central Powers: Automatic Victory": 30,
+      "Allied Powers: Turn Limit": 33,
+      "Allied Powers: Automatic Victory": 59,
+      "Central Powers: Turn Limit": 9,
+      "Allied Powers: Armistice Declared": 8,
+      "Central Powers: Armistice Declared": 1
+    }
+  }
+}

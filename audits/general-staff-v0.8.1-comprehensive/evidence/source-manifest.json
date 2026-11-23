@@ -1,0 +1,46 @@
+{
+  "app/build_app.js": {
+    "bytes": 21580,
+    "sha256": "cb12e954ac44343600427f41b404fb5e741c531dee169456456d7073b91fe07e"
+  },
+  "app/General_Staff_Companion.html": {
+    "bytes": 33820,
+    "sha256": "e76f9c646277ebc60c9bdd3278509d3e77f2f47ce7be920d42eb393e9e7f5393"
+  },
+  "sim/bot.js": {
+    "bytes": 81279,
+    "sha256": "db1debf9706e27ed2fdeb2441d39a9ea52bd4722d190d0b45dcdc134aef5b84b"
+  },
+  "sim/board.js": {
+    "bytes": 5729,
+    "sha256": "59504f86bb997cac4bfdcf03a5217eb4d90ea3a01a9228602c6c5bfcf9831f56"
+  },
+  "sim/events.js": {
+    "bytes": 5239,
+    "sha256": "223b653c3a4584ad8843b13a1f8c0e31dea68c08d09d497176ad438fb6517490"
+  },
+  "sim/engine_hook.js": {
+    "bytes": 1013,
+    "sha256": "d8690e77eeb152daf98910d520407d05c8e0789da48135b4da5e1c506151acdc"
+  },
+  "bot/General_Staff_Rules.md": {
+    "bytes": 27144,
+    "sha256": "f798c7036da09b14c50d952e546625ad9f7c9cda29dbff47877df2dd9139748a"
+  },
+  "print/build.js": {
+    "bytes": 12632,
+    "sha256": "a2494fef2d147c58a77beec233c65a676b771e96220f33bd7eb51fbb6cfe15b2"
+  },
+  "print/out/rules.pdf": {
+    "bytes": 198526,
+    "sha256": "66a4efa9ca131335d550946b9379c4f8f46de1efc290139a574ac4847e87840c"
+  },
+  "print/out/reference.pdf": {
+    "bytes": 277843,
+    "sha256": "d5c61602c711d5fc4afe7662a329c0f13134ec63c417bcd5637ec2bdd5ad4a66"
+  },
+  "print/out/staff_cards.pdf": {
+    "bytes": 203994,
+    "sha256": "16974efba3db57f4cd2e48e28abf8a26a42987b7d5b788fe5f47cb8a2a403ddb"
+  }
+}

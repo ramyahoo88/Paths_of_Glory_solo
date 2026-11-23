@@ -1,0 +1,17 @@
+{
+  "rules": {
+    "pages": 11,
+    "outsidePageTextBlocks": [],
+    "visualInspection": "All pages inspected at 1.2x; both reference page-1 columns; all 18 card faces and three back pages."
+  },
+  "reference": {
+    "pages": 7,
+    "outsidePageTextBlocks": [],
+    "visualInspection": "All pages inspected at 1.2x; both reference page-1 columns; all 18 card faces and three back pages."
+  },
+  "staff_cards": {
+    "pages": 6,
+    "outsidePageTextBlocks": [],
+    "visualInspection": "All pages inspected at 1.2x; both reference page-1 columns; all 18 card faces and three back pages."
+  }
+}
