@@ -63,6 +63,7 @@ ol { margin: 4px 0 0 20px; padding:0 } li { margin: 3px 0 }
 table { border-collapse: collapse; width:100%; font-size:13px; }
 td, th { border-bottom:1px solid #e2d7bb; padding:4px; text-align:left; vertical-align: top; }
 .tabs button { background:#e4dcc6; color: var(--ink); } .tabs button.on { background: var(--ink); color: #fff; }
+.print-downloads { grid-column: 1 / -1; }
 .downloads { display:grid; gap:8px; }
 .downloads a { display:flex; justify-content:space-between; gap:12px; align-items:center; min-height:44px; padding:9px 10px; border:1px solid var(--line); border-radius:8px; color:var(--ink); text-decoration:none; font-size:15px; }
 .downloads a:hover { background:#e4dcc6; }
@@ -83,15 +84,6 @@ td, th { border-bottom:1px solid #e2d7bb; padding:4px; text-align:left; vertical
 <details style="margin-top:8px"><summary>Move this session to another device</summary>
 <div class="row"><button id="export">Export</button><button id="import">Import</button><span class="muted" id="ioinfo"></span></div>
 <textarea id="iotext" rows="4" style="width:100%" aria-label="Session text to copy or paste" placeholder="Export puts the session here to copy; paste a session here and press Import."></textarea></details>
-</section>
-<section aria-labelledby="print-title"><h2 id="print-title">Print &amp; downloads</h2>
-<nav class="downloads" aria-label="Download General Staff materials">
-<a href="https://solo-table.pages.dev/games/paths-of-glory/General_Staff_Rules.pdf" download="General_Staff_Rules.pdf">Rules PDF <span>11 pages</span></a>
-<a href="https://solo-table.pages.dev/games/paths-of-glory/General_Staff_Cards.pdf" download="General_Staff_Cards.pdf">Staff cards PDF <span>6 pages</span></a>
-<a href="https://solo-table.pages.dev/games/paths-of-glory/General_Staff_Reference.pdf" download="General_Staff_Reference.pdf">Reference sheets PDF <span>7 pages</span></a>
-<a href="https://solo-table.pages.dev/downloads/paths-of-glory" download="General_Staff_Companion.html">Offline HTML app</a>
-</nav>
-<p class="muted">v${VERSION} · Print at 100% on US Letter. For card faces only, print pages 1, 3 and 5. Download the PDFs while connected to keep them for offline use.</p>
 </section>
 <section><h2>Action round</h2>
 <div class="row"><label>Turn <input type="number" id="tturn" value="1" min="1" max="20" title="Correcting the turn number clears both boxes below"></label><label>Round <input type="number" id="tround" value="1" min="1" max="6"></label><button id="nextround" title="Next bot action round">Next round</button><button class="primary" id="nextdraw" title="Next bot action round and draw its Staff card; one Undo undoes both">Next round + draw</button><button id="nextturn" title="Turn + 1, round 1, and clear both boxes (Undo restores)">Next turn</button></div>
@@ -122,6 +114,15 @@ td, th { border-bottom:1px solid #e2d7bb; padding:4px; text-align:left; vertical
 <div id="t-obj"></div><div id="t-front" class="hidden"></div><div id="t-ev" class="hidden"><div class="row"><input id="evq" placeholder="card number or name" style="flex:1"></div><div id="evlist"></div></div>
 </section>
 </div>
+<section class="print-downloads" aria-labelledby="print-title"><h2 id="print-title">Print &amp; downloads</h2>
+<nav class="downloads" aria-label="Download General Staff materials">
+<a href="https://solo-table.pages.dev/games/paths-of-glory/General_Staff_Rules.pdf" download="General_Staff_Rules.pdf">Rules PDF <span>11 pages</span></a>
+<a href="https://solo-table.pages.dev/games/paths-of-glory/General_Staff_Cards.pdf" download="General_Staff_Cards.pdf">Staff cards PDF <span>6 pages</span></a>
+<a href="https://solo-table.pages.dev/games/paths-of-glory/General_Staff_Reference.pdf" download="General_Staff_Reference.pdf">Reference sheets PDF <span>7 pages</span></a>
+<a href="https://solo-table.pages.dev/downloads/paths-of-glory" download="General_Staff_Companion.html">Offline HTML app</a>
+</nav>
+<p class="muted">v${VERSION} · Print at 100% on US Letter. For card faces only, print pages 1, 3 and 5. Download the PDFs while connected to keep them for offline use.</p>
+</section>
 </main>
 <script>
 const D = ${JSON.stringify(DATA)};
