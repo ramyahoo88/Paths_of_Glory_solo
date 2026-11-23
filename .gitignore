@@ -2,3 +2,5 @@
 sim/rtt-pog/
 node_modules/
 *.cpuprofile
+deployment/pages-worker.mjs
+deployment/home.html

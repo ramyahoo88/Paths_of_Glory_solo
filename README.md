@@ -2,6 +2,8 @@
 
 **Version 1.0.0**
 
+[Open the companion](https://solo-table.pages.dev/games/paths-of-glory/) · [Download the offline HTML](https://solo-table.pages.dev/downloads/paths-of-glory)
+
 General Staff is an unofficial, card-driven solo opponent for GMT Games' **Paths of Glory** (Deluxe edition, Historical scenario, standard 110 strategy cards, no optional cards). It can command **either side** through the **full campaign**. You need the physical game.
 
 The bot follows the normal game rules. It holds a hand of real strategy cards and uses them as Events, Operations, Strategic Redeployment or Replacement Points, or takes the 1-OP Automatic Operation. Its choices come from an 18-card **Staff deck** and the printed priorities. Each Staff card gives a front, a Stance, a Plan and a North/South tie-break. The bot never looks at your hand or rolls dice to decide what to do.
@@ -16,6 +18,8 @@ The bot follows the normal game rules. It holds a hand of real strategy cards an
 | **Companion**: optional offline card draws, calculator, turn tracker and lookups | [HTML app](app/General_Staff_Companion.html) |
 | **Worked examples** | [Sample turns](bot/Sample_Turns.md) |
 | **Release notes** | [Changes](CHANGELOG.md) |
+
+The app's **Print & downloads** panel provides direct downloads of all three PDFs, hosted alongside the app. You can also download the [rules](https://solo-table.pages.dev/games/paths-of-glory/General_Staff_Rules.pdf), [Staff cards](https://solo-table.pages.dev/games/paths-of-glory/General_Staff_Cards.pdf) and [reference sheets](https://solo-table.pages.dev/games/paths-of-glory/General_Staff_Reference.pdf) directly.
 
 ## Getting started
 
