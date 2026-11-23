@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/workspace/scratch/724b97a792fc/pog-checker-04a4734/print/test_check_print.py", line 72, in <module>
+    cards_pdf(d, html[:i] + html[i + len(A1) - 1:])
+  File "/workspace/scratch/724b97a792fc/pog-checker-04a4734/print/test_check_print.py", line 33, in cards_pdf
+    subprocess.run(['google-chrome', '--headless', '--no-sandbox', '--disable-gpu', '--no-pdf-header-footer', f'--print-to-pdf={dst}', 'file://' + src],
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'google-chrome'

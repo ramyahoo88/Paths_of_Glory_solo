@@ -1,0 +1,24 @@
+PASS current release: all 18 cards accepted
+PASS old reference: rejected; exactly the original two page-2 mismatches
+PASS missing threshold on card 1: rejected; only card 1 named
+PASS missing threshold on card 2: rejected; only card 2 named
+PASS missing threshold on card 3: rejected; only card 3 named
+PASS missing threshold on card 4: rejected; only card 4 named
+PASS missing threshold on card 5: rejected; only card 5 named
+PASS missing threshold on card 6: rejected; only card 6 named
+PASS missing threshold on card 7: rejected; only card 7 named
+PASS missing threshold on card 8: rejected; only card 8 named
+PASS missing threshold on card 9: rejected; only card 9 named
+PASS missing threshold on card 10: rejected; only card 10 named
+PASS missing threshold on card 11: rejected; only card 11 named
+PASS missing threshold on card 12: rejected; only card 12 named
+PASS missing threshold on card 13: rejected; only card 13 named
+PASS missing threshold on card 14: rejected; only card 14 named
+PASS missing threshold on card 15: rejected; only card 15 named
+PASS missing threshold on card 16: rejected; only card 16 named
+PASS missing threshold on card 17: rejected; only card 17 named
+PASS missing threshold on card 18: rejected; only card 18 named
+PASS stale: rejected; only card 5 named
+PASS wrong-stance: rejected; only card 3 named
+PASS duplicate: rejected; only card 2 named
+PASS 23 independent PDF controls

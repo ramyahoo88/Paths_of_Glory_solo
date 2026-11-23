@@ -1,5 +1,7 @@
 # Independent verification of General Staff v0.8.1
 
+**Follow-up status:** the Low checker limitation recorded below is [closed at `04a4734`](Verification_checker_04a4734.md). This note preserves the original verification findings.
+
 Reviewed release: `a81eda6` on `claude-bot`. This follow-up verifies the v0.8.0 correction and the new guard; it does not repeat the full base-game audit or strength study.
 
 **Verdict: the Medium printed-reference defect is closed. The corrected v0.8.1 release is acceptable for play.** One Low coverage limitation remains in the checker, with no defect found in the shipped Staff cards.

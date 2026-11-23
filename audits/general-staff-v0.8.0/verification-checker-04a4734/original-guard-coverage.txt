@@ -1,0 +1,21 @@
+PASS: old reference rejected with exactly the original two mismatches
+Traceback (most recent call last):
+  File "/workspace/scratch/724b97a792fc/pog-checker-04a4734/audits/general-staff-v0.8.0/verification-v0.8.1/guard_coverage.py", line 68, in <module>
+    assert result.returncode == 0, result.stdout + result.stderr
+           ^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: page 1: faces  card numbers 6  Tie lines 6  tops 6  backs 0  ok
+page 2: backs  card numbers 0  Tie lines 0  tops 0  backs 6  ok
+page 3: faces  card numbers 6  Tie lines 6  tops 6  backs 0  ok
+page 4: backs  card numbers 0  Tie lines 0  tops 0  backs 6  ok
+page 5: faces  card numbers 6  Tie lines 6  tops 6  backs 0  ok
+page 6: backs  card numbers 0  Tie lines 0  tops 0  backs 6  ok
+companion shift matches the bot: ok
+rules: Stance table: ok
+reference p1: Stance: ok
+reference p2: Stance: ok
+rules: CP West first: ok
+reference p1: CP West first: ok
+reference p2: CP West first: ok
+Staff cards: each card's Stance and threshold: MISMATCH
+  card 1: Stance ['Assault'], thresholds missing; expected Assault CP +0.75 · Allies +1
+FAIL

@@ -58,3 +58,5 @@ A mismatch names the card. The checker stops with a message if `makeDeck()` chan
 | Card 3 prints "Press" over the Hold threshold | fail, card 3 | fail: card 3 only |
 
 The reviewer's `guard_coverage.py` needs PyMuPDF, which is not installed here, so it was not run. Its single-card mutation is the same case as the deleted-line control. Against the fixed checker it should now stop at its assertion that the checker passes, which is the intended outcome.
+
+**Independent follow-up:** [verification at `04a4734`](Verification_checker_04a4734.md) confirms that behavior with the original reviewer script and closes the Low finding. An additional 23-control PDF test rejects a missing threshold on each of the 18 Staff cards separately, plus stale values, a wrong Stance, and a duplicate threshold. The new Chrome-dependent harness could not complete in that environment; the independently generated PDF controls cover its five cases, with the dependency limitation recorded in the verification.
