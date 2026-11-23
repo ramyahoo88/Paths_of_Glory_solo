@@ -1,0 +1,31 @@
+{
+  "mode": "shipped script with DOM/storage doubles; no browser",
+  "calculatorCases": 13080,
+  "deckCycles": 10,
+  "damagedLevel": [
+    {
+      "lvl": "constructor",
+      "accepted": false,
+      "notice": "The saved session was damaged, so a new deck was started. The old data was kept in browser storage under \"gs-companion-rejected\"."
+    },
+    {
+      "lvl": "__proto__",
+      "accepted": false,
+      "notice": "The saved session was damaged, so a new deck was started. The old data was kept in browser storage under \"gs-companion-rejected\"."
+    },
+    {
+      "lvl": "toString",
+      "accepted": false,
+      "notice": "The saved session was damaged, so a new deck was started. The old data was kept in browser storage under \"gs-companion-rejected\"."
+    }
+  ],
+  "tracker": {
+    "state": {
+      "turn": 2,
+      "round": 1,
+      "mo": false,
+      "rp": false
+    },
+    "hint": "Rebuild: check missing steps − RP held ≥ 6."
+  }
+}

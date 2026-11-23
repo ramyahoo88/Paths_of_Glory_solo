@@ -1,0 +1,135 @@
+{
+  "mode": "shipped script callbacks with DOM/storage doubles; no browser",
+  "checks": [
+    "A01 original two reproductions now corrected, including reload",
+    "ordinary draws interleaved with Import preserve coherent Undo",
+    "two Imports, tracker action and reload preserve every prior session",
+    "Next round + draw reshuffle and one-step Undo",
+    "storage failure remains visible and Import Undo still works in memory",
+    "25 varied imports plus ordinary actions; exactly ten import Undos, correct older sessions, reload at each step",
+    "five original draws remain undoable after ten Imports"
+  ],
+  "boundaries": {
+    "round6": {
+      "turn": 1,
+      "round": 6,
+      "drawsBefore": 6,
+      "drawsAfter": 6,
+      "buttonDisabled": true,
+      "undoToRound5": true
+    },
+    "repeatedImports": [
+      {
+        "imports": 1,
+        "characters": 552
+      },
+      {
+        "imports": 2,
+        "characters": 781
+      },
+      {
+        "imports": 3,
+        "characters": 1010
+      },
+      {
+        "imports": 4,
+        "characters": 1239
+      },
+      {
+        "imports": 5,
+        "characters": 1468
+      },
+      {
+        "imports": 6,
+        "characters": 1697
+      },
+      {
+        "imports": 7,
+        "characters": 1926
+      },
+      {
+        "imports": 8,
+        "characters": 2155
+      },
+      {
+        "imports": 9,
+        "characters": 2384
+      },
+      {
+        "imports": 10,
+        "characters": 2613
+      },
+      {
+        "imports": 11,
+        "characters": 2467
+      },
+      {
+        "imports": 12,
+        "characters": 2467
+      },
+      {
+        "imports": 13,
+        "characters": 2467
+      },
+      {
+        "imports": 14,
+        "characters": 2467
+      },
+      {
+        "imports": 15,
+        "characters": 2467
+      },
+      {
+        "imports": 16,
+        "characters": 2467
+      },
+      {
+        "imports": 17,
+        "characters": 2467
+      },
+      {
+        "imports": 18,
+        "characters": 2467
+      }
+    ],
+    "syntheticQuota": {
+      "maxCharacters": 5242880,
+      "failedAtImport": null,
+      "currentCharacters": 2461,
+      "persistedCharacters": 2467,
+      "notice": ""
+    }
+  },
+  "legacyMigration": [
+    {
+      "oldImports": 1,
+      "legacyCharacters": 581,
+      "normalizedCharacters": 767,
+      "allLegacyUndosPreserved": true
+    },
+    {
+      "oldImports": 2,
+      "legacyCharacters": 939,
+      "normalizedCharacters": 989,
+      "allLegacyUndosPreserved": true
+    },
+    {
+      "oldImports": 10,
+      "legacyCharacters": 104203,
+      "normalizedCharacters": 2390,
+      "allLegacyUndosPreserved": true
+    },
+    {
+      "oldImports": 12,
+      "legacyCharacters": 411719,
+      "normalizedCharacters": 2390,
+      "allLegacyUndosPreserved": true
+    },
+    {
+      "oldImports": 16,
+      "legacyCharacters": 6556351,
+      "normalizedCharacters": 2390,
+      "allLegacyUndosPreserved": true
+    }
+  ]
+}

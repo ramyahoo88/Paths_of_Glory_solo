@@ -1,0 +1,14 @@
+{
+  "rules": {
+    "pages": 11,
+    "textUnchangedExceptVersion": true
+  },
+  "reference": {
+    "pages": 7,
+    "textUnchangedExceptVersion": true
+  },
+  "staff_cards": {
+    "pages": 6,
+    "textUnchangedExceptVersion": true
+  }
+}

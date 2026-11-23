@@ -1,0 +1,15 @@
+{
+  "reviewedCommit": "23dfb5166bfb5a92965114fe244276f901242b7c",
+  "companionChecks": 71,
+  "calculatorCases": 13080,
+  "deckCycles": 10,
+  "independentPDFMutationControls": 23,
+  "browserTest": {
+    "scriptReviewed": true,
+    "authorReportsChecks": 11,
+    "independentlyExecuted": false
+  },
+  "botPlayingCodeUnchanged": true,
+  "newSimulationGames": 0,
+  "productionFilesChanged": false
+}

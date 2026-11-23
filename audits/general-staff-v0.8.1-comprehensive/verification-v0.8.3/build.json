@@ -1,0 +1,26 @@
+[
+  {
+    "path": "app/General_Staff_Companion.html",
+    "identical": true,
+    "bytes": 37598,
+    "sha256": "8d8d6030bbf1952f1739b922e6dd4282d23fdb9de4ec9f22f95a3261a2925f0d"
+  },
+  {
+    "path": "print/out/rules.html",
+    "identical": true,
+    "bytes": 33389,
+    "sha256": "4188a3059c964ceea5cbc0c7108571bfecdfda6e743aaa5ed5e3f000858cdd6d"
+  },
+  {
+    "path": "print/out/reference.html",
+    "identical": true,
+    "bytes": 29470,
+    "sha256": "23b5920596342422fe30fe6d16c61fce77724122472b76dea4a2ea98f69a5e14"
+  },
+  {
+    "path": "print/out/staff_cards.html",
+    "identical": true,
+    "bytes": 15418,
+    "sha256": "b1137f720b9e1049ec8f225595228c37e03561cf25d57ee6578cb0701f082ce7"
+  }
+]

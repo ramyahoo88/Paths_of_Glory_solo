@@ -1,0 +1,15 @@
+{
+  "General_Staff_v0.8.3_Verification.md": "35fa018a5205566a0aaa02b63bb560df0da9cf1594ac254a7bdd1a4d61feda56",
+  "General_Staff_v0.8.3_Verification.pdf": "1b3ff8293e7fedbdc99f43712c03626ab58128e00738a2131b6c4e7dda9a0fc8",
+  "README.md": "afe8a4250d8e866d604ab5667252a5506c60ac2054dc71d5600f678fd8fbcc54",
+  "build.json": "dd433bab0288d3cf21d282504af626d0fe41f31dc9ee7a6f05aa5e443679afb7",
+  "calculator-cycles.json": "482573a5ed7a67f9d31491895f3f4e1b14e1e5d98920f2e2bbf08cb2cf30e4af",
+  "checks.json": "47f5db0432702031fbbfd8b6d41ef0c68284b6e20188560aaccdcacfe343a55d",
+  "companion-verification.json": "7e3c34d25a331502e443e49255f69febbbd362fb723aec6a7bf79fcc68a777ac",
+  "geometry.json": "df8c3544c007c57e09665c790ebda0392c5b22d46253446493e7a8817b220065",
+  "make-report.py": "d7615f8ca3796b27a207fd4f8df93b986491feccb056ad45f1477c3f7453fbba",
+  "print-comparison.json": "8d94732e51a0f70e5f3b30dc15db53668a19a3d1f18b1b0fd75bc65a8c12a440",
+  "source-manifest.json": "49d96f1cbb55ac41ddf810da283737118888e66cf7197d848d7508f3df3f20e0",
+  "verify-calculator.cjs": "0e899637b25968cc74e63e2e97c052cbddebe0953431fb586ad8c33f56fed59f",
+  "verify-companion.cjs": "20e83334739129dbebdf2582d6fe26ccc7095ac35b8f96062c820fcb38580ad9"
+}

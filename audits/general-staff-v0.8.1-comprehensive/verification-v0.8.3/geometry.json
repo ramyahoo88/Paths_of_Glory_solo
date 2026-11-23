@@ -1,0 +1,14 @@
+{
+  "rules": {
+    "pages": 11,
+    "outsidePageTextBlocks": 0
+  },
+  "reference": {
+    "pages": 7,
+    "outsidePageTextBlocks": 0
+  },
+  "staff_cards": {
+    "pages": 6,
+    "outsidePageTextBlocks": 0
+  }
+}
