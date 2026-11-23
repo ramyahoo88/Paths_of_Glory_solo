@@ -1,10 +1,11 @@
 # General Staff — simulation report
 
-*Covers General Staff **v0.7**, with checks of **v0.7.1** to **v0.7.6** and the Central Powers changes of **v0.8.0** (print fix in v0.8.1) (rules: [`bot/General_Staff_Rules.md`](../bot/General_Staff_Rules.md)). Written 22 November 2026.*
+*Covers General Staff **v0.7**, with checks of **v0.7.1** to **v0.7.6** and the Central Powers changes of **v0.8.0** (print fix in v0.8.1) and the audit fixes of **v0.8.2** (rules: [`bot/General_Staff_Rules.md`](../bot/General_Staff_Rules.md)). Written 22 November 2026.*
 
 ## Summary
 
-* **v0.8.0 / v0.8.1 (current).** The Central Powers bot always puts the West first and needs 0.75 more Edge to attack, so it makes fewer, better-placed attacks. GPT's five recommendations and my own campaign-focus ideas were each tested on matched seeds; only these two changes helped. Against the v0.7 reference the CP bot now wins **74%** (was 53–56%; z 4.9 and 4.2 on the same seeds). Strict self-play is **69% Allies / 31% CP** (was 85% / 15%), with every bot run-health count zero. The Allied bot is unchanged (see *v0.8.0*). An independent review (GPT) confirmed the gain on 200 fresh matched seeds: 12% to 31.5%. v0.8.1 corrects reference page 2, which still printed the v0.7.6 CP thresholds.
+* **v0.8.2 (current).** v0.8.2 fixes the v0.8.1 comprehensive audit. Import can now be undone in full in the companion. The simulator uses the Staff Tie for equal Forward destinations and for equally ranked units in different spaces (SR, replacements, losses, advance). Among equal SR units, the Reserve Box goes first. Neither bot changed significantly on matched seeds: against the v0.7 reference the CP bot wins 70–73% and the Allied bot 94–95%. Strict self-play on a fresh seed range is **73% Allies / 27% CP**, with every run-health count zero (see *v0.8.2*).
+* **v0.8.0 / v0.8.1.** The Central Powers bot always puts the West first and needs 0.75 more Edge to attack, so it makes fewer, better-placed attacks. GPT's five recommendations and my own campaign-focus ideas were each tested on matched seeds; only these two changes helped. Against the v0.7 reference the CP bot now wins **74%** (was 53–56%; z 4.9 and 4.2 on the same seeds). Strict self-play is **69% Allies / 31% CP** (was 85% / 15%), with every bot run-health count zero. The Allied bot is unchanged (see *v0.8.0*). An independent review (GPT) confirmed the gain on 200 fresh matched seeds: 12% to 31.5%. v0.8.1 corrects reference page 2, which still printed the v0.7.6 CP thresholds.
 * **v0.7.6.** v0.7.6 fixes the comprehensive v0.7.5 audit: supply-safe movement, corps gathering to besiege, Brusilov, Tie and front order, companion validation and provenance stamps. Against the v0.7 reference the Allied bot wins 92–94% and the CP bot 53–56%. Strict self-play is **85% Allies / 15% CP**, and every run-health count, including the new supply-policy check, is zero (see *v0.7.6*).
 * **v0.7.5.** In v0.7.5, units leaving a siege keep a legal besieging force, and every headline figure comes from per-seed records of one pinned commit. Against the v0.7 reference the Allied bot wins 90–92% and the CP bot 49–59%. Strict self-play is **85% Allies / 15% CP**, with **no rule-violation resets** in 740 games (see *v0.7.5*).
 * **v0.7.4.** v0.7.4 corrects the two issues left by the v0.7.3 re-audit: a Salonika corps in contact and the event Tie. 600 fresh strict self-play games: **85% Allies / 15% CP**, no exceptions, no choice left to the engine's default (see *v0.7.4: re-audit corrections*).
@@ -34,6 +35,33 @@
 * **Naive**: the same machinery with the main features off. It plays only forced events and makes one attack per action round. It does not advance, move, use SR or fill crisis spaces, and it checks every target. This is roughly a first-draft "one order per round" bot.
 
 **Design comparisons.** A candidate bot played one side against a frozen reference bot on the other side, on the same seeds: 120 or 150 per side. At those sizes the standard error of a win rate near 50% is about ±4 points. Only differences of about 10 points or more were treated as real. When a change made no difference, the simpler procedure was kept.
+
+## v0.8.2: v0.8.1 comprehensive audit fixes
+
+The audit ([report](../audits/general-staff-v0.8.1-comprehensive/General_Staff_v0.8.1_Comprehensive_Audit.md), [response](../audits/general-staff-v0.8.1-comprehensive/Response.md)) found two Medium issues and one design question.
+
+* **A01, companion.** Undoing an Import could bring back the old deck under the imported side and thresholds, and further Undos entered the imported history. An Import now leaves one Undo step that holds the whole replaced session.
+* **A02, simulator.** Three choices ignored the Staff Tie: Forward destinations at equal distance, and the SR and replacement unit among equal units in different spaces. Losses and the advance order had the same gap. All five now use the Tie.
+* **Q01.** Among equal SR units, the Reserve Box goes first.
+
+The changes are tie-breaks, so they alter which unit moves in a minority of decisions, and most games then diverge. On the same paired seeds neither bot's results moved significantly:
+
+| Test (paired seeds, against the v0.7 reference) | before | v0.8.2 | gained / lost | z |
+|---|---|---|---|---|
+| CP bot, seeds 6001–6300 | 73.7% | 73.0% | 55 / 57 | −0.2 |
+| CP bot, seeds 7001–7300 | 73.7% | 70.3% | 58 / 68 | −0.9 |
+| Allied bot, seeds 6001–6300 | 92.0% | 94.3% | 23 / 16 | 1.1 |
+| Allied bot, seeds 7001–7300 | 93.7% | 95.0% | 17 / 13 | 0.7 |
+
+Strict self-play on a fresh seed range (1200000–1200599) is **73% Allies / 27% CP** (v0.8.0: 69% / 31% on 1100000–; the audit's stock batch: 71% / 29%). The 740 strict games show no unfinished games, exceptions, resets, bot supply breaches, abandoned moves or choices without a rule. CP attacks per game: 69 (v0.8.0: 71).
+
+**Handicap** (self-play, seeds 30001–30150):
+
+| Starting VP | 10 (normal) | 11 | 12 | 13 | 14 | 15 |
+|---|---|---|---|---|---|---|
+| Allied / CP wins | 70% / 30% | 65% / 35% | 60% / 40% | 53% / 47% | 46% / 54% | 38% / 62% |
+
+Three to four VP even a bot game. The printed advice (start 1 or 2 VP in the CP bot's favour) is unchanged.
 
 ## v0.8.0: Central Powers strategy
 

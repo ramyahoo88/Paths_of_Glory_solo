@@ -142,6 +142,21 @@ d3.nodes.iotext.value = '{not json'; d3.nodes.import.onclick(); ok(d3.nodes.ioin
   ok(JSON.stringify(o.state()) === r1, 'A01: an older saved session with ordinary steps still loads and undoes')
 }
 
+// v0.8.1 audit usability: Next round + draw (one Undo), a typed turn change clears the per-turn boxes, Clear attack
+{
+  const u = boot(); u.nodes.draw.onclick(); const u0 = JSON.stringify(u.state())
+  u.nodes.nextdraw.onclick(); const s1 = u.state()
+  ok(s1.track.round === 2 && s1.discard.length === 2 && s1.cur !== JSON.parse(u0).cur, 'Next round + draw advances the round and draws')
+  u.nodes.undo.onclick(); ok(JSON.stringify(u.state()) === u0, 'one Undo undoes Next round + draw')
+  for (const k of ['tmo', 'trp']) { u.nodes[k].checked = true; u.nodes[k].onchange() }
+  u.nodes.tround.value = '4'; u.nodes.tround.onchange(); ok(u.state().track.mo && u.state().track.rp, 'changing the round keeps the MO and RP boxes')
+  u.nodes.tturn.value = '3'; u.nodes.tturn.onchange(); ok(u.state().track.turn === 3 && !u.state().track.mo && !u.state().track.rp && u.state().track.round === 4, 'typing a different turn clears the MO and RP boxes (round kept)')
+  for (const [k, v] of Object.entries({ acf: 3, dcf: 9, fort: 2, terr: 1, tr: 2, bmo: 6 })) { u.nodes[k].value = String(v) }
+  for (const k of ['bobj', 'bvp', 'boos']) u.nodes[k].checked = true; u.nodes.dunits.checked = false; u.nodes.acf.oninput()
+  const dirty = u.nodes.edge.innerHTML; u.nodes.clearatk.onclick()
+  ok(u.nodes.acf.value === '8' && u.nodes.dcf.value === '4' && u.nodes.bmo.value === '0' && !u.nodes.bobj.checked && u.nodes.dunits.checked && u.nodes.edge.innerHTML !== dirty, 'Clear attack restores every calculator input')
+}
+
 // search
 c = boot(); c.nodes.evq.value = '55'; c.nodes.evq.oninput(); ok(c.nodes.evlist.innerHTML.includes('Lloyd George'), 'card-number search')
 c.nodes.side.onchange({ target: { value: 'ap' } }); ok(c.nodes.evlist.innerHTML.includes('Over There'), 'side switch changes the event list')

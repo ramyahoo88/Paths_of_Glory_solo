@@ -15,7 +15,7 @@ The bot plays by the same rules you do. It holds a hand of real strategy cards a
 | **Worked example**: narrated bot decisions for the first two turns of a game | [Sample turns](bot/Sample_Turns.md) |
 | **Simulation report** | [REPORT.md](sim/REPORT.md) |
 | **Changes** | [CHANGELOG.md](CHANGELOG.md) |
-| **Independent reviews** and responses: v0.7.1 review, v0.7.2 re-audit, v0.7.2 comprehensive audit, v0.7.3 re-audit, v0.7.4 and v0.7.5 verifications, v0.7.5 comprehensive audit, v0.8.0 review | [audits/](audits/) |
+| **Independent reviews** and responses: v0.7.1 review, v0.7.2 re-audit, v0.7.2 comprehensive audit, v0.7.3 re-audit, v0.7.4 and v0.7.5 verifications, v0.7.5 comprehensive audit, v0.8.0 review, v0.8.1 comprehensive audit | [audits/](audits/) |
 | **Seed-level results** behind the report's tables | [sim/results/](sim/results/) |
 
 Print the cards at 100% (actual size) on US Letter: six cards per page, each face page followed by a page of backs. Print double-sided (flip on long edge) for backed cards, or print only the odd pages for faces alone. `python3 print/check_print.py` checks that no card is split across pages and that every printed Stance threshold matches the bot. The reference sheets are seven pages: procedure, tables, a record sheet, and the event lists (which can stay in a sleeve).
@@ -24,12 +24,12 @@ Print the cards at 100% (actual size) on US Letter: six cards per page, each fac
 
 General Staff was developed and tested in about **50,000 simulated full campaigns** on the open-source **Rally the Troops** rules engine. The engine is used with GMT's permission on that site and is not included here. The final version:
 
-* plays both sides strongly: against the earlier v0.7 bots, the current version (v0.8.1; bot unchanged from v0.8.0) wins **92–94%** as the Allies and **74%** as the Central Powers. v0.8.0 made the Central Powers bot stronger: it now always puts the West first and attacks more selectively. In 600 strict self-play games the Allied bot won **69%** and the Central Powers bot **31%** (v0.7.6: 85% / 15%). There were no exceptions, no rule-violation resets, no bot movement out of supply and no choice left to the engine's default. Every figure has per-seed, commit-stamped records in [sim/results/v0.8.0](sim/results/v0.8.0/) (the Allied paired figures are from [v0.7.6](sim/results/v0.7.6/); the Allied bot did not change);
-* beat a random player and a naive one-attack, no-events bot in every test game (**1,240 of 1,240** across v0.7 to v0.8.0);
+* plays both sides strongly: against the earlier v0.7 bots, the current version (v0.8.2) wins **94–95%** as the Allies and **70–73%** as the Central Powers. v0.8.0 made the Central Powers bot stronger: it now always puts the West first and attacks more selectively. In 600 strict self-play games the Allied bot won **73%** and the Central Powers bot **27%** (v0.7.6: 85% / 15%). There were no exceptions, no rule-violation resets, no bot movement out of supply and no choice left to the engine's default. Every figure has per-seed, commit-stamped records in [sim/results/v0.8.2](sim/results/v0.8.2/);
+* beat a random player and a naive one-attack, no-events bot in every test game (**1,380 of 1,380** across v0.7 to v0.8.2);
 * made only legal moves, and plays a recognisable war: Russia usually collapses in 1917 and the USA enters in most games;
-* has an optional difficulty handicap (starting VP), worth six to eight points of win rate per VP in bot-versus-bot play.
+* has an optional difficulty handicap (starting VP), worth five to eight points of win rate per VP in bot-versus-bot play.
 
-Bot-versus-bot strength is not the same as strength against a person; **human playtesting is the next step.** See the [report](sim/REPORT.md) for the evidence behind each design decision and the known limits. The Allied bot is still the stronger of the two, so for the hardest game give the bot the Allies. Against the Central Powers bot, add VP in its favour if it proves too easy. In bot-versus-bot play each VP is worth six to eight points, and about three VP evens the game (see the report's handicap table). The main known weakness is that both bots, and especially the Allies, miss some mandated offensives.
+Bot-versus-bot strength is not the same as strength against a person; **human playtesting is the next step.** See the [report](sim/REPORT.md) for the evidence behind each design decision and the known limits. The Allied bot is still the stronger of the two, so for the hardest game give the bot the Allies. Against the Central Powers bot, add VP in its favour if it proves too easy. In bot-versus-bot play each VP is worth five to eight points, and three to four VP even the game (see the report's handicap table). The main known weakness is that both bots, and especially the Allies, miss some mandated offensives.
 
 ## For developers
 
@@ -45,6 +45,7 @@ node tests/event_choices.js          # event-choice regressions (Salonika, War i
 node tests/siege.js                  # units leaving a siege keep a legal besieging force
 node tests/movement.js               # no step out of supply; corps gather to besiege
 node tests/priorities.js             # Tie and front order, Brusilov choice
+node tests/ties.js                   # Staff Tie for Forward, SR, replacements, losses (v0.8.2)
 node ../print/build.js               # rebuild the PDFs (needs Google Chrome and pandoc)
 python3 ../print/check_print.py      # every Staff card whole on one page; printed thresholds match the bot
 python3 ../print/test_check_print.py # negative controls for the print check (needs Chrome)

@@ -1,5 +1,31 @@
 # Changelog
 
+## v0.8.2 — 22 Nov 2026
+
+Fixes for the v0.8.1 comprehensive audit ([response](audits/general-staff-v0.8.1-comprehensive/Response.md)).
+
+* **Companion: Import can be undone in full (A01).**
+  * An Import leaves one Undo step holding the whole session it replaced: side, commitment, deck, current card, tracker and Undo history.
+  * One Undo restores all of it. Before, the old deck came back under the donor's side and thresholds, and further Undos entered the donor's history.
+* **Simulator: the Staff Tie decides more equal choices (A02).**
+  * Forward destinations at equal distance.
+  * Equally ranked units in different spaces for SR, replacements, losses and the advance order.
+  * Units in the same space stay the operator's choice.
+* **SR ties with the Reserve Box (Q01).** Among equal SR units, one in the Reserve Box goes before one on the map, then the Tie.
+* **Where the ties are printed.** The rules state the Tie at Forward, SR (§7.2), Losses, Advance and Replacement. The reference sheet's SR and Replacement lines do too.
+* **Usability:**
+  * *Next round + draw* (one Undo undoes both);
+  * typing a different turn clears the MO and RP boxes;
+  * *Clear attack* resets the calculator, with a note that its MO and bonus boxes are set per attack;
+  * the event tables repeat their header on each printed page;
+  * the rules booklet shows its version (0.8.2).
+* **Testing** (commit `dba0de2`, clean worktree, every file stamped):
+  * neither bot changed significantly on matched seeds: CP 73% / 70% and Allies 94% / 95% against the v0.7 reference;
+  * strict self-play on a fresh seed range is **73% Allies / 27% CP**;
+  * about **three and a half VP** of handicap evens a bot game;
+  * run-health counts are all zero.
+* **New tests:** `sim/tests/ties.js` (11 checks, with the audit's fixtures) and 16 more companion checks (56 in all).
+
 ## v0.8.1 — 22 Nov 2026
 
 Print fix from the v0.8.0 review ([response](audits/general-staff-v0.8.0/Response.md)). The bot's behaviour is unchanged.

@@ -90,7 +90,7 @@ function edgeTables() {
 }
 function eventTable(side) {
   const rows = POLICY.filter(e => e.side === side).sort((x, y) => x.num - y.num)
-  let h = '<table><tr><th>#</th><th>Card</th><th>Pri</th><th>Notes</th></tr>'
+  let h = '<table><thead><tr><th>#</th><th>Card</th><th>Pri</th><th>Notes</th></tr></thead><tbody>' // the header repeats on each printed page
   for (const e of rows) {
     const pr = EP.printedPriority(e.global)
     let note = EP.NOTE[e.global] || ''
@@ -100,7 +100,7 @@ function eventTable(side) {
     const shown = pr === 'CC' ? 'CC ' + e.event_priority : pr
     h += `<tr><td>${e.num}</td><td>${esc(e.name)}</td><td>${shown}</td><td>${esc(note)}</td></tr>`
   }
-  return h + '</table>'
+  return h + '</tbody></table>'
 }
 const procedure = fs.readFileSync(path.join(root, 'print/summary.html'), 'utf8')
 let ref = `<!doctype html><meta charset="utf-8"><style>${css}</style><div class="ref">

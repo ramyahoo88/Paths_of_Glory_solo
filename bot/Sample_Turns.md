@@ -52,10 +52,10 @@ Use it to check your reading of the procedure: with the same hand (shown, with e
 
 **Turn 2, Allied bot, round 4.** Hand: French Reinforcements (FR 10) [3], Pleve [2], Russian Reinforcements (RU 11) [3], British Reinforcements (BR 1) [4], Withdrawal [2]. Staff card 14: front 5, Press, plan Ops, tie South. Step: *Urgent event*. Plays **French Reinforcements (FR 10)** as an Event.
 
-**Turn 2, Central Powers bot, round 5.** Hand: Von Francois [2], Severe Weather [2], Race to the Sea [3], SUD Army [3]. Staff card 15: front 5, Hold, plan Event, tie North. Step: *Plan: Attack*. Plays **Race to the Sea** for Operations. Attacks: Grodno from Insterberg (Edge +3.2); Cambrai from Sedan + Brussels (Edge +1).
+**Turn 2, Central Powers bot, round 5.** Hand: Von Francois [2], Severe Weather [2], Race to the Sea [3], SUD Army [3]. Staff card 15: front 5, Hold, plan Event, tie North. Step: *Plan: Attack*. Plays **Race to the Sea** for Operations. Attacks: Cambrai from Sedan + Brussels (Edge +1.7); Grodno from Insterberg (Edge +3.2).
 
-**Turn 2, Allied bot, round 5.** Hand: Russian Reinforcements (RU 11) [3], British Reinforcements (BR 1) [4]. Staff card 10: front 4, Assault, plan Event, tie South. Step: *MO: last chance*. Plays **British Reinforcements (BR 1)** for Operations. Attacks: Sedan from Verdun + Cambrai (Edge +1, MO); Metz from Nancy (Edge -1.2, MO); Mulhouse from Belfort (Edge -3.7, MO).
+**Turn 2, Allied bot, round 5.** Hand: Russian Reinforcements (RU 11) [3], British Reinforcements (BR 1) [4]. Staff card 10: front 4, Assault, plan Event, tie South. Step: *MO: last chance*. Plays **Russian Reinforcements (RU 11)** for Operations. Attacks: Sedan from Verdun (Edge +0, MO); Metz from Nancy (Edge -1.2, MO); Cambrai from Amiens (Edge -2.7, MO).
 
 **Turn 2, Central Powers bot, round 6.** Hand: Severe Weather [2], SUD Army [3]. Staff card 9: front 3, Hold, plan Logistics, tie North. Step: *Plan: Logistics*. Plays **SUD Army** for RP.
 
-**Turn 2, Allied bot, round 6.** Hand: Russian Reinforcements (RU 11) [3]. Staff card 7: front 3, Assault, plan Ops, tie North. Step: *Plan: Attack*. Plays **Russian Reinforcements (RU 11)** for Operations. Attacks: Insterberg from Kovno (Edge +2); Munkacs from Czernowitz (Edge +0.8). Moves: capture Antwerp → Brussels.
+**Turn 2, Allied bot, round 6.** Hand: British Reinforcements (BR 1) [4]. Staff card 7: front 3, Assault, plan Ops, tie North. Step: *Crisis*. Plays **British Reinforcements (BR 1)** for Operations. Attacks: Insterberg from Kovno (Edge +2). Moves: fill Riga → Vilna; fill Dubno → Lemberg; fill London → Calais.

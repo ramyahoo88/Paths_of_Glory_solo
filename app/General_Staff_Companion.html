@@ -49,7 +49,7 @@ td, th { border-bottom:1px solid #e2d7bb; padding:4px; text-align:left; vertical
 <textarea id="iotext" rows="4" style="width:100%" aria-label="Session text to copy or paste" placeholder="Export puts the session here to copy; paste a session here and press Import."></textarea></details>
 </section>
 <section><h2>Action round</h2>
-<div class="row"><label>Turn <input type="number" id="tturn" value="1" min="1" max="20"></label><label>Round <input type="number" id="tround" value="1" min="1" max="6"></label><button id="nextround" title="Next bot action round">Next round</button><button id="nextturn" title="Turn + 1, round 1, and clear both boxes (Undo restores)">Next turn</button></div>
+<div class="row"><label>Turn <input type="number" id="tturn" value="1" min="1" max="20" title="Correcting the turn number clears both boxes below"></label><label>Round <input type="number" id="tround" value="1" min="1" max="6"></label><button id="nextround" title="Next bot action round">Next round</button><button class="primary" id="nextdraw" title="Next bot action round and draw its Staff card; one Undo undoes both">Next round + draw</button><button id="nextturn" title="Turn + 1, round 1, and clear both boxes (Undo restores)">Next turn</button></div>
 <div class="row"><label><input type="checkbox" id="tmo"> MO met this turn</label><label><input type="checkbox" id="trp"> RP card played this turn</label></div>
 <div id="thint" class="muted" style="margin:4px 0 6px"></div>
 <ol>
@@ -71,6 +71,7 @@ td, th { border-bottom:1px solid #e2d7bb; padding:4px; text-align:left; vertical
 <div class="row"><label>Bonuses</label>
 <label><input type="checkbox" id="bobj"> Objective (+1)</label><label><input type="checkbox" id="bnear"> else within 2 of it (+0.4)</label><label><input type="checkbox" id="bvp"> VP (+0.5)</label><label><input type="checkbox" id="boos"> defender OOS (+0.5)</label></div>
 <div class="row"><label title="Tick only when the units chosen for this attack would satisfy the bot's unmet MO">Attack meets an unmet MO</label><select id="bmo"><option value="0">no</option><option value="1">yes, rounds 1–2 (+1)</option><option value="2.5">yes, rounds 3–4 (+2.5)</option><option value="6">yes, rounds 5–6 (+6, mandatory)</option></select><label>Front position <select id="bfront"><option value="0">1st</option><option value="-0.25">2nd</option><option value="-0.5">3rd</option><option value="-0.75">4th</option><option value="-1">5th</option></select></label></div>
+<div class="row"><button id="clearatk" title="Reset every calculator input for the next attack">Clear attack</button><span class="muted">The MO and bonus boxes are not taken from the tracker: set them for each attack.</span></div>
 <div id="edge" class="res"></div></section>
 <section><div class="row tabs"><button data-t="obj" class="on">Objectives</button><button data-t="front">Front Table</button><button data-t="ev">Event priorities</button></div>
 <div id="t-obj"></div><div id="t-front" class="hidden"></div><div id="t-ev" class="hidden"><div class="row"><input id="evq" placeholder="card number or name" style="flex:1"></div><div id="evlist"></div></div>
@@ -185,7 +186,9 @@ function renderTabs() {
 }
 function snapshot() { S.hist.push(JSON.stringify({ deck: S.deck, discard: S.discard, cur: S.cur, track: S.track })); if (S.hist.length > 30) S.hist.shift() }
 // the snapshot is taken before any reshuffle, so Undo restores the exact state before the draw
-$('draw').onclick = () => { snapshot(); if (!S.deck.length) { S.deck = shuffle(S.discard.slice()); S.discard = [] } S.cur = S.deck.pop(); S.discard.push(S.cur); render() };
+function drawCard() { if (!S.deck.length) { S.deck = shuffle(S.discard.slice()); S.discard = [] } S.cur = S.deck.pop(); S.discard.push(S.cur) }
+$('draw').onclick = () => { snapshot(); drawCard(); render() };
+$('nextdraw').onclick = () => { snapshot(); S.track = cleanTrack(Object.assign({}, S.track, { round: Math.min(6, S.track.round + 1) })); drawCard(); render() };
 $('undo').onclick = () => {
   while (S.hist.length) {
     const h = S.hist.pop(), x = validStep(h) ? JSON.parse(h) : null;
@@ -209,9 +212,16 @@ $('import').onclick = () => {
   $('ioinfo').textContent = 'Imported. Undo returns to your previous session: deck, tracker, side and commitment.'; render();
 };
 $('side').onchange = e => { S.side = e.target.value; render() };
-for (const id of ['tturn', 'tround', 'tmo', 'trp']) $(id).onchange = $(id).oninput = () => { S.track = cleanTrack({ turn: Math.round(+$('tturn').value), round: Math.round(+$('tround').value), mo: $('tmo').checked, rp: $('trp').checked }); render() };
+// a different turn number typed in starts that turn's boxes afresh, as Next turn does (the MO and RP boxes are per turn)
+for (const id of ['tturn', 'tround', 'tmo', 'trp']) $(id).onchange = $(id).oninput = () => {
+  const turn = Math.round(+$('tturn').value), fresh = id === 'tturn' && turn !== S.track.turn;
+  S.track = cleanTrack({ turn, round: Math.round(+$('tround').value), mo: fresh ? false : $('tmo').checked, rp: fresh ? false : $('trp').checked }); render();
+};
 $('lvl').onchange = e => { S.lvl = e.target.value; render() };
-for (const id of ['acf','dcf','fort','aarmy','darmy','dunits','terr','tr','bobj','bnear','bvp','boos','bmo','bfront']) { $(id).oninput = renderEdge; $(id).onchange = renderEdge }
+const CALC = ['acf','dcf','fort','aarmy','darmy','dunits','terr','tr','bobj','bnear','bvp','boos','bmo','bfront'];
+const CALC0 = Object.fromEntries(CALC.map(id => [id, { value: $(id).value, checked: $(id).checked }])); // the page's starting values
+for (const id of CALC) { $(id).oninput = renderEdge; $(id).onchange = renderEdge }
+$('clearatk').onclick = () => { for (const id of CALC) { $(id).value = CALC0[id].value; $(id).checked = CALC0[id].checked } renderEdge() };
 $('evq').oninput = renderTabs;
 document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => { document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x === b)); for (const t of ['obj','front','ev']) $('t-' + t).classList.toggle('hidden', t !== b.dataset.t) });
 load(); if (!S.deck.length && !S.discard.length) reset(); render();

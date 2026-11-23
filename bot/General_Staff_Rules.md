@@ -1,6 +1,6 @@
 # General Staff — a card-driven solo opponent for *Paths of Glory*
 
-**Version 0.8.0 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
+**Version 0.8.2 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
 
 General Staff can command **either side**; you play the other side normally. The bot follows the same rules you do. It holds a hand of real strategy cards and takes six action rounds a turn. Each round it plays a card as an Event, for Operations (OPS), for Strategic Redeployment (SR) or for Replacement Points (RP), or it takes the 1-OP Automatic Operation. It never breaks a rule, never looks at your hand and never rolls dice to make a decision. Its decisions come from a deck of **Staff cards** and the fixed priorities in this booklet. Dice are rolled only where the game rules call for them (combat, mandated offensives, entrenching, sieges and so on).
 
@@ -23,7 +23,7 @@ The optional **General Staff Companion** (an offline web page) draws Staff cards
 
 **Setup.** Set up the Historical scenario normally. Shuffle the Staff deck. Deal the bot its strategy cards exactly as for a human player.
 
-**Difficulty (optional).** For a harder game, start the VP marker 1 or 2 spaces in the bot's favour: toward 20 when the bot plays the Central Powers, toward 0 when it plays the Allies. For an easier game, move it toward you instead. In bot-versus-bot tests, each VP of handicap shifted the result by six to eight percentage points. The Allied bot is still the stronger of the two: about three VP evens a game between the bots. A player facing the Central Powers bot may want to start with 1 or 2 VP in the bot's favour, raising it if the bot still loses. Keep the bot's hand face down beside the board and look at it when the procedure tells you to. The bot plays to fixed rules, so seeing its cards gives you little, but the honest habit is to look only when asked.
+**Difficulty (optional).** For a harder game, start the VP marker 1 or 2 spaces in the bot's favour: toward 20 when the bot plays the Central Powers, toward 0 when it plays the Allies. For an easier game, move it toward you instead. In bot-versus-bot tests, each VP of handicap shifted the result by five to eight percentage points. The Allied bot is still the stronger of the two: three to four VP even a game between the bots. A player facing the Central Powers bot may want to start with 1 or 2 VP in the bot's favour, raising it if the bot still loses. Keep the bot's hand face down beside the board and look at it when the procedure tells you to. The bot plays to fixed rules, so seeing its cards gives you little, but the honest habit is to look only when asked.
 
 ---
 

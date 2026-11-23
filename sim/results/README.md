@@ -2,6 +2,16 @@
 
 Raw outputs behind the figures in [`../REPORT.md`](../REPORT.md), kept so the summary tables can be checked.
 
+## v0.8.2 (`v0.8.2/`), run-time provenance
+
+Every file was produced from a clean worktree of commit **`dba0de2`** (v0.8.2 code), stamped as before. The paired runs play against the v0.7 reference at **`bc8bef6`**.
+
+* `self_a`–`self_d.json`: strict self-play, 600 games, seeds 1200000–1200599.
+* `naive_*.json` and `rnd_*.json`: 140 baseline games.
+* `paired_cp6/7.json`, `paired_ap6/7.json`: both bots against the v0.7 reference, seeds 6001–6300 and 7001–7300. These are the same seeds as `v0.8.0/paired_cp*.json` and `v0.7.6/paired_ap*.json`, for per-seed comparison.
+* `handicap_<shift>.json`: self-play with the starting VP at 10 + shift, seeds 30001–30150.
+* `summary.md`: the `summarize.py` output.
+
 ## v0.8.0 (`v0.8.0/`), run-time provenance
 
 Every file at the top level was produced from a clean worktree of commit **`c8559da`** (the v0.8.0 code), stamped as for v0.7.6. The paired runs play against the v0.7 reference at **`bc8bef6`**.
