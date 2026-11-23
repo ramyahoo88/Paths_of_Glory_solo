@@ -157,6 +157,48 @@ d3.nodes.iotext.value = '{not json'; d3.nodes.import.onclick(); ok(d3.nodes.ioin
   ok(u.nodes.acf.value === '8' && u.nodes.dcf.value === '4' && u.nodes.bmo.value === '0' && !u.nodes.bobj.checked && u.nodes.dunits.checked && u.nodes.edge.innerHTML !== dirty, 'Clear attack restores every calculator input')
 }
 
+// v0.8.2 verification B01: Next round + draw stops at round 6
+{
+  const u = boot(); u.nodes.draw.onclick()
+  for (let i = 0; i < 4; i++) u.nodes.nextdraw.onclick()
+  const r5 = JSON.stringify(u.state()); ok(u.state().track.round === 5 && !u.nodes.nextdraw.disabled, 'B01: rounds 1-5 drawn, the button is still on')
+  u.nodes.nextdraw.onclick(); const r6 = JSON.stringify(u.state())
+  ok(u.state().track.round === 6 && u.state().discard.length === 6 && u.nodes.nextdraw.disabled, 'B01: round 6 drawn, then the button is off')
+  u.nodes.nextdraw.onclick(); ok(JSON.stringify(u.state()) === r6, 'B01: pressed at round 6 it draws nothing and takes no Undo step')
+  const re = boot(u.store.get(KEY)); ok(re.nodes.nextdraw.disabled && JSON.stringify(re.state()) === r6, 'B01: still off after a reload at round 6')
+  u.nodes.undo.onclick(); ok(JSON.stringify(u.state()) === r5 && !u.nodes.nextdraw.disabled, 'B01: Undo from round 6 returns to round 5 and turns it back on')
+  u.nodes.nextdraw.onclick(); u.nodes.nextturn.onclick(); ok(u.state().track.round === 1 && !u.nodes.nextdraw.disabled, 'B01: Next turn turns it back on')
+}
+
+// v0.8.2 verification B02: repeated Imports add about one session each, and the checkpoints are bounded
+{
+  const dn = boot(); dn.nodes.draw.onclick(); dn.nodes.export.onclick(); const donor = dn.nodes.iotext.value
+  const w = boot(); w.nodes.draw.onclick(); const w0 = JSON.stringify(w.state())
+  const sizes = [], states = [w0]
+  for (let i = 0; i < 20; i++) { w.nodes.iotext.value = donor; w.nodes.import.onclick(); sizes.push(w.store.get(KEY).length); states.push(JSON.stringify(w.state())) }
+  const steps = sizes.slice(1).map((v, i) => v - sizes[i])
+  ok(sizes[9] < 6000 && Math.max(...steps.slice(0, 9)) - Math.min(...steps.slice(0, 9)) < 50, `B02: ten Imports grow the save about evenly (${sizes[0]} to ${sizes[9]} characters)`)
+  ok(sizes[19] === sizes[10] && sizes[19] < 6000, `B02: from the ${11}th Import on the save stops growing (${sizes[19]} characters): at most 10 checkpoints are kept`)
+  // Undo walks back through the 10 kept Imports, then stops on the oldest kept session
+  for (let i = 0; i < 10; i++) w.nodes.undo.onclick()
+  ok(JSON.stringify(Object.assign(w.state(), { hist: [] })) === JSON.stringify(Object.assign(JSON.parse(states[10]), { hist: [] })) && w.state().hist.length === 0, 'B02: ten Undos return through the ten kept Imports')
+  // two Imports, reload, two Undos
+  const v = boot(); v.nodes.draw.onclick(); const v0 = JSON.stringify(v.state())
+  v.nodes.iotext.value = donor; v.nodes.import.onclick(); const v1 = JSON.stringify(v.state()); v.nodes.iotext.value = text; v.nodes.import.onclick()
+  const v2 = boot(v.store.get(KEY)); v2.nodes.undo.onclick(); ok(JSON.stringify(v2.state()) === v1, 'B02: after a reload, Undo returns to the first imported session')
+  v2.nodes.undo.onclick(); ok(JSON.stringify(v2.state()) === v0, 'B02: and a second Undo to the original session')
+  // a checkpoint in the v0.8.2 format (steps inside as strings) still loads, undoes, and is normalised by the next Import
+  const inner = JSON.parse(v0), legacy = JSON.parse(v0) // v0.8.2 saved a checkpoint's own steps as strings, as inner.hist is here
+  legacy.hist = [JSON.stringify({ kind: 'import', session: inner })]
+  const lg = boot(JSON.stringify(Object.assign({ v: 1 }, legacy))); ok(lg.error === null && lg.state().hist.length === 1 && !lg.nodes.notice.textContent.includes('damaged'), 'B02: a v0.8.2 checkpoint loads')
+  lg.nodes.iotext.value = donor; lg.nodes.import.onclick(); const nested = JSON.parse(lg.state().hist[0]).session.hist
+  ok(nested.every(h => typeof h === 'object'), 'B02: the next Import stores the old steps as objects')
+  lg.nodes.undo.onclick(); lg.nodes.undo.onclick(); ok(JSON.stringify(lg.state()) === JSON.stringify(inner), 'B02: Undo still walks through the v0.8.2 checkpoint to the session inside it')
+  // a hand-made session with object steps at the top level is rejected
+  const bad = JSON.parse(v0); bad.hist = [{ deck: bad.deck, discard: bad.discard, cur: bad.cur }]
+  const y = boot(); const yPre = JSON.stringify(y.state()); y.nodes.iotext.value = JSON.stringify(bad); y.nodes.import.onclick(); ok(JSON.stringify(y.state()) === yPre, "B02: a session's own steps must be strings")
+}
+
 // search
 c = boot(); c.nodes.evq.value = '55'; c.nodes.evq.oninput(); ok(c.nodes.evlist.innerHTML.includes('Lloyd George'), 'card-number search')
 c.nodes.side.onchange({ target: { value: 'ap' } }); ok(c.nodes.evlist.innerHTML.includes('Over There'), 'side switch changes the event list')

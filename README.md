@@ -15,7 +15,7 @@ The bot plays by the same rules you do. It holds a hand of real strategy cards a
 | **Worked example**: narrated bot decisions for the first two turns of a game | [Sample turns](bot/Sample_Turns.md) |
 | **Simulation report** | [REPORT.md](sim/REPORT.md) |
 | **Changes** | [CHANGELOG.md](CHANGELOG.md) |
-| **Independent reviews** and responses: v0.7.1 review, v0.7.2 re-audit, v0.7.2 comprehensive audit, v0.7.3 re-audit, v0.7.4 and v0.7.5 verifications, v0.7.5 comprehensive audit, v0.8.0 review, v0.8.1 comprehensive audit | [audits/](audits/) |
+| **Independent reviews** and responses: v0.7.1 review, v0.7.2 re-audit, v0.7.2 comprehensive audit, v0.7.3 re-audit, v0.7.4 and v0.7.5 verifications, v0.7.5 comprehensive audit, v0.8.0 review, v0.8.1 comprehensive audit, v0.8.2 verification | [audits/](audits/) |
 | **Seed-level results** behind the report's tables | [sim/results/](sim/results/) |
 
 Print the cards at 100% (actual size) on US Letter: six cards per page, each face page followed by a page of backs. Print double-sided (flip on long edge) for backed cards, or print only the odd pages for faces alone. `python3 print/check_print.py` checks that no card is split across pages and that every printed Stance threshold matches the bot. The reference sheets are seven pages: procedure, tables, a record sheet, and the event lists (which can stay in a sleeve).
@@ -24,7 +24,7 @@ Print the cards at 100% (actual size) on US Letter: six cards per page, each fac
 
 General Staff was developed and tested in about **50,000 simulated full campaigns** on the open-source **Rally the Troops** rules engine. The engine is used with GMT's permission on that site and is not included here. The final version:
 
-* plays both sides strongly: against the earlier v0.7 bots, the current version (v0.8.2) wins **94–95%** as the Allies and **70–73%** as the Central Powers. v0.8.0 made the Central Powers bot stronger: it now always puts the West first and attacks more selectively. In 600 strict self-play games the Allied bot won **73%** and the Central Powers bot **27%** (v0.7.6: 85% / 15%). There were no exceptions, no rule-violation resets, no bot movement out of supply and no choice left to the engine's default. Every figure has per-seed, commit-stamped records in [sim/results/v0.8.2](sim/results/v0.8.2/);
+* plays both sides strongly: against the earlier v0.7 bots, the current version (v0.8.3; bot unchanged from v0.8.2) wins **94–95%** as the Allies and **70–73%** as the Central Powers. v0.8.0 made the Central Powers bot stronger: it now always puts the West first and attacks more selectively. In 600 strict self-play games the Allied bot won **73%** and the Central Powers bot **27%** (v0.7.6: 85% / 15%). There were no exceptions, no rule-violation resets, no bot movement out of supply and no choice left to the engine's default. Every figure has per-seed, commit-stamped records in [sim/results/v0.8.2](sim/results/v0.8.2/);
 * beat a random player and a naive one-attack, no-events bot in every test game (**1,380 of 1,380** across v0.7 to v0.8.2);
 * made only legal moves, and plays a recognisable war: Russia usually collapses in 1917 and the USA enters in most games;
 * has an optional difficulty handicap (starting VP), worth five to eight points of win rate per VP in bot-versus-bot play.
@@ -51,6 +51,7 @@ python3 ../print/check_print.py      # every Staff card whole on one page; print
 python3 ../print/test_check_print.py # negative controls for the print check (needs Chrome)
 node ../app/build_app.js             # rebuild the companion page
 node ../app/test_companion.cjs       # companion regression tests (no browser)
+python3 ../app/test_browser.py       # companion in real headless Chrome (needs Playwright)
 ```
 
 `sim/bot.js` is the reference implementation of the printed procedure. Its constructor defaults are the released rules; options that are off by default are rejected experiments kept for reproducibility. `research/event_policy.md` is the card-by-card research behind the event priorities.

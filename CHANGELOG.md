@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.8.3 — 22 Nov 2026
+
+Companion fixes from the v0.8.2 verification ([response](audits/general-staff-v0.8.1-comprehensive/Response.md)). The bot and the printed rules are unchanged apart from the version number.
+
+* **Next round + draw stops at round 6 (B01).** It used to draw a seventh card while still showing round 6. *Next turn* turns it back on.
+* **Repeated Imports keep the save small (B02).**
+  * The steps inside an import checkpoint are stored as objects instead of escaped strings, and at most 10 checkpoints are kept.
+  * Sixteen Imports used to make 6.5 million characters; now the save levels off at about 2,500.
+  * v0.8.2 checkpoints still load and undo.
+* **Tests:** 15 new companion checks (71 in all). `app/test_browser.py` adds 11 checks in a real headless Chrome (Playwright), with real storage and reloads.
+
 ## v0.8.2 — 22 Nov 2026
 
 Fixes for the v0.8.1 comprehensive audit ([response](audits/general-staff-v0.8.1-comprehensive/Response.md)).

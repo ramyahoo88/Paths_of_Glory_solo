@@ -8,7 +8,7 @@ const B = require(path.join(root, 'sim/board.js'))
 const R = require(path.join(root, 'engine/rules.js'))
 const POLICY = require(path.join(root, 'research/event_policy.json'))
 const EP = require(path.join(root, 'sim/events.js'))
-const VERSION = process.env.GS_VERSION || '0.8.2'
+const VERSION = process.env.GS_VERSION || '0.8.3'
 
 const FN = { WEST: 'West', EAST: 'East', ITALY: 'Italy', BALKANS: 'Balkans', NEAREAST: 'Near East' }
 const objectives = {}
@@ -143,17 +143,38 @@ function renderTrack() {
   if (S.side === 'ap') h.push(t.rp ? 'Rebuild: not this turn (an RP card was already played).' : 'Rebuild: check missing steps − RP held ≥ 6.');
   $('thint').textContent = h.join(' ');
 }
-function validSession(x) {
+function validSession(x, depth = 0) {
   if (!x || typeof x !== 'object' || !['cp', 'ap'].includes(x.side) || !LEVELS.includes(x.lvl)) return false;
   if (!validDeck(x) || !Array.isArray(x.hist)) return false;
-  return x.hist.every(validStep);
+  return x.hist.every(h => (depth > 0 || typeof h === 'string') && validStep(h, depth)); // a saved session's own steps are strings
 }
-// An Undo step is either an ordinary step {deck, discard, cur, track}, or an import step {kind: 'import', session} that holds the
-// whole session an Import replaced: side, commitment, deck, current card, tracker and its own Undo history.
-function validStep(h) {
-  if (typeof h !== 'string') return false;
-  let x = null; try { x = JSON.parse(h) } catch (e) { return false }
-  return x && x.kind === 'import' ? validSession(x.session) : validDeck(x);
+// An Undo step is either an ordinary step {deck, discard, cur, track}, or an import checkpoint {kind: 'import', session} that holds
+// the whole session an Import replaced: side, commitment, deck, current card, tracker and its own Undo history.
+// The session's history is stored as a JSON string per step. Inside a checkpoint, the replaced session's steps are kept as objects,
+// so nothing is escaped twice and each Import adds about one session. At most MAX_IMPORT_UNDO checkpoints are kept, one inside the
+// next; older ones are dropped. Checkpoints saved by v0.8.2 (steps as strings inside) are still read.
+const MAX_IMPORT_UNDO = 10;
+function parseStep(h) {
+  if (typeof h === 'string') { try { return JSON.parse(h) } catch (e) { return null } }
+  return h && typeof h === 'object' ? h : null;
+}
+function validStep(h, depth = 0) {
+  const x = parseStep(h);
+  if (!x || typeof x !== 'object') return false;
+  if (x.kind !== 'import') return validDeck(x);
+  return depth < 40 && validSession(x.session, depth + 1); // the bound only stops hostile nesting; real sessions hold at most MAX_IMPORT_UNDO
+}
+// the replaced session's steps, as objects, keeping import checkpoints down to the MAX_IMPORT_UNDO-th
+function nestSteps(steps, level) {
+  const out = [];
+  for (const h of steps) {
+    const x = parseStep(h);
+    if (!x) continue;
+    if (x.kind !== 'import') { out.push(x); continue }
+    if (level >= MAX_IMPORT_UNDO) continue;
+    out.push({ kind: 'import', session: Object.assign({}, x.session, { hist: nestSteps(x.session.hist, level + 1) }) });
+  }
+  return out;
 }
 function load() {
   let raw = null;
@@ -174,6 +195,7 @@ function render() {
   $('side').value = S.side; $('lvl').value = S.lvl;
   $('deckinfo').textContent = S.deck.length + ' in deck · ' + S.discard.length + ' discarded';
   $('undo').disabled = !S.hist.length;
+  $('nextdraw').disabled = S.track.round >= 6; $('nextdraw').title = S.track.round >= 6 ? 'Round 6 is the last bot round of the turn: use Next turn, then Draw' : 'Next bot action round and draw its Staff card; one Undo undoes both';
   const c = S.cur ? cardById(S.cur) : null;
   if (c) {
     const front = D.frontTable[S.side][S.lvl][c.n - 1];
@@ -219,11 +241,12 @@ function snapshot() { S.hist.push(JSON.stringify({ deck: S.deck, discard: S.disc
 // the snapshot is taken before any reshuffle, so Undo restores the exact state before the draw
 function drawCard() { if (!S.deck.length) { S.deck = shuffle(S.discard.slice()); S.discard = [] } S.cur = S.deck.pop(); S.discard.push(S.cur) }
 $('draw').onclick = () => { snapshot(); drawCard(); render() };
-$('nextdraw').onclick = () => { snapshot(); S.track = cleanTrack(Object.assign({}, S.track, { round: Math.min(6, S.track.round + 1) })); drawCard(); render() };
+// Round 6 is the bot's last action round: the button stops there (Next turn starts the next turn; Draw stays for corrections)
+$('nextdraw').onclick = () => { if (S.track.round >= 6) return; snapshot(); S.track = cleanTrack(Object.assign({}, S.track, { round: Math.min(6, S.track.round + 1) })); drawCard(); render() };
 $('undo').onclick = () => {
   while (S.hist.length) {
-    const h = S.hist.pop(), x = validStep(h) ? JSON.parse(h) : null;
-    if (x && x.kind === 'import') { const p = x.session; S.side = p.side; S.lvl = p.lvl; S.deck = p.deck; S.discard = p.discard; S.cur = p.cur ?? null; S.track = cleanTrack(p.track); S.hist = p.hist; $('ioinfo').textContent = 'Import undone: your previous session is back, with its side, commitment and Undo history.'; break }
+    const h = S.hist.pop(), x = validStep(h) ? parseStep(h) : null;
+    if (x && x.kind === 'import') { const p = x.session; S.side = p.side; S.lvl = p.lvl; S.deck = p.deck; S.discard = p.discard; S.cur = p.cur ?? null; S.track = cleanTrack(p.track); S.hist = p.hist.map(e => typeof e === 'string' ? e : JSON.stringify(e)); $('ioinfo').textContent = 'Import undone: your previous session is back, with its side, commitment and Undo history.'; break }
     if (x) { S.deck = x.deck; S.discard = x.discard; S.cur = x.cur ?? null; if (x.track) S.track = cleanTrack(x.track); break }
     note('A damaged Undo step was skipped.');
   }
@@ -237,7 +260,7 @@ $('import').onclick = () => {
   let x = null; try { x = JSON.parse($('iotext').value) } catch (e) {}
   if (!validSession(x)) { $('ioinfo').textContent = 'Import rejected: that is not a complete, undamaged session. Nothing was changed.'; return }
   // one Undo returns to the whole session this Import replaces (its Undo history included); the other device's history is not imported
-  const prev = { side: S.side, lvl: S.lvl, deck: S.deck, discard: S.discard, cur: S.cur, track: S.track, hist: S.hist };
+  const prev = { side: S.side, lvl: S.lvl, deck: S.deck, discard: S.discard, cur: S.cur, track: S.track, hist: nestSteps(S.hist, 1) };
   S.side = x.side; S.lvl = x.lvl; S.deck = x.deck; S.discard = x.discard; S.cur = x.cur ?? null; S.track = cleanTrack(x.track);
   S.hist = [JSON.stringify({ kind: 'import', session: prev })];
   $('ioinfo').textContent = 'Imported. Undo returns to your previous session: deck, tracker, side and commitment.'; render();
