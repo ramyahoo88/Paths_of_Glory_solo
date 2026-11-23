@@ -45,7 +45,7 @@ need = [
     ('rules: Stance table', None, ('rules.pdf', None, f"Assault {cp['A']} {ap['A']} Press {cp['P']} {ap['P']} Hold {cp['H']} {ap['H']}")),
     ('reference p1: Stance', None, ('reference.pdf', 1, f"CP: Assault {cp['A']}, Press {cp['P']}, Hold {cp['H']}; Allies: {ap['A']}, {ap['P']}, {ap['H']}")),
     ('reference p2: Stance', None, ('reference.pdf', 2, f"Central Powers bot Assault {cp['A']}, Press {cp['P']}, Hold {cp['H']}; Allied bot Assault {ap['A']}, Press {ap['P']}, Hold {ap['H']}")),
-] + [(f'Staff cards: {k} thresholds', None, ('staff_cards.pdf', None, f"CP {cp[k]} · Allies {ap[k]}")) for k in 'APH']
+]
 if west_first:
     need += [('rules: CP West first', None, ('rules.pdf', None, 'The Central Powers bot always puts the West first')),
              ('reference p1: CP West first', None, ('reference.pdf', 1, 'CP bot: West first')),
@@ -54,5 +54,43 @@ for label, val, spec in need:
     good = val if spec == '' else spec[2] in text(spec[0], spec[1])
     ok &= bool(good)
     print(f'{label}: {"ok" if good else "MISMATCH (expected " + repr(spec[2] if spec else "") + ")"}')
+
+# Each Staff card face, one by one: its Stance (from the deck in sim/bot.js) and exactly one threshold line for that Stance.
+# Words are placed on a card by position: the card's number "n/18" sits at the bottom of its face, in the same column.
+stances = re.search(r"const STANCES = \[([^\]]*)\]", bot).group(1).replace("'", '').replace(' ', '').split(',')
+assert re.search(r'for \(let n = 1; n <= 6; n\+\+\) for \(let s = 0; s < 3; s\+\+\) \{ deck\.push\(\{ id: deck\.length \+ 1, n, stance: STANCES\[s\]', bot), \
+    'makeDeck() changed shape: update the per-card check in print/check_print.py'
+NAME = {'A': 'Assault', 'P': 'Press', 'H': 'Hold'}
+card_ok, cards_seen = [], set()
+for p in range(1, pages + 1):
+    html = subprocess.run(['pdftotext', '-bbox', '-f', str(p), '-l', str(p), pdf, '-'], capture_output=True, text=True).stdout
+    words = [(float(a), float(b), float(c), float(d), w) for a, b, c, d, w in
+             re.findall(r'<word xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)">([^<]*)</word>', html)]
+    nums = [((x0 + x1) / 2, y0, int(w.split('/')[0])) for x0, y0, x1, y1, w in words if re.fullmatch(r'\d+/18', w)]
+    if not nums: continue
+    # card centres: the centred "FRONT NUMBER" label on each face; the cards are tiled, so each word belongs to the nearest centre
+    fronts = [(x0, y0) for x0, y0, x1, y1, w in words if w == 'FRONT']
+    cols = sorted({round((fx + x1) / 2) for fx, fy in fronts for x0, y0, x1, y1, w in words if w == 'NUMBER' and abs(y0 - fy) < 1 and 0 < x0 - fx < 60})
+    col_of = lambda xc: min(cols, key=lambda c: abs(c - xc))
+    per = {n: [] for _, _, n in nums}
+    for x0, y0, x1, y1, w in words:
+        col = col_of((x0 + x1) / 2)
+        below = [(ny, n) for nx, ny, n in nums if col_of(nx) == col and ny >= y0 - 1]  # the card number is at the foot of its face
+        if below: per[min(below)[1]].append((round(y0, 1), x0, w))
+    for n, ws in per.items():
+        cards_seen.add(n)
+        lines = {}
+        for y, x, w in ws: lines.setdefault(y, []).append((x, w))
+        lines = [' '.join(w for _, w in sorted(v)) for _, v in sorted(lines.items())]
+        want = stances[(n - 1) % 3]
+        printed = [w for _, _, w in ws if w in NAME.values()]
+        thr = [m.groups() for l in lines for m in re.finditer(r'CP (\+[\d.]+) · Allies (\+[\d.]+)', l)]
+        good = printed == [NAME[want]] and thr == [(cp[want], ap[want])]
+        if not good: card_ok.append(f'card {n}: Stance {printed or "missing"}, thresholds {thr or "missing"}; expected {NAME[want]} CP {cp[want]} · Allies {ap[want]}')
+good = not card_ok and cards_seen == set(range(1, 19))
+ok &= good
+print(f'Staff cards: each card\'s Stance and threshold: {"ok (18 cards)" if good else "MISMATCH"}')
+for m in card_ok: print('  ' + m)
+if cards_seen != set(range(1, 19)): print('  cards placed:', sorted(cards_seen))
 print('PASS' if ok else 'FAIL')
 sys.exit(0 if ok else 1)

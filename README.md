@@ -47,6 +47,7 @@ node tests/movement.js               # no step out of supply; corps gather to be
 node tests/priorities.js             # Tie and front order, Brusilov choice
 node ../print/build.js               # rebuild the PDFs (needs Google Chrome and pandoc)
 python3 ../print/check_print.py      # every Staff card whole on one page; printed thresholds match the bot
+python3 ../print/test_check_print.py # negative controls for the print check (needs Chrome)
 node ../app/build_app.js             # rebuild the companion page
 node ../app/test_companion.cjs       # companion regression tests (no browser)
 ```

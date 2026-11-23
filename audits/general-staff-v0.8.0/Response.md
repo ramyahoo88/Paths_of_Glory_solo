@@ -35,3 +35,26 @@ The project has no Cloudflare deployment of its own. The companion is published 
 * as a private claude.ai artifact, which was republished for v0.8.1.
 
 The bot's behaviour is unchanged from v0.8.0.
+
+# Response to the v0.8.1 verification
+
+The verification ([Verification_v0.8.1.md](Verification_v0.8.1.md)) closed the Medium finding. It found one **Low** checker limitation: the Staff-card guard only checked that each threshold line appeared somewhere in the PDF. A single card could lose its line and still pass.
+
+**Fixed (tooling only; no printed file changed).** `print/check_print.py` now checks the 18 Staff card faces one by one. It places every word on a card by position: the nearest "FRONT NUMBER" label for the column, and the card number at the foot of the face for the row. For each card it requires two things:
+
+* the printed Stance name matches that card's Stance in the deck (`makeDeck()` in `sim/bot.js`);
+* there is exactly one threshold line, and it gives that Stance's CP and Allied values.
+
+A mismatch names the card. The checker stops with a message if `makeDeck()` changes shape.
+
+**Negative controls.** `print/test_check_print.py` builds temporary copies and never touches the release files. It checks five cases:
+
+| Control | Expected result | Result |
+|---|---|---|
+| Release files | pass | pass |
+| v0.8.0 reference (from git) | fail, page 2 only | fail: exactly the two page-2 mismatches |
+| Card 1's threshold line deleted (the reviewer's case) | fail, card 1 | fail: card 1 only |
+| Card 5 prints the v0.7.6 threshold | fail, card 5 | fail: card 5 only |
+| Card 3 prints "Press" over the Hold threshold | fail, card 3 | fail: card 3 only |
+
+The reviewer's `guard_coverage.py` needs PyMuPDF, which is not installed here, so it was not run. Its single-card mutation is the same case as the deleted-line control. Against the fixed checker it should now stop at its assertion that the checker passes, which is the intended outcome.
