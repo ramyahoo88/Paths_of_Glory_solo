@@ -1,0 +1,157 @@
+{
+  "paired": {
+    "paired_cp6.json": {
+      "n": 300,
+      "wins": 219,
+      "oldWins": 221,
+      "gained": 55,
+      "lost": 57,
+      "exactPairedP": 0.9247750936572269,
+      "candidate": {
+        "dir": "/tmp/wt082/sim",
+        "commit": "dba0de2ff37d86f678fe506e9dee5dd2e88423dc",
+        "dirty": false,
+        "engine": {
+          "engine": "c58b0b4a33e227faf73cbe561f3bede17087a142",
+          "hook_sha256": "d8690e77eeb152daf98910d520407d05c8e0789da48135b4da5e1c506151acdc"
+        }
+      },
+      "reference": {
+        "dir": "/tmp/wtref/sim",
+        "commit": "bc8bef6ceb8311425accab2bfe2f7a8411548f55",
+        "dirty": false,
+        "engine": {
+          "engine": "c58b0b4a33e227faf73cbe561f3bede17087a142",
+          "hook_sha256": "d8690e77eeb152daf98910d520407d05c8e0789da48135b4da5e1c506151acdc"
+        }
+      }
+    },
+    "paired_cp7.json": {
+      "n": 300,
+      "wins": 211,
+      "oldWins": 221,
+      "gained": 58,
+      "lost": 68,
+      "exactPairedP": 0.42279113414588043,
+      "candidate": {
+        "dir": "/tmp/wt082/sim",
+        "commit": "dba0de2ff37d86f678fe506e9dee5dd2e88423dc",
+        "dirty": false,
+        "engine": {
+          "engine": "c58b0b4a33e227faf73cbe561f3bede17087a142",
+          "hook_sha256": "d8690e77eeb152daf98910d520407d05c8e0789da48135b4da5e1c506151acdc"
+        }
+      },
+      "reference": {
+        "dir": "/tmp/wtref/sim",
+        "commit": "bc8bef6ceb8311425accab2bfe2f7a8411548f55",
+        "dirty": false,
+        "engine": {
+          "engine": "c58b0b4a33e227faf73cbe561f3bede17087a142",
+          "hook_sha256": "d8690e77eeb152daf98910d520407d05c8e0789da48135b4da5e1c506151acdc"
+        }
+      }
+    },
+    "paired_ap6.json": {
+      "n": 300,
+      "wins": 283,
+      "oldWins": 276,
+      "gained": 23,
+      "lost": 16,
+      "exactPairedP": 0.3367836351899314,
+      "candidate": {
+        "dir": "/tmp/wt082/sim",
+        "commit": "dba0de2ff37d86f678fe506e9dee5dd2e88423dc",
+        "dirty": false,
+        "engine": {
+          "engine": "c58b0b4a33e227faf73cbe561f3bede17087a142",
+          "hook_sha256": "d8690e77eeb152daf98910d520407d05c8e0789da48135b4da5e1c506151acdc"
+        }
+      },
+      "reference": {
+        "dir": "/tmp/wtref/sim",
+        "commit": "bc8bef6ceb8311425accab2bfe2f7a8411548f55",
+        "dirty": false,
+        "engine": {
+          "engine": "c58b0b4a33e227faf73cbe561f3bede17087a142",
+          "hook_sha256": "d8690e77eeb152daf98910d520407d05c8e0789da48135b4da5e1c506151acdc"
+        }
+      }
+    },
+    "paired_ap7.json": {
+      "n": 300,
+      "wins": 285,
+      "oldWins": 281,
+      "gained": 17,
+      "lost": 13,
+      "exactPairedP": 0.584664711728692,
+      "candidate": {
+        "dir": "/tmp/wt082/sim",
+        "commit": "dba0de2ff37d86f678fe506e9dee5dd2e88423dc",
+        "dirty": false,
+        "engine": {
+          "engine": "c58b0b4a33e227faf73cbe561f3bede17087a142",
+          "hook_sha256": "d8690e77eeb152daf98910d520407d05c8e0789da48135b4da5e1c506151acdc"
+        }
+      },
+      "reference": {
+        "dir": "/tmp/wtref/sim",
+        "commit": "bc8bef6ceb8311425accab2bfe2f7a8411548f55",
+        "dirty": false,
+        "engine": {
+          "engine": "c58b0b4a33e227faf73cbe561f3bede17087a142",
+          "hook_sha256": "d8690e77eeb152daf98910d520407d05c8e0789da48135b4da5e1c506151acdc"
+        }
+      }
+    }
+  },
+  "handicap": [
+    {
+      "shift": 0,
+      "n": 150,
+      "cpWins": 45
+    },
+    {
+      "shift": 1,
+      "n": 150,
+      "cpWins": 53
+    },
+    {
+      "shift": 2,
+      "n": 150,
+      "cpWins": 60
+    },
+    {
+      "shift": 3,
+      "n": 150,
+      "cpWins": 70
+    },
+    {
+      "shift": 4,
+      "n": 150,
+      "cpWins": 81
+    },
+    {
+      "shift": 5,
+      "n": 150,
+      "cpWins": 93
+    }
+  ],
+  "selfplay": {
+    "ap": 439,
+    "cp": 161
+  },
+  "health": {
+    "games": 740,
+    "incomplete": 0,
+    "exceptions": 0,
+    "errors": 0,
+    "violations": 0,
+    "undos": 0,
+    "abandoned": 0,
+    "calledOff": 0,
+    "salonikaForced": 0,
+    "fallback": 0,
+    "opponentSupplyBreaches": 1
+  }
+}

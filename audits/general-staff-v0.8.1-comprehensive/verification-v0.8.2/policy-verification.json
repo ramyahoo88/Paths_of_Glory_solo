@@ -1,0 +1,71 @@
+{
+  "originalCases": [
+    {
+      "key": "Forward",
+      "staff": 3,
+      "actual": "Verdun"
+    },
+    {
+      "key": "Forward",
+      "staff": 6,
+      "actual": "Nancy"
+    },
+    {
+      "key": "SR",
+      "staff": 1,
+      "actual": "Berlin"
+    },
+    {
+      "key": "SR",
+      "staff": 4,
+      "actual": "Stuttgart"
+    },
+    {
+      "key": "replacement",
+      "staff": 1,
+      "actual": "Berlin"
+    },
+    {
+      "key": "replacement",
+      "staff": 4,
+      "actual": "Stuttgart"
+    }
+  ],
+  "reserve": [
+    {
+      "staff": 1,
+      "piece": 69
+    },
+    {
+      "staff": 4,
+      "piece": 69
+    }
+  ],
+  "advance": [
+    {
+      "staff": 1,
+      "selected": [
+        1,
+        3,
+        2
+      ],
+      "stayed": [
+        4
+      ]
+    },
+    {
+      "staff": 4,
+      "selected": [
+        2,
+        4,
+        1
+      ],
+      "stayed": [
+        3
+      ]
+    }
+  ],
+  "primaryRanking": [
+    "SR army before Reserve Box corps"
+  ]
+}

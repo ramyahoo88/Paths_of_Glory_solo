@@ -1,0 +1,19 @@
+{
+  "health": {
+    "games": 740,
+    "incomplete": 0,
+    "exceptions": 0,
+    "err": 0,
+    "violations": 0,
+    "undos": 0,
+    "abandoned": 0,
+    "calledOff": 0,
+    "salonikaForced": 0,
+    "fallback": 0,
+    "opponentSupplyBreaches": 1
+  },
+  "selfplay": {
+    "ap": 439,
+    "cp": 161
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "mode": "shipped script callbacks with DOM/storage doubles; no browser",
+  "checks": [
+    "A01 original two reproductions now corrected, including reload",
+    "ordinary draws interleaved with Import preserve coherent Undo",
+    "two Imports, tracker action and reload preserve every prior session",
+    "Next round + draw reshuffle and one-step Undo",
+    "storage failure remains visible and Import Undo still works in memory"
+  ],
+  "boundaries": {
+    "round6": {
+      "turn": 1,
+      "round": 6,
+      "drawsBefore": 6,
+      "drawsAfter": 7,
+      "buttonDisabled": false,
+      "undoRestores": true
+    },
+    "repeatedImports": [
+      {
+        "imports": 1,
+        "characters": 588
+      },
+      {
+        "imports": 2,
+        "characters": 953
+      },
+      {
+        "imports": 3,
+        "characters": 1518
+      },
+      {
+        "imports": 4,
+        "characters": 2483
+      },
+      {
+        "imports": 5,
+        "characters": 4248
+      },
+      {
+        "imports": 6,
+        "characters": 7613
+      },
+      {
+        "imports": 7,
+        "characters": 14178
+      },
+      {
+        "imports": 8,
+        "characters": 27143
+      },
+      {
+        "imports": 9,
+        "characters": 52908
+      },
+      {
+        "imports": 10,
+        "characters": 104273
+      },
+      {
+        "imports": 11,
+        "characters": 206838
+      },
+      {
+        "imports": 12,
+        "characters": 411803
+      },
+      {
+        "imports": 13,
+        "characters": 821568
+      },
+      {
+        "imports": 14,
+        "characters": 1640933
+      },
+      {
+        "imports": 15,
+        "characters": 3279498
+      },
+      {
+        "imports": 16,
+        "characters": 6556463
+      }
+    ],
+    "syntheticQuota": {
+      "maxCharacters": 5242880,
+      "failedAtImport": 16,
+      "currentCharacters": 6556457,
+      "persistedCharacters": 3279498,
+      "notice": "Not saved: this browser is not keeping the session (storage blocked or full). Draws will be lost if the page reloads."
+    }
+  }
+}

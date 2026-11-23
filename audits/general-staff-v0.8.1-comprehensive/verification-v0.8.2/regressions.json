@@ -1,0 +1,18 @@
+{
+  "companionChecks": 56,
+  "cardDisplays": 108,
+  "tieChecks": 11,
+  "calculatorCases": 13080,
+  "deckCycles": 10,
+  "independentPDFControls": 23,
+  "suites": {
+    "multinational": "pass",
+    "eventChoices": "pass",
+    "siege": "pass",
+    "movement": "pass",
+    "priorities": "pass",
+    "print": "pass"
+  },
+  "chromeAvailable": false,
+  "productionFilesChanged": false
+}

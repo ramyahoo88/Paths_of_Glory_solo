@@ -1,0 +1,70 @@
+{
+  "frontCellsCompared": 36,
+  "eventRowsCompared": 110,
+  "objectiveRowsCompared": 10,
+  "expectedHitColumnsCompared": 19,
+  "cardPages": [
+    {
+      "page": 1,
+      "cards": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "ties": 6,
+      "backs": 0
+    },
+    {
+      "page": 2,
+      "cards": [],
+      "ties": 0,
+      "backs": 6
+    },
+    {
+      "page": 3,
+      "cards": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "ties": 6,
+      "backs": 0
+    },
+    {
+      "page": 4,
+      "cards": [],
+      "ties": 0,
+      "backs": 6
+    },
+    {
+      "page": 5,
+      "cards": [
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "ties": 6,
+      "backs": 0
+    },
+    {
+      "page": 6,
+      "cards": [],
+      "ties": 0,
+      "backs": 6
+    }
+  ],
+  "pageCounts": {
+    "rules": 11,
+    "reference": 7,
+    "staff_cards": 6
+  }
+}

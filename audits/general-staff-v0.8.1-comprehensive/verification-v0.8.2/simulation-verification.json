@@ -1,0 +1,20 @@
+{
+  "reviewedCommit": "50dd24589968c88dd115a3afa48d5da3e70f99b2",
+  "fresh": {
+    "start": 3500000,
+    "games": 60,
+    "ap": 50,
+    "cp": 10,
+    "decisions": 182664,
+    "exceptions": 0,
+    "supplyBreaches": 0,
+    "ruleResets": 0,
+    "fallbacks": 0
+  },
+  "replay": {
+    "start": 1200000,
+    "games": 20,
+    "fullRecordsIdentical": true,
+    "decisions": 53635
+  }
+}
