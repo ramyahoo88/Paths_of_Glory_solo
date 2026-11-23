@@ -2,6 +2,18 @@
 
 Raw outputs behind the figures in [`../REPORT.md`](../REPORT.md), kept so the summary tables can be checked.
 
+## v0.8.0 (`v0.8.0/`), run-time provenance
+
+Every file at the top level was produced from a clean worktree of commit **`c8559da`** (the v0.8.0 code), stamped as for v0.7.6. The paired runs play against the v0.7 reference at **`bc8bef6`**.
+
+* `self_a`–`self_d.json`: strict self-play, 600 games, seeds 1100000–1100599 (a range not used before).
+* `naive_*.json` and `rnd_*.json`: 140 baseline games.
+* `paired_cp6` and `paired_cp7.json`: the CP bot against the v0.7 reference, seeds 6001–6300 and 7001–7300. The Allied bot did not change, so its paired figures are the v0.7.6 files.
+* `ap_identity6.json`: 60 Allied paired games (seeds 6001–6060), identical game for game to `v0.7.6/paired_ap6.json`.
+* `handicap_<shift>.json`: self-play with the starting VP at 10 + shift, seeds 30001–30150.
+* `summary.md`: the `summarize.py` output.
+* `experiments/`: the CP strategy screening and confirmation runs, with their own [README](v0.8.0/experiments/README.md).
+
 ## v0.7.6 (`v0.7.6/`), run-time provenance
 
 Every file was produced from a clean worktree of commit **`8f71855`** (the v0.7.6 code). The paired runs play against the v0.7 reference at **`bc8bef6`**. Every output carries a run-time stamp from `sim/provenance.js`: bot commit, an uncommitted-changes flag (false for all of these) and the engine revision with the hook hash. Every file also has one record per seed. Self-play records include `supplyBreaches`, the movement steps that left the moving units out of supply.

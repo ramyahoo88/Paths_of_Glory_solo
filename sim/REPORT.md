@@ -1,10 +1,11 @@
 # General Staff — simulation report
 
-*Covers General Staff **v0.7**, with checks of **v0.7.1** to **v0.7.6** (rules: [`bot/General_Staff_Rules.md`](../bot/General_Staff_Rules.md)). Written 22 November 2026.*
+*Covers General Staff **v0.7**, with checks of **v0.7.1** to **v0.7.6** and the Central Powers changes of **v0.8.0** (rules: [`bot/General_Staff_Rules.md`](../bot/General_Staff_Rules.md)). Written 22 November 2026.*
 
 ## Summary
 
-* **v0.7.6 (current).** v0.7.6 fixes the comprehensive v0.7.5 audit: supply-safe movement, corps gathering to besiege, Brusilov, Tie and front order, companion validation and provenance stamps. Against the v0.7 reference the Allied bot wins 92–94% and the CP bot 53–56%. Strict self-play is **85% Allies / 15% CP**, and every run-health count, including the new supply-policy check, is zero (see *v0.7.6*).
+* **v0.8.0 (current).** The Central Powers bot always puts the West first and needs 0.75 more Edge to attack, so it makes fewer, better-placed attacks. GPT's five recommendations and my own campaign-focus ideas were each tested on matched seeds; only these two changes helped. Against the v0.7 reference the CP bot now wins **74%** (was 53–56%; z 4.9 and 4.2 on the same seeds). Strict self-play is **69% Allies / 31% CP** (was 85% / 15%), with every bot run-health count zero. The Allied bot is unchanged (see *v0.8.0*).
+* **v0.7.6.** v0.7.6 fixes the comprehensive v0.7.5 audit: supply-safe movement, corps gathering to besiege, Brusilov, Tie and front order, companion validation and provenance stamps. Against the v0.7 reference the Allied bot wins 92–94% and the CP bot 53–56%. Strict self-play is **85% Allies / 15% CP**, and every run-health count, including the new supply-policy check, is zero (see *v0.7.6*).
 * **v0.7.5.** In v0.7.5, units leaving a siege keep a legal besieging force, and every headline figure comes from per-seed records of one pinned commit. Against the v0.7 reference the Allied bot wins 90–92% and the CP bot 49–59%. Strict self-play is **85% Allies / 15% CP**, with **no rule-violation resets** in 740 games (see *v0.7.5*).
 * **v0.7.4.** v0.7.4 corrects the two issues left by the v0.7.3 re-audit: a Salonika corps in contact and the event Tie. 600 fresh strict self-play games: **85% Allies / 15% CP**, no exceptions, no choice left to the engine's default (see *v0.7.4: re-audit corrections*).
 * **v0.7.3.** v0.7.3 fixes the nine findings of a comprehensive audit. The simulator now follows the printed procedure in every choice it meets, including event choices and event-granted Operations. Both bots are much stronger against the v0.7 reference: Allies 90–95%, CP 49–56%. Strict self-play is **84% Allies / 16% CP**, with one rule-violation reset in 740 games (see *v0.7.3: comprehensive audit fixes*).
@@ -33,6 +34,86 @@
 * **Naive**: the same machinery with the main features off. It plays only forced events and makes one attack per action round. It does not advance, move, use SR or fill crisis spaces, and it checks every target. This is roughly a first-draft "one order per round" bot.
 
 **Design comparisons.** A candidate bot played one side against a frozen reference bot on the other side, on the same seeds: 120 or 150 per side. At those sizes the standard error of a win rate near 50% is about ±4 points. Only differences of about 10 points or more were treated as real. When a change made no difference, the simpler procedure was kept.
+
+## v0.8.0: Central Powers strategy
+
+In v0.7.6 self-play the Allied bot won 85%. The CP bot attacked about twice as often as the Allies: 86 attacks a game against 44. GPT's review of v0.7.5 games read this as winning battles while losing the position: ground gained in the East, more lost in the West and Italy. GPT proposed five changes:
+
+1. protect the German front before it becomes a crisis;
+2. keep a main front for a sustained campaign;
+3. value attacks by their strategic consequence;
+4. rebuild German strength selectively;
+5. redeploy to the West after success in the East.
+
+I tested those as paper-friendly CP-only rules, together with my own campaign-focus tests: a turn checklist, West first, and East first until Russia falls. Each was played as the CP bot against the **current (v0.7.6) Allied bot** on matched seeds. The v0.7.6 CP bot wins about 16% of these games. The per-seed files are in [`results/v0.8.0/experiments/`](results/v0.8.0/experiments/).
+
+**Screening** (seeds 7001–7200, 200 games each; the v0.7.6 CP bot won 16.5%):
+
+| Change tested | Source | CP wins |
+|---|---|---|
+| Stance threshold +0.75 (fewer, better attacks; +0.5 and +1 gave the same) | GPT 3 | **23%** |
+| West always the first front | my test, GPT 2 | 20% |
+| West first and Stance +0.5 | both | 21.5% |
+| Attacks with no positional stake count 0.5 less | GPT 3 | 17% |
+| Turn checklist: a threatened home VP front, else West in 1914, else East until Russia falls, then West | my test, GPT 2 and 5 | 15% |
+| Home VP spaces in contact keep an army or two units; weak ones are reinforced like gaps | GPT 1 | 14% |
+| Checklist + home-VP security (with or without the attack penalty) | GPT 1, 2 | 10–13% |
+| Rebuild step at 6 missing steps | GPT 4 | 11% |
+| Rebuild step at 4 missing German steps only (alone or with Stance +0.5) | GPT 4 | 12.5% (17.5%) |
+| East first until the Tsar falls, then West | my test, GPT 5 | 9% |
+
+**Confirmation on fresh seeds** (300 games each, paired by seed with the v0.7.6 CP bot):
+
+| Seeds | v0.7.6 CP bot | West first + Stance +0.75 | Seeds gained / lost | z |
+|---|---|---|---|---|
+| 8001–8300 | 16.0% | **30.0%** | 76 / 34 | 4.0 |
+| 9001–9300 | 15.3% | **32.0%** | 82 / 32 | 4.7 |
+| 7001–7300 | 16.5% (first 200) | **25.3%** | — | — |
+
+On seeds 8001–8300, each part alone was smaller: Stance +0.75 gave 18.3% and West first gave 20.0%. Variants of the winning pair on seeds 9001–9300:
+
+* Stance +0.5: 23%;
+* Stance +1: 30%;
+* adding the attack penalty: 26%;
+* adding home-VP security: 27%.
+
+A repeat run gave identical results, confirming the harness is deterministic.
+
+**Adopted in v0.8.0 (CP bot only):**
+
+* **The West is always the CP bot's first front.** The Staff card's front comes second, so the card still varies the secondary effort.
+* **CP Stance thresholds are 0.75 higher:** Assault +0.75, Press +1.5, Hold +2.25. The Allied bot's are +1, +1.75 and +2.5.
+
+The Allied bot is unchanged.
+
+**Why the two help together** (my reading, not separately tested): the higher threshold stops the CP bot from bleeding steps in marginal attacks. Putting the West first then concentrates fills, SR destinations, Forward moves and the remaining attacks where the CP loses most of its VP. Neither change alone gained more than four points on seeds 8001–8300. Together they gained 14 and 17 points on two fresh seed sets.
+
+**Not adopted:** the turn checklist, East-first focus, home-VP security, the attack penalty and both rebuild rules made the CP bot weaker or no stronger in these tests. These are tests of simple paper rules against one opponent, not proof that the underlying ideas are wrong.
+
+**Evidence suite.** Every figure below comes from a clean worktree of the v0.8.0 code (commit `c8559da`), with each output file stamped. The paired runs play against the v0.7 reference at `bc8bef6`. The files are in [`results/v0.8.0/`](results/v0.8.0/).
+
+| Test | v0.7.6 | v0.8.0 |
+|---|---|---|
+| CP bot against the v0.7 reference, seeds 6001–6300 / 7001–7300 | 53% / 56% | **74% / 74%** |
+| Same seeds, games gained / lost against v0.7.6 (z) | — | 107 / 46 (4.9); 105 / 52 (4.2) |
+| Strict self-play, 600 games (v0.8.0: seeds 1100000–1100599, a range not used before) | Allies 85% / CP 15% | Allies **69%** / CP **31%** |
+| Against random and naive opponents (140 games) | won all 140 | won all 140 |
+| CP attacks per game (self-play) | 86 | 71 |
+| CP advances after combat per game | 33 | 30 |
+| Mandated offensives missed per game, Allies / CP | 2.5 / 1.0 | 2.3 / 0.9 |
+| Fall of the Tsar / USA at war (share of games) | 71% / 74% | 53% / 68% |
+
+The Allied bot is unchanged. Its paired figures (92–94% against the v0.7 reference) stand from v0.7.6. As a check, 60 Allied paired games from v0.8.0 (seeds 6001–6060, `ap_identity6.json`) match the v0.7.6 records game for game: same winner, final turn, VP and number of steps.
+
+**Run health, strict mode** (740 games): no unfinished games, exceptions, rule-violation resets, bot supply breaches, called-off attacks, Salonika safety transfers or choices without a rule. Two Allied moves in self-play were abandoned and took the printed one-safe-step exit (§6). The supply check also caught two steps out of supply by the *random* baseline player. These are not General Staff moves, and `summarize.py` now lists them separately.
+
+**Handicap** (self-play, starting VP moved in the CP bot's favour, seeds 30001–30150):
+
+| Starting VP | 10 (normal) | 11 | 12 | 13 | 14 | 15 |
+|---|---|---|---|---|---|---|
+| Allied / CP wins | 69% / 31% | 61% / 39% | 55% / 45% | 49% / 51% | 45% / 55% | 37% / 63% |
+
+About **three VP** now evens a bot-versus-bot game (v0.7.6: five and a half). Each VP is worth six to eight points. This is a coarse self-play calibration, not a human difficulty rating.
 
 ## v0.7.6: comprehensive v0.7.5 audit fixes
 
@@ -393,9 +474,10 @@ These are counts, not clock times. Table time has not been measured.
 * **Thin lines.** Watch whether the bot's Fill and Capture moves leave holes a person can drive through.
 * **Mandated offensives.** Note when the Allied bot misses one because no British or Italian unit is in contact.
 * **The 1914 West.** Check whether the CP bot's Guns of August push feels too strong or too weak against your defence.
+* **The CP bot's West focus (v0.8.0).** Since the West always comes first, watch whether the CP bot neglects Russia or the Balkans in ways a person can punish, and whether it still takes chances in the East.
 * **Event timing.** Note any card the bot plays (or holds) at a clearly wrong moment, with the turn and the situation.
 
-Reports like these are the most useful input for v0.8.
+Reports like these are the most useful input for the next version.
 
 ## Reproducing
 

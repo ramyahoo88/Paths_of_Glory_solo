@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.8.0 — 22 Nov 2026
+
+A stronger Central Powers bot. GPT's five CP recommendations and my own campaign-focus tests were each played against the v0.7.6 Allied bot on matched seeds (see the report, *v0.8.0*). Two changes helped and are adopted. The Allied bot is unchanged.
+
+* **The West is always the CP bot's first front.** Front order is West, then the Staff card's front, then the fixed order. Printed in the rules (*Front order*), the reference sheet and the companion.
+* **CP Stance thresholds are 0.75 higher:** Assault +0.75, Press +1.5, Hold +2.25 (Allies stay at +1, +1.75, +2.5). The CP bot makes fewer attacks (71 a game, was 86) and keeps its strength for the ones that count. Printed on the Staff cards, the rules' Stance table and the companion.
+* **Not adopted** (each made the CP bot weaker or no stronger): a turn checklist of campaign fronts, East first until Russia falls, keeping home VP spaces garrisoned, a penalty for attacks with no positional stake, and two rebuild rules. They stay in `sim/bot.js` as switches that are off by default.
+* Testing (commit `c8559da`, clean worktree, every file stamped):
+  * the CP bot wins **74%** against the v0.7 reference on both seed sets (v0.7.6: 53% and 56%; seeds gained / lost 107 / 46 and 105 / 52);
+  * strict self-play is **69% Allies / 31% CP** (v0.7.6: 85% / 15%);
+  * no unfinished games, exceptions, resets, bot supply breaches or choices without a rule;
+  * about **three VP** of handicap now evens a bot-versus-bot game (v0.7.6: five and a half).
+* `summarize.py` now counts supply breaches only for General Staff's own moves. A random baseline player's steps out of supply are listed separately.
+* Experiment files (per seed, with options) are in `sim/results/v0.8.0/experiments/`.
+
 ## v0.7.6 — 22 Nov 2026
 
 Fixes for the comprehensive v0.7.5 audit (`audits/general-staff-v0.7.5-comprehensive/`). Response: [`audits/general-staff-v0.7.5-comprehensive/Response.md`](audits/general-staff-v0.7.5-comprehensive/Response.md).

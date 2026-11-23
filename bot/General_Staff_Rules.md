@@ -23,7 +23,7 @@ The optional **General Staff Companion** (an offline web page) draws Staff cards
 
 **Setup.** Set up the Historical scenario normally. Shuffle the Staff deck. Deal the bot its strategy cards exactly as for a human player.
 
-**Difficulty (optional).** For a harder game, start the VP marker 1 or 2 spaces in the bot's favour: toward 20 when the bot plays the Central Powers, toward 0 when it plays the Allies. For an easier game, move it toward you instead. In bot-versus-bot tests, each VP of handicap shifted the result by about seven percentage points. The Allied bot is clearly the stronger of the two. A player facing the Central Powers bot may want to start with 1 to 3 VP in the bot's favour, raising it if the bot still loses. Keep the bot's hand face down beside the board and look at it when the procedure tells you to. The bot plays to fixed rules, so seeing its cards gives you little, but the honest habit is to look only when asked.
+**Difficulty (optional).** For a harder game, start the VP marker 1 or 2 spaces in the bot's favour: toward 20 when the bot plays the Central Powers, toward 0 when it plays the Allies. For an easier game, move it toward you instead. In bot-versus-bot tests, each VP of handicap shifted the result by six to eight percentage points. The Allied bot is still the stronger of the two: about three VP evens a game between the bots. A player facing the Central Powers bot may want to start with 1 or 2 VP in the bot's favour, raising it if the bot still loses. Keep the bot's hand face down beside the board and look at it when the procedure tells you to. The bot plays to fixed rules, so seeing its cards gives you little, but the honest habit is to look only when asked.
 
 ---
 

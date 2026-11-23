@@ -28,7 +28,8 @@ th { background: #e8e2d0; }
 .small { font-size: 7.5pt; } .pb { page-break-before: always; } .rec td { height: 30px; } .rec th { font-size: 8pt; }
 ol, ul { margin: 2px 0 4px 16px; padding: 0; } li { margin: 1px 0; }
 </style><div class="ref">
-<h1>General Staff v0.7.6 &mdash; Reference</h1><h2>Bot action round &mdash; draw 1 Staff card, then take the first step that applies</h2>
+<h1>General Staff v0.8.0 &mdash; Reference</h1><h2>Bot action round &mdash; draw 1 Staff card, then take the first step that applies</h2>
+<p class="small"><b>Front order</b>: card's front, then W, E, It, Bal, NE. <b>CP bot: West first</b>, then the card's front.</p>
 <ol>
 <li><b>Forced play</b> (Guns of August, CP turn 1 round 1).</li>
 <li><b>MO last chance</b>: rounds 5&ndash;6, MO unmet, the planned attacks include an MO attack &rarr; that Operation.</li>
@@ -45,7 +46,7 @@ ol, ul { margin: 2px 0 4px 16px; padding: 0; } li { margin: 1px 0; }
 <li>Targets: enemy-occupied spaces and unbesieged enemy forts the bot can legally attack.</li>
 <li>Shortlist: the 3 largest CF differences (CF of all bot units able to attack &minus; defending CF &minus; fort), plus Objectives and MO targets.</li>
 <li>Edge = bot's expected hits &minus; defender's (Edge table values as printed, after shifts; a 0-CF defender still fires). Score = Edge + bonuses (sheet 2). Rank by Score.</li>
-<li>From the top: take attacking spaces strongest first, skipping any the remaining OPS cannot pay or whose units cannot legally join (mixed nationalities from 2+ spaces need one space holding all of them); rescore (MO bonus only if the chosen units satisfy the MO); attack if Score &ge; Stance (CP: Assault 0, Press +0.75, Hold +1.5; Allies +1 more). From round 5 an MO attack is made at any Score.</li>
+<li>From the top: take attacking spaces strongest first, skipping any the remaining OPS cannot pay or whose units cannot legally join (mixed nationalities from 2+ spaces need one space holding all of them); rescore (MO bonus only if the chosen units satisfy the MO); attack if Score &ge; Stance (CP: Assault +0.75, Press +1.5, Hold +2.25; Allies: +1, +1.75, +2.5). From round 5 an MO attack is made at any Score.</li>
 <li>Up to 3 attacks, each space once; leftover OPS go down the Move list.</li>
 <li>Resolving: recompute each Edge, keep the bonuses (drop the MO bonus if the MO is no longer met); skip if &gt;0.5 below the Stance (never an attack that still meets the MO). Then unused attackers may hit the best Edge &ge; Stance.</li>
 </ol>
@@ -70,9 +71,9 @@ ol, ul { margin: 2px 0 4px 16px; padding: 0; } li { margin: 1px 0; }
 <li><b>Hold ground</b>: in a VP space or capital with a full-strength unit, take the extra step to cancel a retreat where allowed.</li>
 <li><b>Advance</b>: into a VP, fort or own-front Objective-list space, or with an Assault or Press card; strongest first, up to 3 in the space; leave one unit in an emptied space still in contact; one space only.</li>
 <li><b>Replacements</b>: armies in contact, other armies on the map, eliminated armies, then corps likewise. Rebuilt armies: earliest of West, East, Italy, Balkans, Near East.</li>
-<li><b>Event choices</b> (rules &sect;9): Landwehr flips in Replacement order; War in Africa removes a British corps (Reserve Box first); Salonika (played only if a corps qualifies) sends Reserve Box corps, then corps not in contact; entering neutrals go next to the enemy first; Kerensky +2 and Brusilov trench cancellation on the first Russian attack that can use them.</li>
-<li><b>Reinforcements</b>: no overstack &gt; earliest front in front order &gt; nearest an enemy unit &gt; Tie.</li>
-<li><b>Draw</b>: with 3+ combat cards, discard the lowest keep value until two remain.</li>
+<li><b>Event choices</b> (&sect;9): Landwehr in Replacement order; War in Africa: a corps (Reserve Box first); Salonika only with an eligible corps; neutrals next to the enemy; Kerensky, Brusilov: first Russian attack.</li>
+<li><b>Reinforcements</b>: no overstack &gt; earliest front &gt; nearest an enemy &gt; Tie.</li>
+<li><b>Draw</b>: 3+ combat cards: discard lowest keep value to 2.</li>
 </ul>
 </div>
 

@@ -4,7 +4,7 @@
   blockquote { margin: 6px 0; padding: 4px 10px; background: #f3eee0; border-left: 3px solid #8c2d1e; } code { font-size: 9pt; } li { margin: 2px 0; } hr { border: 0; border-top: 1px solid #bbb; margin: 14px 0; }</style><h1
 id="general-staff--a-card-driven-solo-opponent-for-paths-of-glory">General
 Staff — a card-driven solo opponent for <em>Paths of Glory</em></h1>
-<p><strong>Version 0.7.6 (playtest draft)</strong> · Unofficial fan
+<p><strong>Version 0.8.0 (playtest draft)</strong> · Unofficial fan
 material for GMT Games' <em>Paths of Glory</em> (Deluxe edition,
 Historical scenario / full campaign, the standard 110 strategy cards, no
 optional cards). You need the physical game. Strategy-card numbers below
@@ -54,13 +54,14 @@ human player.</p>
 VP marker 1 or 2 spaces in the bot's favour: toward 20 when the bot
 plays the Central Powers, toward 0 when it plays the Allies. For an
 easier game, move it toward you instead. In bot-versus-bot tests, each
-VP of handicap shifted the result by about seven percentage points. The
-Allied bot is clearly the stronger of the two. A player facing the
-Central Powers bot may want to start with 1 to 3 VP in the bot's favour,
-raising it if the bot still loses. Keep the bot's hand face down beside
-the board and look at it when the procedure tells you to. The bot plays
-to fixed rules, so seeing its cards gives you little, but the honest
-habit is to look only when asked.</p>
+VP of handicap shifted the result by six to eight percentage points. The
+Allied bot is still the stronger of the two: about three VP evens a game
+between the bots. A player facing the Central Powers bot may want to
+start with 1 or 2 VP in the bot's favour, raising it if the bot still
+loses. Keep the bot's hand face down beside the board and look at it
+when the procedure tells you to. The bot plays to fixed rules, so seeing
+its cards gives you little, but the honest habit is to look only when
+asked.</p>
 <hr />
 <h2 id="2-terms">2. Terms</h2>
 <ul>
@@ -68,7 +69,10 @@ habit is to look only when asked.</p>
 <strong>West</strong>, <strong>East</strong>, <strong>Italy</strong>,
 <strong>Balkans</strong>, <strong>Near East</strong> (§10.1).</li>
 <li><strong>Front order.</strong> The Staff card's front first; then the
-others in this fixed order: West, East, Italy, Balkans, Near East.</li>
+others in this fixed order: West, East, Italy, Balkans, Near East.
+<strong>The Central Powers bot always puts the West first</strong>, then
+the Staff card's front, then the fixed order. Its main effort stays in
+the West, and the Staff card sets the second front.</li>
 <li><strong>Contact.</strong> A space is <em>in contact</em> if an enemy
 unit is in an adjacent space.</li>
 <li><strong>Objective.</strong> For each front, the bot's Objective is
@@ -333,17 +337,17 @@ Stance (a Score equal to the threshold meets it):</p>
 <tbody>
 <tr class="odd">
 <td>Assault</td>
-<td>0</td>
+<td>+0.75</td>
 <td>+1</td>
 </tr>
 <tr class="even">
 <td>Press</td>
-<td>+0.75</td>
+<td>+1.5</td>
 <td>+1.75</td>
 </tr>
 <tr class="odd">
 <td>Hold</td>
-<td>+1.5</td>
+<td>+2.25</td>
 <td>+2.5</td>
 </tr>
 </tbody>

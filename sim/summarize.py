@@ -9,7 +9,10 @@ def load(name):
     for f in sorted(glob.glob(os.path.join(d, name))):
         try: data = json.load(open(f))
         except ValueError: continue  # empty or partial file (a run still in progress)
-        if isinstance(data, dict) and 'games' in data: out += data['games']  # skips digest.json
+        if isinstance(data, dict) and 'games' in data:  # skips digest.json
+            pr = data.get('pairing') or ['bot', 'bot']
+            for g in data['games']: g['_players'] = {'ap': pr[0], 'cp': pr[1]}  # which side the General Staff bot played
+            out += data['games']
     return out
 
 def wins(games, side):
@@ -78,8 +81,10 @@ if ALL:
     hit = sum(1 for g in ALL if any(g['stats'][x].get('violations') for x in ('ap', 'cp')))
     print(f'| Rule-violation resets (' + (', '.join(f'{k} {v}' for k, v in viol.most_common()) or 'none') + f'); games affected: {hit} | {resets} |')
     print(f'| Undo of a dead-end step | {undo} |')
-    sb = [x for g in ALL for x in g.get('supplyBreaches', [])]
-    print(f'| Movement steps that left moving units out of supply (rules §6) | {len(sb)} |')
+    sb = [x for g in ALL for x in g.get('supplyBreaches', []) if g['_players'][x['side']] == 'bot']
+    sbo = [x for g in ALL for x in g.get('supplyBreaches', []) if g['_players'][x['side']] != 'bot']
+    print(f'| Bot movement steps that left moving units out of supply (rules §6) | {len(sb)} |')
+    if sbo: print(f'| &nbsp;&nbsp;(baseline opponents\' own steps out of supply, not bound by §6: {len(sbo)}) | — |')
     print(f'| Units moved one safe step because their planned move was abandoned | {hold} |')
     print(f'| ... of which passed through a space they could not end in, then returned | {thru} |')
     print(f'| Attacks called off after the final check of the selected units | {called} |')
@@ -87,7 +92,7 @@ if ALL:
     print(f'| Choices with no bot rule, empty handler results or rejected proposals | {sum(fb.values())} |')
     for k, v in fb.most_common(12): print(f'| &nbsp;&nbsp;{k} | {v} |')
     print(f'| Forced acknowledgements (one legal action, no choice) | {sum(forced.values())} |')
-    digest['health'] = dict(games=len(ALL), incomplete=len(inc), exceptions=exc, violations=dict(viol), undos=undo, holdMoves=hold, calledOff=called, fallback=dict(fb), forced=dict(forced))
+    digest['health'] = dict(games=len(ALL), incomplete=len(inc), exceptions=exc, supplyBreaches=len(sb), opponentSupplyBreaches=len(sbo), violations=dict(viol), undos=undo, holdMoves=hold, calledOff=called, fallback=dict(fb), forced=dict(forced))
 
 # Self-play details
 G = load('self_*.json')
