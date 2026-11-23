@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.8.1 — 22 Nov 2026
+
+Print fix from the v0.8.0 review ([response](audits/general-staff-v0.8.0/Response.md)). The bot's behaviour is unchanged.
+
+* **Reference page 2** now prints the CP Stance thresholds (Assault +0.75, Press +1.5, Hold +2.25) and the CP bot's West-first front order. In v0.8.0 that page still showed the v0.7.6 values. The rules, page 1, the Staff cards and the companion were already right.
+* **`print/check_print.py`** now checks every printed threshold and the West-first rule against `sim/bot.js` and the companion. Run on the v0.8.0 reference, it reports the two stale lines.
+* The review independently confirmed the CP gain: 12% to 31.5% on 200 fresh matched seeds against the unchanged Allied bot.
+
 ## v0.8.0 — 22 Nov 2026
 
 A stronger Central Powers bot. GPT's five CP recommendations and my own campaign-focus tests were each played against the v0.7.6 Allied bot on matched seeds (see the report, *v0.8.0*). Two changes helped and are adopted. The Allied bot is unchanged.

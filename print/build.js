@@ -8,7 +8,7 @@ const B = require(path.join(root, 'sim/board.js'))
 const POLICY = require(path.join(root, 'research/event_policy.json'))
 const EP = require(path.join(root, 'sim/events.js'))
 const out = path.join(root, 'print/out'); fs.mkdirSync(out, { recursive: true })
-const VERSION = process.env.GS_VERSION || '0.8.0'
+const VERSION = process.env.GS_VERSION || '0.8.1'
 
 const STANCE = { A: ['Assault', 'CP +0.75 · Allies +1'], P: ['Press', 'CP +1.5 · Allies +1.75'], H: ['Hold', 'CP +2.25 · Allies +2.5'] }
 const PLAN = { O: ['Ops', 'Attack · Event · Logistics'], E: ['Event', 'Event · Attack · Logistics'], L: ['Logistics', 'Logistics · Attack · Event'] }
@@ -108,9 +108,9 @@ let ref = `<!doctype html><meta charset="utf-8"><style>${css}</style><div class=
 <div class="pb"></div><h1>Fronts, Objectives and Edge</h1>
 <h2>Front Table &mdash; Central Powers bot</h2>${frontTable('cp')}
 <h2>Front Table &mdash; Allied bot</h2>${frontTable('ap')}
-<p class="small">After the Staff card's front, check the others in this order: West, East, Italy, Balkans, Near East.</p>
+<p class="small">Front order: the Staff card's front, then the others in this order: West, East, Italy, Balkans, Near East. <b>The Central Powers bot always puts the West first</b>, then the Staff card's front, then the same order.</p>
 <h2>Edge table</h2>${edgeTables()}
-<p class="small">Use the columns after all shifts. Edge = bot's expected hits &minus; defender's expected hits. Score = Edge + bonuses (Objective +1, or else within 2 of the Objective +0.4; VP space +0.5; a defender out of supply +0.5; MO attack +1 / +2.5 / +6 in rounds 1&ndash;2 / 3&ndash;4 / 5&ndash;6; &minus;0.25 for each place the target's front is after the first in front order). Attack if Score &ge; Stance: Central Powers bot Assault 0, Press +0.75, Hold +1.5; Allied bot Assault +1, Press +1.75, Hold +2.5. From round 5 an MO attack is made at any Score.</p>
+<p class="small">Use the columns after all shifts. Edge = bot's expected hits &minus; defender's expected hits. Score = Edge + bonuses (Objective +1, or else within 2 of the Objective +0.4; VP space +0.5; a defender out of supply +0.5; MO attack +1 / +2.5 / +6 in rounds 1&ndash;2 / 3&ndash;4 / 5&ndash;6; &minus;0.25 for each place the target's front is after the first in front order). Attack if Score &ge; Stance: Central Powers bot Assault +0.75, Press +1.5, Hold +2.25; Allied bot Assault +1, Press +1.75, Hold +2.5. From round 5 an MO attack is made at any Score.</p>
 <h2>Objectives &mdash; Central Powers bot</h2>${objTable('cp')}
 <h2>Objectives &mdash; Allied bot</h2>${objTable('ap')}
 <div class="pb"></div><h1>Bot record sheet</h1>

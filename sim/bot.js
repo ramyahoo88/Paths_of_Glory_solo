@@ -1255,7 +1255,7 @@ class Bot {
     }
     return out
   }
-  // spaces in front order (the Staff card's front first), then the Tie; spaces off the five fronts last
+  // spaces in front order (the Staff card's front first; for the CP bot, the West before it), then the Tie; spaces off the five fronts last
   byFrontThenTie(A, spaces) {
     const fo = this.frontsInOrder(A)
     const fi = x => { const i = fo.indexOf(B.FRONT[x]); return i < 0 ? 99 : i }
