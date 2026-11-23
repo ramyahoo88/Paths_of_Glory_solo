@@ -1,6 +1,6 @@
 # Response to the v0.8.1 comprehensive audit
 
-The audit is by Codex ([report](General_Staff_v0.8.1_Comprehensive_Audit.md)). Both Medium findings and the design question are fixed in **v0.8.2**, and so are four of the five usability recommendations. The code is commit `dba0de2`; the evidence and documentation follow it.
+The audit is by Codex ([report](General_Staff_v0.8.1_Comprehensive_Audit.md)). Both Medium findings and the design question are fixed in **v0.8.2**, and so are four of the five usability recommendations. The bot and Import fixes are commit `dba0de2`, which produced the evidence below. The usability changes, documentation and results followed in `6b5e527`.
 
 ## A01 — Medium: importing a session could not be fully undone — fixed
 
