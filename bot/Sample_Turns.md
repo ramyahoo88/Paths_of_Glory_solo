@@ -1,8 +1,8 @@
 # Sample turns
 
-These are the first 2 turns of a simulated campaign (seed 2), with **General Staff playing both sides**. Each paragraph is one bot action round: the Staff card drawn, the step of the action-round procedure (rules §3) that decided it, the card played, and for Operations the planned attacks (with their Edge) and moves.
+These worked examples cover the first 2 turns of a campaign, with **General Staff commanding each side**. Each paragraph is one bot action round: the Staff card drawn, the step of the action-round procedure (rules §3) that decided it, the card played, and for Operations the planned attacks (with their Edge) and moves.
 
-Use it to check your reading of the procedure: with the same hand (shown, with each card's OPS value in brackets) and the same Staff card, see whether you reach the same step. The engine resolved all combat, so dice results are not shown. Positions differ in your own games.
+Use these examples to check your reading of the procedure: with the same hand (shown, with each card's OPS value in brackets) and the same Staff card, see whether you reach the same step. Only the bot's decisions are shown; combat dice results are omitted. Positions differ in your own games.
 
 *How to read the entries*
 

@@ -1,6 +1,6 @@
 # General Staff — a card-driven solo opponent for *Paths of Glory*
 
-**Version 0.8.3 (playtest draft)** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
+**Version 1.0.0** · Unofficial fan material for GMT Games' *Paths of Glory* (Deluxe edition, Historical scenario / full campaign, the standard 110 strategy cards, no optional cards). You need the physical game. Strategy-card numbers below are the numbers printed on the cards.
 
 General Staff can command **either side**; you play the other side normally. The bot follows the same rules you do. It holds a hand of real strategy cards and takes six action rounds a turn. Each round it plays a card as an Event, for Operations (OPS), for Strategic Redeployment (SR) or for Replacement Points (RP), or it takes the 1-OP Automatic Operation. It never breaks a rule, never looks at your hand and never rolls dice to make a decision. Its decisions come from a deck of **Staff cards** and the fixed priorities in this booklet. Dice are rolled only where the game rules call for them (combat, mandated offensives, entrenching, sieges and so on).
 
@@ -23,7 +23,7 @@ The optional **General Staff Companion** (an offline web page) draws Staff cards
 
 **Setup.** Set up the Historical scenario normally. Shuffle the Staff deck. Deal the bot its strategy cards exactly as for a human player.
 
-**Difficulty (optional).** For a harder game, start the VP marker 1 or 2 spaces in the bot's favour: toward 20 when the bot plays the Central Powers, toward 0 when it plays the Allies. For an easier game, move it toward you instead. In bot-versus-bot tests, each VP of handicap shifted the result by five to eight percentage points. The Allied bot is still the stronger of the two: three to four VP even a game between the bots. A player facing the Central Powers bot may want to start with 1 or 2 VP in the bot's favour, raising it if the bot still loses. Keep the bot's hand face down beside the board and look at it when the procedure tells you to. The bot plays to fixed rules, so seeing its cards gives you little, but the honest habit is to look only when asked.
+**Difficulty (optional).** For a harder game, start the VP marker 1 or 2 spaces in the bot's favour: toward 20 when the bot plays the Central Powers, toward 0 when it plays the Allies. For an easier game, move it toward you instead. Adjust the handicap between games to suit the challenge you want. Keep the bot's hand face down beside the board and look at it when the procedure tells you to. The bot plays to fixed rules, so seeing its cards gives you little, but the honest habit is to look only when asked.
 
 ---
 
@@ -50,7 +50,7 @@ Draw one Staff card. When the deck runs out, shuffle the discards to form a new 
 2. **MO: last chance.** In action rounds 5 and 6, if the bot's mandated offensive (MO) is unmet and the attacks the Attack Search plans (§5.4, with the highest OPS among the bot's cards) include one that would satisfy it, conduct that Operation (§4).
 3. **Urgent event.** Among the bot's cards whose event is legal now, play the one with the highest **event priority of 7, 8 or 9** (§8). Ties: lower OPS value, then the lower card number.
 4. **MO.** From action round 3, if the MO is unmet and the planned attacks include one that would satisfy it, conduct that Operation.
-5. **Crisis.** If a bot space is in crisis, plan an Operation as in §4 with the highest OPS among the bot's cards. If its planned moves include any **Fill** (§6), of this space or another, conduct an Operation — but choose the card as if no attacks were planned: the lowest-OPS card that pays for the first planned move (§4 step 2), then plan again with that card's OPS, attacks first. A cheap card may therefore make no Fill; that is intended and tested.
+5. **Crisis.** If a bot space is in crisis, plan an Operation as in §4 with the highest OPS among the bot's cards. If its planned moves include any **Fill** (§6), of this space or another, conduct an Operation — but choose the card as if no attacks were planned: the lowest-OPS card that pays for the first planned move (§4 step 2), then plan again with that card's OPS, attacks first. A cheap card may therefore make no Fill.
 6. **Rebuild** (Allied bot only). If the bot has not played a card for RP this turn and its missing steps, less the RP it already holds, total **6 or more**, play a card for RP as in §7.1 (if one qualifies).
 7. **The Staff card's Plan**, in the order on the card:
 
@@ -267,6 +267,6 @@ These are on the Reference sheets and in the Companion.
 
 ---
 
-## Credits and status
+## About this material
 
-Design: Claude (Anthropic), 2026, for a solo player of GMT's *Paths of Glory* (designer Ted Raicer). This is unofficial fan material, not endorsed by GMT Games. Developed and tested with simulated full campaigns on the Rally the Troops implementation of the rules (Nathan Forget and Tor Andersson, with GMT's permission). See the simulation report for results and limits. This is a playtest draft: human games have not yet been played with it.
+General Staff is unofficial fan material for GMT Games' *Paths of Glory*, designed by Ted Raicer. It requires the physical game and is not endorsed by GMT Games.

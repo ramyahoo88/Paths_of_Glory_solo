@@ -8,7 +8,7 @@ const B = require(path.join(root, 'sim/board.js'))
 const R = require(path.join(root, 'engine/rules.js'))
 const POLICY = require(path.join(root, 'research/event_policy.json'))
 const EP = require(path.join(root, 'sim/events.js'))
-const VERSION = process.env.GS_VERSION || '0.8.3'
+const VERSION = process.env.GS_VERSION || '1.0.0'
 
 const FN = { WEST: 'West', EAST: 'East', ITALY: 'Italy', BALKANS: 'Balkans', NEAREAST: 'Near East' }
 const objectives = {}

@@ -8,14 +8,14 @@ section.pg { page-break-after: always; } section.pg:last-of-type { page-break-af
 .card { box-sizing: border-box; border: 1.5px solid #555; border-radius: 0.12in; padding: 0.12in; display: flex; flex-direction: column; background: #f6f1e4; position: relative; overflow: hidden; }
 .card .hdr { font-size: 8pt; letter-spacing: 0.12em; text-transform: uppercase; color: #6b5a3a; display: flex; justify-content: space-between; border-bottom: 1px solid #b9a77f; padding-bottom: 3px; }
 .num { margin: 0.12in auto 0.04in; width: 0.95in; height: 0.95in; border-radius: 50%; border: 3px solid #1d1d1b; display: flex; align-items: center; justify-content: center; font-size: 44pt; font-weight: bold; background: #fffdf6; }
-.flabel { text-align: center; font-size: 7pt; color: #6b5a3a; text-transform: uppercase; letter-spacing: 0.1em; }
+.flabel { text-align: center; font-size: 7pt; color: #6b5a3a; text-transform: uppercase; }
 .row { margin-top: 0.08in; border-radius: 0.06in; padding: 0.05in 0.08in; }
 .row .k { font-size: 7pt; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8; }
 .row .v { font-size: 15pt; font-weight: bold; }
 .row .s { font-size: 7.5pt; }
 .st-A { background: #8c2d1e; color: #fff; } .st-P { background: #c47f17; color: #fff; } .st-H { background: #2f5d7c; color: #fff; }
 .pl { background: #e4dcc6; }
-.tie { margin-top: auto; text-align: center; font-size: 10pt; font-weight: bold; }
+.tie { position: absolute; bottom: 0.12in; left: 0.12in; right: 0.12in; text-align: center; font-size: 10pt; font-weight: bold; }
 .cardno { position: absolute; bottom: 0.06in; right: 0.1in; font-size: 7pt; color: #6b5a3a; }
 .back { background: repeating-linear-gradient(45deg, #3b3a36, #3b3a36 6px, #45443f 6px, #45443f 12px); color: #f6f1e4; align-items: center; justify-content: center; text-align: center; }
 .back .t { font-size: 20pt; font-weight: bold; letter-spacing: 0.08em; } .back .u { font-size: 8pt; margin-top: 6px; }
@@ -28,7 +28,7 @@ th { background: #e8e2d0; }
 .small { font-size: 7.5pt; } .pb { page-break-before: always; } .rec td { height: 30px; } .rec th { font-size: 8pt; }
 ol, ul { margin: 2px 0 4px 16px; padding: 0; } li { margin: 1px 0; }
 </style><div class="ref">
-<h1>General Staff v0.8.3 &mdash; Reference</h1><h2>Bot action round &mdash; draw 1 Staff card, then take the first step that applies</h2>
+<h1>General Staff v1.0.0 &mdash; Reference</h1><h2>Bot action round &mdash; draw 1 Staff card, then take the first step that applies</h2>
 <p class="small"><b>Front order</b>: card's front, then W, E, It, Bal, NE. <b>CP bot: West first</b>, then the card's front.</p>
 <ol>
 <li><b>Forced play</b> (Guns of August, CP turn 1 round 1).</li>

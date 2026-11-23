@@ -1,61 +1,30 @@
-# Paths of Glory Solo — *General Staff* bot (branch `claude-bot`)
+# General Staff — Paths of Glory Solo
 
-**General Staff** is an unofficial, card-driven solo opponent for GMT Games' **Paths of Glory** (Deluxe edition, Historical scenario, standard 110 strategy cards, no optional cards). It can command **either side** through the **full campaign**. You need the physical game.
+**Version 1.0.0**
 
-The bot plays by the same rules you do. It holds a hand of real strategy cards and uses them as Events, Operations, SR or RP, or takes the 1-OP Automatic Operation. Its choices come from an 18-card **Staff deck** — each card gives a front, a Stance (how good an attack must look), a Plan (Ops, Event or Logistics first) and a tie-break — and from fixed, printed priorities. It never looks at your hand and never rolls dice to decide what to do.
+General Staff is an unofficial, card-driven solo opponent for GMT Games' **Paths of Glory** (Deluxe edition, Historical scenario, standard 110 strategy cards, no optional cards). It can command **either side** through the **full campaign**. You need the physical game.
 
-## Start here
+The bot follows the normal game rules. It holds a hand of real strategy cards and uses them as Events, Operations, Strategic Redeployment or Replacement Points, or takes the 1-OP Automatic Operation. Its choices come from an 18-card **Staff deck** and the printed priorities. Each Staff card gives a front, a Stance, a Plan and a North/South tie-break. The bot never looks at your hand or rolls dice to decide what to do.
 
-| What | File |
+## Downloads
+
+| Material | File |
 |---|---|
-| **Rules** (booklet) | [Markdown](bot/General_Staff_Rules.md) · [PDF](print/out/rules.pdf) |
-| **Staff cards**: 18 poker-size cards and backs | [PDF](print/out/staff_cards.pdf) |
-| **Reference sheets**: procedure summary, Front Tables, Objectives, Edge table, Event priorities for both decks | [PDF](print/out/reference.pdf) |
-| **Companion** (optional offline web page: draws Staff cards, Edge/Score calculator, turn/round/MO tracker, lookups, session export/import) | [HTML file](app/General_Staff_Companion.html) |
-| **Worked example**: narrated bot decisions for the first two turns of a game | [Sample turns](bot/Sample_Turns.md) |
-| **Simulation report** | [REPORT.md](sim/REPORT.md) |
-| **Changes** | [CHANGELOG.md](CHANGELOG.md) |
-| **Independent reviews** and responses: v0.7.1 review, v0.7.2 re-audit, v0.7.2 comprehensive audit, v0.7.3 re-audit, v0.7.4 and v0.7.5 verifications, v0.7.5 comprehensive audit, v0.8.0 review, v0.8.1 comprehensive audit, v0.8.2 verification | [audits/](audits/) |
-| **Seed-level results** behind the report's tables | [sim/results/](sim/results/) |
+| **Rules booklet** | [PDF](print/out/rules.pdf) · [Text](bot/General_Staff_Rules.md) |
+| **Staff cards**: 18 poker-size cards with optional backs | [PDF](print/out/staff_cards.pdf) |
+| **Reference sheets**: procedure, front tables, objectives, Edge table, event priorities and record sheet | [PDF](print/out/reference.pdf) |
+| **Companion**: optional offline card draws, calculator, turn tracker and lookups | [HTML app](app/General_Staff_Companion.html) |
+| **Worked examples** | [Sample turns](bot/Sample_Turns.md) |
+| **Release notes** | [Changes](CHANGELOG.md) |
 
-Print the cards at 100% (actual size) on US Letter: six cards per page, each face page followed by a page of backs. Print double-sided (flip on long edge) for backed cards, or print only the odd pages for faces alone. `python3 print/check_print.py` checks that no card is split across pages and that every printed Stance threshold matches the bot. The reference sheets are seven pages: procedure, tables, a record sheet, and the event lists (which can stay in a sleeve).
+## Getting started
 
-## How good is it?
+1. Set up the physical game's Historical scenario and choose the bot's side.
+2. Print the Staff cards or open the companion HTML in your browser. The companion works offline and supports saving, Undo and moving a session between devices.
+3. Follow the rules booklet. Draw one Staff card at the start of each bot action round and take the first applicable step of the procedure.
 
-General Staff was developed and tested in about **50,000 simulated full campaigns** on the open-source **Rally the Troops** rules engine. The engine is used with GMT's permission on that site and is not included here. The final version:
+Print the cards at **100% on US Letter**: six cards per face page, followed by a page of backs. For double-sided cards, flip on the long edge. For faces only, print pages **1, 3 and 5**. The reference packet is seven pages.
 
-* plays both sides strongly: against the earlier v0.7 bots, the current version (v0.8.3; bot unchanged from v0.8.2) wins **94–95%** as the Allies and **70–73%** as the Central Powers. v0.8.0 made the Central Powers bot stronger: it now always puts the West first and attacks more selectively. In 600 strict self-play games the Allied bot won **73%** and the Central Powers bot **27%** (v0.7.6: 85% / 15%). There were no exceptions, no rule-violation resets, no bot movement out of supply and no choice left to the engine's default. Every figure has per-seed, commit-stamped records in [sim/results/v0.8.2](sim/results/v0.8.2/);
-* beat a random player and a naive one-attack, no-events bot in every test game (**1,380 of 1,380** across v0.7 to v0.8.2);
-* made only legal moves, and plays a recognisable war: Russia usually collapses in 1917 and the USA enters in most games;
-* has an optional difficulty handicap (starting VP), worth five to eight points of win rate per VP in bot-versus-bot play.
-
-Bot-versus-bot strength is not the same as strength against a person; **human playtesting is the next step.** See the [report](sim/REPORT.md) for the evidence behind each design decision and the known limits. The Allied bot is still the stronger of the two, so for the hardest game give the bot the Allies. Against the Central Powers bot, add VP in its favour if it proves too easy. In bot-versus-bot play each VP is worth five to eight points, and three to four VP even the game (see the report's handicap table). The main known weakness is that both bots, and especially the Allies, miss some mandated offensives.
-
-## For developers
-
-```sh
-cd sim
-./setup_engine.sh                    # fetch the rules engine (pinned commit) into ../engine
-node batch.js 20 1 bot bot           # 20 bot-vs-bot games
-node sample.js 7 2                   # narrated bot decisions, seed 7, turns 1-2
-STRICT=1 node final_eval.js self 100 5001 > /tmp/ev/self_a.json   # strict evaluation runs
-python3 summarize.py /tmp/ev                # results and run-health table
-node tests/multinational.js          # attack-group regression (GS-14)
-node tests/event_choices.js          # event-choice regressions (Salonika, War in Africa, Ties)
-node tests/siege.js                  # units leaving a siege keep a legal besieging force
-node tests/movement.js               # no step out of supply; corps gather to besiege
-node tests/priorities.js             # Tie and front order, Brusilov choice
-node tests/ties.js                   # Staff Tie for Forward, SR, replacements, losses (v0.8.2)
-node ../print/build.js               # rebuild the PDFs (needs Google Chrome and pandoc)
-python3 ../print/check_print.py      # every Staff card whole on one page; printed thresholds match the bot
-python3 ../print/test_check_print.py # negative controls for the print check (needs Chrome)
-node ../app/build_app.js             # rebuild the companion page
-node ../app/test_companion.cjs       # companion regression tests (no browser)
-python3 ../app/test_browser.py       # companion in real headless Chrome (needs Playwright)
-```
-
-`sim/bot.js` is the reference implementation of the printed procedure. Its constructor defaults are the released rules; options that are off by default are rejected experiments kept for reproducibility. `research/event_policy.md` is the card-by-card research behind the event priorities.
-
-GPT's earlier 1914 Tabletop Pilot and digital reference are kept in [`gpt_handoff/`](gpt_handoff/). General Staff is a new design and does not depend on them.
+For a harder game, use the optional starting-VP handicap in the rules. Adjust it between games to suit the challenge you want.
 
 *Unofficial fan material, not endorsed by GMT Games. Paths of Glory is © GMT Games; designer Ted Raicer.*

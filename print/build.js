@@ -8,7 +8,7 @@ const B = require(path.join(root, 'sim/board.js'))
 const POLICY = require(path.join(root, 'research/event_policy.json'))
 const EP = require(path.join(root, 'sim/events.js'))
 const out = path.join(root, 'print/out'); fs.mkdirSync(out, { recursive: true })
-const VERSION = process.env.GS_VERSION || '0.8.3'
+const VERSION = process.env.GS_VERSION || '1.0.0'
 
 const STANCE = { A: ['Assault', 'CP +0.75 · Allies +1'], P: ['Press', 'CP +1.5 · Allies +1.75'], H: ['Hold', 'CP +2.25 · Allies +2.5'] }
 const PLAN = { O: ['Ops', 'Attack · Event · Logistics'], E: ['Event', 'Event · Attack · Logistics'], L: ['Logistics', 'Logistics · Attack · Event'] }
@@ -25,14 +25,14 @@ section.pg { page-break-after: always; } section.pg:last-of-type { page-break-af
 .card { box-sizing: border-box; border: 1.5px solid #555; border-radius: 0.12in; padding: 0.12in; display: flex; flex-direction: column; background: #f6f1e4; position: relative; overflow: hidden; }
 .card .hdr { font-size: 8pt; letter-spacing: 0.12em; text-transform: uppercase; color: #6b5a3a; display: flex; justify-content: space-between; border-bottom: 1px solid #b9a77f; padding-bottom: 3px; }
 .num { margin: 0.12in auto 0.04in; width: 0.95in; height: 0.95in; border-radius: 50%; border: 3px solid #1d1d1b; display: flex; align-items: center; justify-content: center; font-size: 44pt; font-weight: bold; background: #fffdf6; }
-.flabel { text-align: center; font-size: 7pt; color: #6b5a3a; text-transform: uppercase; letter-spacing: 0.1em; }
+.flabel { text-align: center; font-size: 7pt; color: #6b5a3a; text-transform: uppercase; }
 .row { margin-top: 0.08in; border-radius: 0.06in; padding: 0.05in 0.08in; }
 .row .k { font-size: 7pt; text-transform: uppercase; letter-spacing: 0.1em; opacity: 0.8; }
 .row .v { font-size: 15pt; font-weight: bold; }
 .row .s { font-size: 7.5pt; }
 .st-A { background: #8c2d1e; color: #fff; } .st-P { background: #c47f17; color: #fff; } .st-H { background: #2f5d7c; color: #fff; }
 .pl { background: #e4dcc6; }
-.tie { margin-top: auto; text-align: center; font-size: 10pt; font-weight: bold; }
+.tie { position: absolute; bottom: 0.12in; left: 0.12in; right: 0.12in; text-align: center; font-size: 10pt; font-weight: bold; }
 .cardno { position: absolute; bottom: 0.06in; right: 0.1in; font-size: 7pt; color: #6b5a3a; }
 .back { background: repeating-linear-gradient(45deg, #3b3a36, #3b3a36 6px, #45443f 6px, #45443f 12px); color: #f6f1e4; align-items: center; justify-content: center; text-align: center; }
 .back .t { font-size: 20pt; font-weight: bold; letter-spacing: 0.08em; } .back .u { font-size: 8pt; margin-top: 6px; }
@@ -54,7 +54,7 @@ function cardHtml(c) {
   <div class="row st-${c.stance}"><div class="k">Stance</div><div class="v">${STANCE[c.stance][0]}</div><div class="s">Attack if Score &ge; ${STANCE[c.stance][1]}</div></div>
   <div class="row pl"><div class="k">Plan</div><div class="v">${PLAN[c.plan][0]}</div><div class="s">${PLAN[c.plan][1]}</div></div>
   <div class="tie">Tie: ${c.tie === 'N' ? '&#9650; North' : '&#9660; South'}</div>
-  <div class="cardno">${c.id}/18 · v${VERSION}</div></div>`
+  <div class="cardno">${c.id}/18</div></div>`
 }
 const deck = makeDeck()
 let cardsHtml = `<!doctype html><meta charset="utf-8"><style>${css}</style>`
@@ -125,7 +125,11 @@ fs.writeFileSync(path.join(out, 'reference.html'), ref)
 
 function pdf(name) {
   const src = path.join(out, name + '.html'), dst = path.join(out, name + '.pdf')
-  cp.execFileSync('google-chrome', ['--headless', '--no-sandbox', '--disable-gpu', '--no-pdf-header-footer', `--print-to-pdf=${dst}`, 'file://' + src], { stdio: 'ignore' })
+  if (process.env.GS_PDF_ENGINE === 'weasyprint') {
+    cp.execFileSync('python3', ['-m', 'weasyprint', src, dst], { stdio: 'inherit' })
+  } else {
+    cp.execFileSync('google-chrome', ['--headless', '--no-sandbox', '--disable-gpu', '--no-pdf-header-footer', `--print-to-pdf=${dst}`, 'file://' + src], { stdio: 'ignore' })
+  }
   return dst
 }
 // Rules booklet: Markdown -> HTML (pandoc) -> PDF
